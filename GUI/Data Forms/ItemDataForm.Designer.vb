@@ -900,7 +900,6 @@ Partial Class ItemDataForm
         Me.GeneralPage.SuspendLayout
         Me.GroupBox31.SuspendLayout
         Me.tlpGeneralStats.SuspendLayout
-        CType(Me.PriceUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.WeightUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PerPocketUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.ItemSizeUpDown,System.ComponentModel.ISupportInitialize).BeginInit
@@ -1159,23 +1158,21 @@ Partial Class ItemDataForm
         Me.AmmoPage.SuspendLayout
         Me.GroupBox14.SuspendLayout
         Me.tlpAmmoStats.SuspendLayout
-        CType(Me.MagazineubMagSizeUpDown,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.MagazineubMagSizeUpDown, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ArmourPage.SuspendLayout
         Me.GroupBox13.SuspendLayout
         Me.tlpArmorStats.SuspendLayout
-        CType(Me.ubProtectionUpDown,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.ubCoverageUpDown,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.ubDegradePercentUpDown,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.ubProtectionUpDown, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.ubCoverageUpDown, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.ubDegradePercentUpDown, System.ComponentModel.ISupportInitialize).BeginInit
         Me.GroupBox12.SuspendLayout
         Me.tlpArmourFlags.SuspendLayout
         Me.FacePage.SuspendLayout
         Me.GroupBox56.SuspendLayout
-        CType(Me.CompatibleFaceItemGrid,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.CompatibleFaceItemGrid, System.ComponentModel.ISupportInitialize).BeginInit
         Me.InventoryPage.SuspendLayout
         Me.ShopkeepersGroupBox.SuspendLayout
         Me.ShopkeepersPanel.SuspendLayout
-        CType(Me.HowardUpDown,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.JakeUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.KeithUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.MannyUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.MickeyUpDown,System.ComponentModel.ISupportInitialize).BeginInit
@@ -8712,7 +8709,8 @@ Partial Class ItemDataForm
         'NumericUpDown2
         '
         Me.NumericUpDown2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.NumericUpDown2.Location = New System.Drawing.Point(84, 240)
+        Me.NumericUpDown2.Location = New System.Drawing.Point(4, 335)
+        Me.NumericUpDown2.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.NumericUpDown2.Maximum = New Decimal(New Integer() {360, 0, 0, 0})
         Me.NumericUpDown2.Name = "NumericUpDown2"
         Me.NumericUpDown2.Size = New System.Drawing.Size(75, 20)
@@ -9065,11 +9063,12 @@ Partial Class ItemDataForm
         'GroupBox15
         '
         Me.GroupBox15.Controls.Add(Me.tlpExplosivesFlags)
-        Me.GroupBox15.Location = New System.Drawing.Point(3, 294)
+        Me.GroupBox15.Location = New System.Drawing.Point(4, 452)
+        Me.GroupBox15.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.GroupBox15.Name = "GroupBox15"
-        Me.GroupBox15.Size = New System.Drawing.Size(306, 157)
+        Me.GroupBox15.Padding = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.GroupBox15.Size = New System.Drawing.Size(459, 242)
         Me.GroupBox15.TabIndex = 1
-        Me.GroupBox15.TabStop = false
         Me.GroupBox15.Text = "Flags"
         '
         'tlpExplosivesFlags
