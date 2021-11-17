@@ -1152,10 +1152,12 @@ Public Module DatabaseCode
         t.ExtendedProperties.Add(TableProperty.DataSetName, t.TableName & "LIST")
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\AmmoStrings.xml")
         t.ExtendedProperties.Add(TableProperty.ComparisonField, "AmmoCaliber")
+        t.ExtendedProperties.Add(TableProperty.Trim, True)
 
         t.Columns.Add(MakeColumn("uiIndex", "ID", GetType(Integer)))
         t.Columns.Add(MakeColumn("AmmoCaliber", "Caliber", GetType(String), , , , , , , , 20))
         t.Columns.Add(MakeColumn("BRCaliber", "BR Caliber", GetType(String), , , , , , , , 20))
+        t.Columns.Add(MakeColumn("NWSSCaliber", "NWSS Caliber", GetType(String), , , , , , , , 20))
 
         Dim pk(0) As DataColumn
         pk(0) = t.Columns("uiIndex")
