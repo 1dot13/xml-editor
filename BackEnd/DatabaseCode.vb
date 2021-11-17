@@ -791,9 +791,9 @@ Public Module DatabaseCode
         Return ds
     End Function
 
-    Private Function MakeColumn(ByVal columnName As String, ByVal caption As String, ByVal type As Type, Optional ByVal defaultValue As Integer = 0, _
-    Optional ByVal lookup_Table As String = Nothing, Optional ByVal lookup_ValueColumn As String = Nothing, Optional ByVal lookup_TextColumn As String = Nothing, _
-    Optional ByVal lookup_AddBlank As Boolean = False, Optional ByVal lookup_Filter As String = Nothing, Optional ByVal hideInGrid As Boolean = False, _
+    Public Function MakeColumn(ByVal columnName As String, ByVal caption As String, ByVal type As Type, Optional ByVal defaultValue As Integer = 0,
+    Optional ByVal lookup_Table As String = Nothing, Optional ByVal lookup_ValueColumn As String = Nothing, Optional ByVal lookup_TextColumn As String = Nothing,
+    Optional ByVal lookup_AddBlank As Boolean = False, Optional ByVal lookup_Filter As String = Nothing, Optional ByVal hideInGrid As Boolean = False,
     Optional ByVal maxLength As Integer = 0, Optional ByVal lookup_Sort As String = Nothing, Optional ByVal tooltipText As String = Nothing, Optional ReferenceRequired As Boolean = False,
     Optional lookup_FirstValuePrefix As String = Nothing, Optional sourceColumnName As String = Nothing) As DataColumn
         Dim c As DataColumn
@@ -1186,6 +1186,7 @@ Public Module DatabaseCode
         Dim t As New DataTable("WEAPON")
         t.ExtendedProperties.Add(TableProperty.DataSetName, t.TableName & "LIST")
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\Weapons.xml")
+        t.ExtendedProperties.Add(TableProperty.TableHandlerName, "WeaponTable")
         t.ExtendedProperties.Add(TableProperty.Trim, True)
 
         t.Columns.Add(MakeColumn("uiIndex", "ID", GetType(Integer), , , , , , , True))
@@ -1229,10 +1230,15 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("ubAimLevels", "Default Aim Levles", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("ubRecoilDelay", "Recoil Delay", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("Handling", "Weapon Handling", GetType(Integer), , , , , , , True))
-        t.Columns.Add(MakeColumn("usOverheatingJamThreshold", "Overheating Jam Threshold", GetType(Decimal), 4000))
-        t.Columns.Add(MakeColumn("usOverheatingDamageThreshold", "Overheating Damage Threshold", GetType(Decimal), 5000))
-        t.Columns.Add(MakeColumn("usOverheatingSingleShotTemperature", "Overheating Single Shot Temperature ", GetType(Decimal), 80))
-        t.Columns.Add(MakeColumn("HeavyWeapon", "Heavy Weapon", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("usOverheatingJamThreshold", "Overheating Jam Threshold", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("usOverheatingDamageThreshold", "Overheating Damage Threshold", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("usOverheatingSingleShotTemperature", "Overheating Single Shot Temperature ", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("HeavyGun", "Heavy Weapon", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fBurstOnlyByFanTheHammer", "fBurstOnlyByFanTheHammer", GetType(Boolean)))
+
+        ' NOTE BarrelConfiguration tags are defined in LoadData() in Weapontable.vb
+        ' Datasets do not like multiple xml nodes with the same name inside one parent node
+        't.Columns.Add(MakeColumn("BarrelConfiguration", "BarrelConfiguration", GetType(Integer), , , , , , , True))
 
         Dim pk(0) As DataColumn
         pk(0) = t.Columns("uiIndex")

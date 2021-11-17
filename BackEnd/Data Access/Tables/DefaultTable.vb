@@ -1,3 +1,5 @@
+Imports System.IO
+
 Public Class DefaultTable
     Implements IDisposable
 
@@ -211,6 +213,66 @@ Public Class DefaultTable
         view.Dispose()
 
         table.AcceptChanges()
+    End Sub
+
+    Protected Overridable Sub WriteXml(table As DataTable, ByRef memStream As MemoryStream)
+        Dim view As New DataView(table, "", table.Columns(0).ColumnName, DataViewRowState.CurrentRows)
+        Dim trim As Boolean = table.GetBooleanProperty(TableProperty.Trim)
+        Dim sourceDSName = table.GetStringProperty(TableProperty.DataSetName)
+        If sourceDSName Is Nothing Then
+            If table.DataSet IsNot Nothing Then
+                sourceDSName = table.DataSet.DataSetName
+            Else
+                sourceDSName = _dm.Database.SchemaName
+            End If
+        End If
+
+        Dim xw = Xml.XmlWriter.Create(memStream)
+        xw.WriteStartDocument()
+        xw.WriteWhitespace(vbLf)
+        xw.WriteStartElement(sourceDSName)
+        xw.WriteWhitespace(vbLf)
+
+        For i As Long = 0 To view.Count - 1
+            xw.WriteString(vbTab)
+            xw.WriteStartElement(table.TableName)
+            xw.WriteString(vbLf)
+
+            Dim dcIndex As Integer = -1
+
+            For Each c As DataColumn In table.Columns
+                dcIndex = dcIndex + 1
+                Dim xmlColName As String = c.GetStringProperty(ColumnProperty.SourceColumnName)
+                If String.IsNullOrEmpty(xmlColName) Then xmlColName = c.ColumnName
+
+                If Not trim OrElse (i = 0 OrElse c Is table.PrimaryKey(0) OrElse ((c.DataType.Equals(GetType(Boolean)) OrElse c.DataType.Equals(GetType(Decimal)) OrElse c.DataType.Equals(GetType(ULong)) OrElse c.DataType.Equals(GetType(Integer)) OrElse c.DataType.Equals(GetType(Long))) AndAlso view(i)(c.ColumnName) <> 0) _
+                    OrElse (c.DataType.Equals(GetType(String)) AndAlso view(i)(c.ColumnName) <> "")) Then
+
+                    xw.WriteString(vbTab)
+                    xw.WriteString(vbTab)
+
+                    If Not c.DataType.Equals(GetType(Boolean)) Then
+                        xw.WriteElementString(xmlColName, view(i)(c.ColumnName))
+                    Else
+                        If view(i)(c.ColumnName) Then
+                            xw.WriteElementString(xmlColName, 1)
+                        Else
+                            xw.WriteElementString(xmlColName, 0)
+                        End If
+                    End If
+
+                    xw.WriteString(vbLf)
+                End If
+            Next
+            xw.WriteString(vbTab)
+            xw.WriteEndElement()
+            xw.WriteString(vbLf)
+        Next
+        xw.WriteEndElement()
+        xw.Close()
+        view.Dispose()
+
+        'table.AcceptChanges()
     End Sub
 
     'this just works on single pk tables for now
