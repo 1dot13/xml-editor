@@ -450,4 +450,10 @@
   <data name="AmmoFlags" xml:space="preserve">
     <value>Ammo Flags</value>
   </data>
+  <data name="MilitiaGuns" xml:space="preserve">
+    <value>Militia Guns</value>
+  </data>
+  <data name="MilitiaItems" xml:space="preserve">
+    <value>Militia Items</value>
+  </data>
 </root>
