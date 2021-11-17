@@ -1267,7 +1267,7 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("AttachmentPoint", "Att. Point", GetType(ULong), , "AttachmentPoint", "id", "name", , , True, , "name"))
         t.Columns.Add(MakeColumn("AttachToPointAPCost", "Att. AP Cost", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("ubClassIndex", "Foreign Key", GetType(Integer), , , , , , , True))
-        t.Columns.Add(MakeColumn("ItemFlag", "Flag(s)", GetType(Integer), , "ItemFlag", "id", "name", , , True))
+        t.Columns.Add(MakeColumn("ItemFlag", "Flag(s)", GetType(ULong), , "ItemFlag", "id", "name", , , True))
         t.Columns.Add(MakeColumn("ubCursor", "Cursor", GetType(Integer), , "Cursor", "id", "name", , , True))
         t.Columns.Add(MakeColumn("bSoundType", "Sound Type", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("ubGraphicType", "Graphic Type", GetType(Integer), , , , , , , True))
