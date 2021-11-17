@@ -1243,10 +1243,12 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("usOverheatingSingleShotTemperature", "Overheating Single Shot Temperature ", GetType(Decimal)))
         t.Columns.Add(MakeColumn("HeavyGun", "Heavy Weapon", GetType(Boolean)))
         t.Columns.Add(MakeColumn("fBurstOnlyByFanTheHammer", "fBurstOnlyByFanTheHammer", GetType(Boolean)))
-
         ' NOTE BarrelConfiguration tags are defined in LoadData() in Weapontable.vb
         ' Datasets do not like multiple xml nodes with the same name inside one parent node
         't.Columns.Add(MakeColumn("BarrelConfiguration", "BarrelConfiguration", GetType(Integer), , , , , , , True))
+        t.Columns.Add(MakeColumn("ubNWSSCase", "ubNWSSCase", GetType(Byte), , , , , , , True))
+        t.Columns.Add(MakeColumn("ubNWSSLast", "ubNWSSLast", GetType(Byte), , , , , , , True))
+        t.Columns.Add(MakeColumn("szNWSSSound", "szNWSSSound", GetType(String), , , , , , , True))
 
         Dim pk(0) As DataColumn
         pk(0) = t.Columns("uiIndex")
