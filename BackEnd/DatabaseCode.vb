@@ -2326,6 +2326,7 @@ Public Module DatabaseCode
         Dim t As New DataTable("CLOTHES")
         t.ExtendedProperties.Add(TableProperty.DataSetName, "CLOTHESLIST")
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\Clothes.xml")
+        t.ExtendedProperties.Add(TableProperty.Trim, True)
 
         t.Columns.Add(MakeColumn("uiIndex", "Index", GetType(Integer)))
         t.Columns.Add(MakeColumn("szName", "Name", GetType(String)))
