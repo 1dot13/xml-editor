@@ -2327,8 +2327,6 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("szName", "Name", GetType(String)))
         t.Columns.Add(MakeColumn("bFoodPoints", "Food Points", GetType(Integer)))
         t.Columns.Add(MakeColumn("bDrinkPoints", "Drink Points", GetType(Integer)))
-        t.Columns.Add(MakeColumn("ubPortionSize", "Portion Size", GetType(Integer), 100))
-        t.Columns.Add(MakeColumn("bMoraleMod", "Morale Modifier", GetType(Integer)))
         t.Columns.Add(MakeColumn("usDecayRate", "Decay Rate", GetType(Decimal)))
 
         Dim pk(0) As DataColumn
