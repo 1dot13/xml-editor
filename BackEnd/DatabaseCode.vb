@@ -468,6 +468,8 @@ Public Module DatabaseCode
             AddLookupData(explosionSize, 0, "None")
             AddLookupData(explosionSize, 1, "Standard")
             AddLookupData(explosionSize, 2, "HighExplosive")
+            AddLookupData(explosionSize, 3, "Big Bada Boom")
+            AddLookupData(explosionSize, 4, "Flame / Flame retardant")
         Else
             LookupFile.AddLookupData(lookupFilename, explosionSize)
         End If
