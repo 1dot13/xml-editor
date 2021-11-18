@@ -1421,12 +1421,13 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("overheatCooldownModificator", "Overheating Cooldown Modifier", GetType(Decimal), 0, , , , , , True))
         t.Columns.Add(MakeColumn("overheatJamThresholdModificator", "Overheating Jam Threshold Modifier", GetType(Decimal), 0, , , , , , True))
         t.Columns.Add(MakeColumn("overheatDamageThresholdModificator", "Overheating Damage Threshold Modifier", GetType(Decimal), 0, , , , , , True))
-        t.Columns.Add(MakeColumn("PoisonPercentage", "Poison Power", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("FoodType", "Food Type", GetType(Integer), 0, "Food", "uiIndex", "szName", , , True))
         t.Columns.Add(MakeColumn("LockPickModifier", "Lockpicking Modifier", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("CrowbarModifier", "Crowbar Bonus", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("DisarmModifier", "Disarm Bonus", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("RepairModifier", "Repair Kit Effectiveness Modifier", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("usHackingModifier", "Hacking Bonus", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("usBurialModifier", "Burial Modifier", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("DamageChance", "Dirt Damage Chance", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("DirtIncreaseFactor", "Dirt Increase Factor", GetType(Decimal), , , , , , , True))
         t.Columns.Add(MakeColumn("clothestype", "Clothes Type", GetType(Integer), 0, "Clothes", "uiIndex", "szName", , , True, , "szName"))
@@ -1438,10 +1439,20 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("SleepModifier", "Sleep Modifier", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("sBackpackWeightModifier", "Backpack Weight Modifier", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("fAllowClimbing", "Allow Climbing", GetType(Boolean), 0, , , , , , True))
-        'JMich: Attempting to add unknown tag support, 20 should be enough
-        For i As Integer = 0 To 20
-            t.Columns.Add(MakeColumn("ItemUnknownTag" & i, "ItemUnknownTag" & i, GetType(String), , , , , , , True))
-        Next
+        t.Columns.Add(MakeColumn("antitankmine", "Antitankmine", GetType(Boolean), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("cigarette", "Cigarette", GetType(Boolean), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("usPortionSize", "Portion Size", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("diseaseprotectionface", "Disease Protection Face", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("diseaseprotectionhand", "Fisease Protection Hand", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("usRiotShieldStrength", "Riot Shield Strength", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("usRiotShieldGraphic", "Riot Shield Graphic", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("bloodbag", "Bloodbag", GetType(Boolean), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("emptybloodbag", "Empty Bloodbag", GetType(Boolean), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("medicalsplint", "Medical Splint", GetType(Boolean), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("sFireResistance", "Fire Resistance", GetType(Integer), 0, , , , , , True))
+        t.Columns.Add(MakeColumn("usAdministrationModifier", "Administration Modifier", GetType(Byte), , , , , , , True))
+
+
 
         'CHRISL: Add new tags above this point.  Do not have new tags in the above section end in 1, 2 or 3 or the xml will not load correctly
         '   Only add new tags below this point if the tags are in the STAND_MODIFIERS, CROUCH_MODIFIERS and PRONE_MODIFIERS sections

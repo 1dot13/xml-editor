@@ -329,7 +329,7 @@ Public Class ItemTable
         Dim x As Integer
         Dim y As Integer
         Dim a As Integer
-        Dim da, aap, uit As Integer
+        Dim da, aap As Integer
         Dim uicomments As Integer = 0
         Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
         xmldoc.Load(fs)
@@ -343,8 +343,6 @@ Public Class ItemTable
             a = 0
             da = 0
             aap = 0
-            'Unknown Item Tag
-            uit = 0
             xmlnode2 = xmlnode.ChildNodes.Item(i).ChildNodes
             For x = 0 To xmlnode2.Count - 1
                 If xmlnode2.Item(x).Name = "#comment" Then Continue For
@@ -386,12 +384,6 @@ Public Class ItemTable
                             Else
                                 _table.Rows(i - uicomments).Item(xmlnode2.Item(x).Name) = xmlnode2.Item(x).InnerText.Trim
                             End If
-                            'JMich: Attempting to read Unknown Item Tags
-                        Else
-                            _table.Columns("ItemUnknownTag" & uit).Caption = xmlnode2.Item(x).Name
-                            _table.Columns("ItemUnknownTag" & uit).ColumnName = xmlnode2.Item(x).Name
-                            _table.Rows(i - uicomments).Item(xmlnode2.Item(x).Name) = xmlnode2.Item(x).InnerText.Trim
-                            uit += 1
                         End If
                     End If
                 End If
@@ -425,8 +417,6 @@ Public Class ItemTable
                     Dim c As DataColumn = table.Columns(x)
                     Dim xmlColName As String = c.GetStringProperty(ColumnProperty.SourceColumnName) 'only used for defaultattachment and availableattachmentpoint ATM
 
-                    'JMich: Attempting to write only changed Unknown Item Tags
-                    If c.ColumnName.StartsWith("ItemUnknownTag") Then Continue For
                     If c.ColumnName.EndsWith("1") AndAlso String.IsNullOrEmpty(xmlColName) Then Exit For
                     If Not trim OrElse (i = 0 OrElse c Is table.PrimaryKey(0) OrElse ((c.DataType.Equals(GetType(Boolean)) OrElse c.DataType.Equals(GetType(Decimal)) OrElse c.DataType.Equals(GetType(ULong)) OrElse c.DataType.Equals(GetType(Integer)) OrElse c.DataType.Equals(GetType(Long))) AndAlso view(i)(c.ColumnName) <> 0) _
                         OrElse (c.DataType.Equals(GetType(String)) AndAlso view(i)(c.ColumnName) <> "")) Then
