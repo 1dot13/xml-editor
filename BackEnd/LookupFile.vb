@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class LookupFile
     Private Shared Sub AddLookupData(ByVal t As DataTable, ByVal id As Integer, ByVal name As String)
         Dim r As DataRow = t.NewRow

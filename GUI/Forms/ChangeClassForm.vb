@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class ChangeClassForm
     Inherits SimpleFormBase
 

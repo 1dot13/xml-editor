@@ -1,4 +1,6 @@
-﻿Public Class IteTable
+﻿Imports System.Data
+
+Public Class IteTable
     Inherits DefaultTable
 
     Public Sub New(table As DataTable, manager As DataManager)

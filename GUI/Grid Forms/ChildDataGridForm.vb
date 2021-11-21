@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class ChildDataGridForm
     Inherits LookupGridForm
 

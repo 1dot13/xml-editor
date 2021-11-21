@@ -1,6 +1,7 @@
 ﻿Imports System.Xml
 Imports System.IO
 Imports System.Xml.Linq
+Imports System.Data
 
 Public Class WeaponTable
     Inherits DefaultTable

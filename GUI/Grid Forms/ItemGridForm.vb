@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class ItemGridForm
     Inherits GridForm
     Protected deletingRow As DataRow

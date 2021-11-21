@@ -1,3 +1,5 @@
+Imports System.Data
+
 Module GridUtility
     Friend Const BlankLookupRowName As String = " "
     Friend Const BlankLookupRowValue As Integer = 0

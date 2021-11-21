@@ -1,3 +1,5 @@
+Imports System.Data
+
 'for incompatible attachments and compatible face items
 Public Class DuplicateEntryTable
     Inherits DefaultTable

@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class ItemDataForm
     Inherits BaseDataForm
 
@@ -90,7 +92,7 @@ Public Class ItemDataForm
         '    TempDrugChecklistBox.SetItemChecked(i, (BitDrugFlags(i).ToString.Equals("1")))
         'Next
 
-        
+
         SetupGrid(AttachmentGrid, Tables.Attachments.Name, Tables.Attachments.Fields.ItemID)
         SetupGrid(AttachmentInfoGrid, Tables.AttachmentInfo.Name, Tables.AttachmentInfo.Fields.ItemID)
         SetupGrid(AttachToGrid, Tables.Attachments.Name, Tables.Attachments.Fields.AttachmentID)

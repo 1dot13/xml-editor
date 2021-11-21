@@ -1,4 +1,5 @@
-﻿Imports System.Xml
+﻿Imports System.Data
+Imports System.Xml
 
 Public Class InventoryTable
     Inherits AutoIncrementTable

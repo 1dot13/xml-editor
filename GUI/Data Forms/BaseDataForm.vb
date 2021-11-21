@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class BaseDataForm
     Protected _view As DataView
     Protected _id As Integer

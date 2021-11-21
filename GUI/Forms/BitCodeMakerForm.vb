@@ -1,4 +1,6 @@
-﻿Public Class BitCodeMakerForm
+﻿Imports System.Data
+
+Public Class BitCodeMakerForm
     Protected _dm As DataManager
     Protected _sourceTable As DataTable
 

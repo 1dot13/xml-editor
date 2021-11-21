@@ -1,3 +1,4 @@
+Imports System.Data
 Imports System.Runtime.CompilerServices
 
 Public Module Utility
@@ -90,7 +91,13 @@ Public Module Utility
     <Extension()>
     Public Function GetStringProperty(ByVal table As DataTable, ByVal extendedProperty As String) As String
         Dim val As String = Nothing
-        If table Is Nothing Or extendedProperty Is Nothing Then Throw New ArgumentNullException
+        If table Is Nothing Then
+            Throw New ArgumentNullException
+        End If
+        If extendedProperty Is Nothing Then
+            Throw New ArgumentNullException
+        End If
+
         If table.ExtendedProperties.Contains(extendedProperty) Then
             val = CStr(table.ExtendedProperties.Item(extendedProperty))
         End If
@@ -100,7 +107,13 @@ Public Module Utility
     <Extension()>
     Public Function GetStringProperty(ByVal column As DataColumn, ByVal extendedProperty As String) As String
         Dim val As String = Nothing
-        If column Is Nothing Or extendedProperty Is Nothing Then Throw New ArgumentNullException
+        If column Is Nothing Then
+            Throw New ArgumentNullException
+        End If
+        If extendedProperty Is Nothing Then
+            Throw New ArgumentNullException
+        End If
+
         If column.ExtendedProperties.Contains(extendedProperty) Then
             val = CStr(column.ExtendedProperties.Item(extendedProperty))
         End If

@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class EnemyItemTable
     Inherits DefaultTable
     Const AmmoIndex As Integer = 19 'the key of the ammo row

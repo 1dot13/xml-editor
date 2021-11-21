@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Module DatabaseCode
     'JMich
     Public ItemSizesRead As Boolean = False
@@ -2315,17 +2317,18 @@ Public Module DatabaseCode
         t.ExtendedProperties.Add(TableProperty.DataSetName, "DRUGSLIST")
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\Drugs.xml")
 
-        t.Columns.Add(MakeColumn("ubType", "Type", GetType(Integer)))
-        t.Columns.Add(MakeColumn("name", "Name", GetType(String)))
-        t.Columns.Add(MakeColumn("ubDrugTravelRate", "Travel Rate", GetType(Integer)))
-        t.Columns.Add(MakeColumn("ubDrugWearoffRate", "Wear Off Rate", GetType(Integer)))
-        t.Columns.Add(MakeColumn("ubDrugEffect", "Effect", GetType(Integer)))
-        t.Columns.Add(MakeColumn("ubDrugSideEffect", "Side Effect", GetType(Integer)))
-        t.Columns.Add(MakeColumn("ubDrugSideEffectRate", "Side Effect Rate", GetType(Integer)))
-        t.Columns.Add(MakeColumn("ubMoralBacklash", "Morale Hit", GetType(Integer)))
+        t.Columns.Add(MakeColumn("uiIndex", "ID", GetType(Integer)))
+        t.Columns.Add(MakeColumn("szName", "Name", GetType(String)))
+        t.Columns.Add(MakeColumn("opinionevent", "Opinion Event", GetType(Boolean)))
+
+        't.Columns.Add(MakeColumn("ubDrugTravelRate", "Travel Rate", GetType(Integer)))
+        't.Columns.Add(MakeColumn("ubDrugWearoffRate", "Wear Off Rate", GetType(Integer)))
+        't.Columns.Add(MakeColumn("ubDrugEffect", "Effect", GetType(Integer)))
+        't.Columns.Add(MakeColumn("ubDrugSideEffect", "Side Effect", GetType(Integer)))
+        't.Columns.Add(MakeColumn("ubDrugSideEffectRate", "Side Effect Rate", GetType(Integer)))
 
         Dim pk(0) As DataColumn
-        pk(0) = t.Columns("ubType")
+        pk(0) = t.Columns("uiIndex")
         t.PrimaryKey = pk
 
         Return t

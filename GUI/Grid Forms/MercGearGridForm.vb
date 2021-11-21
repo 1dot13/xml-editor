@@ -1,3 +1,5 @@
+Imports System.Data
+
 Public Class MercGearGridForm
     Inherits GridForm
     Protected Const ViewText As String = "&View Details"
