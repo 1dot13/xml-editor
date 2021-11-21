@@ -41,7 +41,7 @@ Public Class ControlTable
     End Sub
 
     Protected Overridable Sub LoadControlData(ByVal fileName As String, ByVal filePath As String)
-        Dim xmldoc As New XmlDataDocument()
+        Dim xmldoc As New XmlDocument()
         Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
         xmldoc.Load(fs)
 
