@@ -93,7 +93,7 @@ Public Class XmlDB
     End Property
 
     Public Sub SaveSchema()
-        'ds.WriteXmlSchema(ds.DataSetName & ".xsd")
+        ds.WriteXmlSchema(ds.DataSetName & ".xsd")
     End Sub
 
     Public Sub LoadSchema(ByVal schemaFileName As String)
