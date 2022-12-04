@@ -7,10 +7,11 @@ use std::env::current_dir;
 // use std::str;
 use std::path::PathBuf;
 use std::time::{Instant};
-use fltk::enums::Color;
-use fltk::group::{Tabs, Group};
+use fltk::enums::{Color, Align};
+use fltk::group::{Tabs, Group, FlexType, Pack};
+use fltk::input::{IntInput, Input};
 use fltk::menu::{MenuFlag, SysMenuBar, Choice};
-use fltk::valuator::Scrollbar;
+use fltk::valuator::{Scrollbar, ScrollbarType};
 // use quick_xml::events::{Event, BytesStart};
 // use quick_xml::events::attributes::{Attributes, Attribute};
 // use quick_xml::{Reader, Writer};
@@ -25,7 +26,8 @@ mod STI;
 
 // TODO
 // Build item info layout
-// Allow editing item info
+// Display existing items' data
+// Allow editing item data
 // Add/Delete/Duplicate items
 // Change item uiIndex
 // Prompt to save work upon quitting if needed
@@ -71,43 +73,31 @@ fn main()
 	tabs.emit(s, Message::Redraw);
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
-	let bigw = 104; let bigh = 74;
-	let medw = 74; let medh = 74;
-	let smallw = 34; let smallh = 34;
 	
 	let tab1 = Group::default().with_size(w, h).below_of(&tabs, 0).with_label("Tab1\t\t");
 	// Item Graphics section
-	let _ = Frame::default().with_size(300, 450).with_pos(5, 25).set_frame(FrameType::EngravedBox);
-	let _ = Frame::default().with_size(60, 20).with_pos(130, 15).with_label("Graphics").set_frame(FrameType::FlatBox);
-	
-	let mut bigimage = Frame::default().with_size(bigw, bigh).with_pos(10, 50);
-    bigimage.set_frame(FrameType::EngravedBox);
-	let mut medimage = Frame::default().with_size(medw, medh).below_of(&bigimage, 20);
-    medimage.set_frame(FrameType::EngravedBox);
-	let mut smallimage = Frame::default().with_size(smallw, smallh).below_of(&medimage, 20);
-    smallimage.set_frame(FrameType::EngravedBox);
+	let x = 0;
+	let y = 25;
+	let mut itemGraphics = ItemGraphicsArea::initialize(x, y, &s, &images);
+	let mut itemStats = ItemStatsArea::initialize(x, 485);
+	let mut itemDecription = ItemDescriptionArea::initialize(310, y);
+	tab1.end();
     
-	let _ = Frame::default().with_size(20, 20).with_pos(32, bigimage.y() - 20).with_label("Big Image");
-	let _ = Frame::default().with_size(20, 20).with_pos(50, medimage.y() - 20).with_label("Inventory Image");
-	let _ = Frame::default().with_size(20, 20).with_pos(42, smallimage.y() - 20).with_label("Ground Image");
-	let _ = Frame::default().with_size(20, 20).with_pos(42, smallimage.y() + smallimage.h() + 5).with_label("Graphic Type");
-	let _ = Frame::default().with_size(20, 20).with_pos(42, smallimage.y() + smallimage.h() + 50).with_label("Graphic Index");
-    
-    let mut graphType: Listener<_> = Choice::default().with_pos(10, smallimage.y() + smallimage.h() + 25).with_size(100, 20).into();
-    let mut graphChooser = GraphicChooser::new(150, 40, 150, 420, &s, Message::GraphicScroll);
-    tab1.end();
-    
+
     let tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label("Tab2\t\t");
     let _but1 = Button::default().with_size(0, 30).with_label("Button").center_of(&itemWindow);
     tab2.end();
+
 
     let tab3 = Group::default().with_size(w, h).right_of(&tab2, 0).with_label("Tab3\t\t");
     let _but2 = RoundButton::default().with_size(0, 30).with_label("Round").center_of(&itemWindow);
     tab3.end();
 
+
     let tab4 = Group::default().with_size(w, h).right_of(&tab3, 0).with_label("Tab4\t\t");
     let _but3 = RoundButton::default().with_size(0, 30).with_label("Round2").center_of(&itemWindow);
     tab4.end();
+
 
     tabs.end();
 	itemWindow.end();
@@ -130,70 +120,75 @@ fn main()
                 let uiIndex = unsafe{item.user_data::<u32>()}.unwrap();
                 println!("uiIndex {}", uiIndex);
                 
-                let graphicType = xmldata.items.items[uiIndex as usize].ubGraphicType as usize;
+                let stiType = xmldata.items.items[uiIndex as usize].ubGraphicType as usize;
                 let stiIndex = xmldata.items.items[uiIndex as usize].ubGraphicNum as usize;
                 println!("Graphic index {}", stiIndex);
-                if graphicType < images.big.len() && stiIndex < images.big[graphicType].len()
+                if stiType < images.big.len() && stiIndex < images.big[stiType].len()
                 {
-                		let mut image = images.big[graphicType][stiIndex].clone();
-                		image.scale(bigw-4, bigh-4, true, true);
-                		bigimage.set_image(Some(image));
-                		
-                		let mut image = images.med[graphicType][stiIndex].clone();
-                		image.scale(medw-4, medh-4, true, true);
-                		medimage.set_image(Some(image));
-                		
-                		let mut image = images.small[graphicType][stiIndex].clone();
-                		image.scale(smallw-4, smallh-4, true, true);
-                		smallimage.set_image(Some(image));
-                		
-                		itemWindow.redraw()
-                	}
-                	else 
-                	{
-    						        println!("Graphic index out of graphic vector bounds!");
-    						        println!("Tried to access image [{}][{}]", graphicType, stiIndex);
-																		    }
+					itemGraphics.updateItemGraphics(&images, stiType, stiIndex);
+
+					if stiType != itemGraphics.itemType.value() as usize
+					{
+						itemGraphics.itemType.set_value(stiType as i32);
+						itemGraphics.updateScrollBarBounds(&images);
+						itemGraphics.redrawScrollAreaImages(&images);
+					}
+					itemGraphics.itemIndex.set_value(&format!("{}", stiIndex));
+
+					itemWindow.redraw()
+				}
+				else 
+				{
+					println!("Graphic index out of graphic vector bounds!");
+					println!("Tried to access image [{}][{}]", stiType, stiIndex);
+				}
  			}
 		}
     	
         if let Some(msg) = r.recv() 
         {
-        	    use Message::*;
+			use Message::*;
             match msg 
             {
-        			    // Toolbar menus
-            	    Open =>
-            	    {
-            	    		openFileDialog(&mut xmldata, &mut images, &mut tree);
-            	    }
-            	    Save =>
-            	    {
-				        saveFileDialog(&xmldata);
-            	    }
-            	    Quit =>
-            	    {
-            	    		a.quit();
-            	    }
-            	    ShowAll | ShowGuns | ShowAmmo | ShowLaunchers | ShowGrenades | ShowExplosives | ShowKnives | 
-            	    ShowOther | ShowArmor | ShowFaceGear | ShowKits | ShowKeys | ShowLBE | ShowMisc | ShowNone | 
-            	    ShowRandom | ShowMerges | ShowAttachmentMerges | ShowLaunchables | ShowCompatibleFaceGear | 
-            	    ShowTransforms | ShowRandomItems | ShowAttachmentList | ShowAttachmentInfo | ShowIncompatibleAttachments | 
-            	    ShowMedical | ShowScifi | ShowNonScifi | ShowTonsOfGuns | ShowReducedGuns | ShowAttachments |
-            	    ShowDrugs => 
-            	    {
-            	    		fillTree(&mut tree, &xmldata, msg);
-            	    }
-            	    // Item Window
-            	    Redraw => 
-            	    {
-            	    		itemWindow.redraw();
-            	    }
-            	    GraphicScroll =>
-            	    {
-            	    		itemWindow.redraw();
-            	    }
-            	    _ => {}
+				// Toolbar menus
+				Open =>
+				{
+					openFileDialog(&mut xmldata, &mut images, &mut tree);
+				}
+				Save =>
+				{
+					saveFileDialog(&xmldata);
+				}
+				Quit =>
+				{
+					a.quit();
+				}
+				ShowAll | ShowGuns | ShowAmmo | ShowLaunchers | ShowGrenades | ShowExplosives | ShowKnives | 
+				ShowOther | ShowArmor | ShowFaceGear | ShowKits | ShowKeys | ShowLBE | ShowMisc | ShowNone | 
+				ShowRandom | ShowMerges | ShowAttachmentMerges | ShowLaunchables | ShowCompatibleFaceGear | 
+				ShowTransforms | ShowRandomItems | ShowAttachmentList | ShowAttachmentInfo | ShowIncompatibleAttachments | 
+				ShowMedical | ShowScifi | ShowNonScifi | ShowTonsOfGuns | ShowReducedGuns | ShowAttachments |
+				ShowDrugs => 
+				{
+					fillTree(&mut tree, &xmldata, msg);
+				}
+				// Item Window
+				Redraw => 
+				{
+					itemWindow.redraw();
+				}
+				GraphicScroll =>
+				{
+					itemGraphics.redrawScrollAreaImages(&images);
+					itemWindow.redraw();
+				}
+				GraphicType =>
+				{
+					itemGraphics.updateScrollBarBounds(&images);
+					itemGraphics.redrawScrollAreaImages(&images);
+
+				}
+				_ => {}
 	        }
         }
     }
@@ -254,18 +249,18 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: M
 		{
 			for item in &xmldata.items.items
 			{
-					    if item.szLongItemName.contains("/")
-				    {
-    				        let name = item.szLongItemName.replace("/", "\\/");
-					        tree.add(&name);
-				    }
-				    else
-				    {
-					        tree.add(&item.szLongItemName);
-				    }
+				if item.szLongItemName.contains("/")
+				{
+					let name = item.szLongItemName.replace("/", "\\/");
+					tree.add(&name);
+				}
+				else
+				{
+					tree.add(&item.szLongItemName);
+				}
 				    
-				    let mut treeitem = tree.last().unwrap();
-				    treeitem.set_user_data(item.uiIndex);
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(item.uiIndex);
 		    }
 		}
 		Message::ShowGuns =>
@@ -300,21 +295,21 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: M
     	{
 			for item in &xmldata.items.items
 			{
-					    if item.usItemClass == JAxml::ItemClass::Thrown as u32 || item.usItemClass == JAxml::ItemClass::Punch as u32
-					    {
-								        if item.szLongItemName.contains("/")
-							        {
-    				    		    let name = item.szLongItemName.replace("/", "\\/");
-					    		    tree.add(&name);
-						        }
-						    else
-						    {
-					    		tree.add(&item.szLongItemName);
-						    }
+				if item.usItemClass == JAxml::ItemClass::Thrown as u32 || item.usItemClass == JAxml::ItemClass::Punch as u32
+				{
+					if item.szLongItemName.contains("/")
+					{
+						let name = item.szLongItemName.replace("/", "\\/");
+						tree.add(&name);
+					}
+					else
+					{
+						tree.add(&item.szLongItemName);
+					}
 				      		
-		      	let mut treeitem = tree.last().unwrap();
-							    treeitem.set_user_data(item.uiIndex);
-					    }
+		      		let mut treeitem = tree.last().unwrap();
+					treeitem.set_user_data(item.uiIndex);
+				}
 			}
     	}
     	Message::ShowFaceGear =>
@@ -355,19 +350,19 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: M
 		    {
 			    if item.scifi
 			    {
-						        if item.szLongItemName.contains("/")
-					        {
-    				           	let name = item.szLongItemName.replace("/", "\\/");
-					           	tree.add(&name);
-					        }
-					        else
-					        {
-					           	tree.add(&item.szLongItemName);
-					        }
-				              	
-					        let mut treeitem = tree.last().unwrap();
-					        treeitem.set_user_data(item.uiIndex);
-				    }
+					if item.szLongItemName.contains("/")
+					{
+						let name = item.szLongItemName.replace("/", "\\/");
+						tree.add(&name);
+					}
+					else
+					{
+						tree.add(&item.szLongItemName);
+					}
+						
+					let mut treeitem = tree.last().unwrap();
+					treeitem.set_user_data(item.uiIndex);
+				}
 			}
     	}
     	Message::ShowNonScifi =>
@@ -376,19 +371,19 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: M
 		    {
 			    if item.scifi == false
 			    {
-						        if item.szLongItemName.contains("/")
-					        {
-    				           	let name = item.szLongItemName.replace("/", "\\/");
-					           	tree.add(&name);
-					        }
-					        else
-					        {
-					           	tree.add(&item.szLongItemName);
-					        }
+					if item.szLongItemName.contains("/")
+					{
+						let name = item.szLongItemName.replace("/", "\\/");
+						tree.add(&name);
+					}
+					else
+					{
+						tree.add(&item.szLongItemName);
+					}
 				              	
-					        let mut treeitem = tree.last().unwrap();
-					        treeitem.set_user_data(item.uiIndex);
-				    }
+					let mut treeitem = tree.last().unwrap();
+					treeitem.set_user_data(item.uiIndex);
+				}
 			}
     	}
     	Message::ShowTonsOfGuns =>
@@ -397,19 +392,19 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: M
 		    {
 			    if item.biggunlist
 			    {
-						        if item.szLongItemName.contains("/")
-					        {
-    				           	let name = item.szLongItemName.replace("/", "\\/");
-					           	tree.add(&name);
-					        }
-					        else
-					        {
-					           	tree.add(&item.szLongItemName);
-					        }
-				              	
-					        let mut treeitem = tree.last().unwrap();
-					        treeitem.set_user_data(item.uiIndex);
-				    }
+					if item.szLongItemName.contains("/")
+					{
+						let name = item.szLongItemName.replace("/", "\\/");
+						tree.add(&name);
+					}
+					else
+					{
+						tree.add(&item.szLongItemName);
+					}
+							
+					let mut treeitem = tree.last().unwrap();
+					treeitem.set_user_data(item.uiIndex);
+				}
 			}
     	}
     	Message::ShowReducedGuns =>
@@ -418,19 +413,19 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: M
 		    {
 			    if item.biggunlist == false
 			    {
-						        if item.szLongItemName.contains("/")
-					        {
-    				           	let name = item.szLongItemName.replace("/", "\\/");
-					           	tree.add(&name);
-					        }
-					        else
-					        {
-					           	tree.add(&item.szLongItemName);
-					        }
-				              	
-					        let mut treeitem = tree.last().unwrap();
-					        treeitem.set_user_data(item.uiIndex);
-				    }
+					if item.szLongItemName.contains("/")
+					{
+						let name = item.szLongItemName.replace("/", "\\/");
+						tree.add(&name);
+					}
+					else
+					{
+						tree.add(&item.szLongItemName);
+					}
+						
+					let mut treeitem = tree.last().unwrap();
+					treeitem.set_user_data(item.uiIndex);
+				}
 			}
     	}
     	Message::ShowAttachments =>
@@ -453,18 +448,18 @@ fn matchItemClass(xmldata: &JAxml::JAxmlState, tree: &mut Listener<tree::Tree>, 
 	{
 		if item.usItemClass == itemClass as u32
 		{
-					if item.szLongItemName.contains("/")
-				{
-    				    let name = item.szLongItemName.replace("/", "\\/");
-					    tree.add(&name);
-				}
-				else
-				{
-					    tree.add(&item.szLongItemName);
-				}
+			if item.szLongItemName.contains("/")
+			{
+				let name = item.szLongItemName.replace("/", "\\/");
+				tree.add(&name);
+			}
+			else
+			{
+				tree.add(&item.szLongItemName);
+			}
 				      
-				let mut treeitem = tree.last().unwrap();
-				treeitem.set_user_data(item.uiIndex);
+			let mut treeitem = tree.last().unwrap();
+			treeitem.set_user_data(item.uiIndex);
 		}
 	}
 }
@@ -722,36 +717,264 @@ fn createMenuBar(s: &app::Sender<Message>) -> menu::SysMenuBar
 	return menu;
 }
 
-struct GraphicChooser
+
+
+struct ItemGraphicsArea
 {
-	g: group::Group,
-	i: Vec<Frame>,
-	s: Scrollbar
+	big: Frame,
+	med: Frame,
+	small: Frame,
+	images: Vec<Frame>,
+	scrollbar: Scrollbar,
+	itemType: Choice,
+	itemIndex: IntInput
 }
-impl GraphicChooser
+impl ItemGraphicsArea
 {
-	fn new(x: i32, y: i32, w: i32, h: i32, sender: &app::Sender<Message>, msg: Message) -> GraphicChooser
+	fn initialize(x: i32, y: i32, s: &app::Sender<Message>, imagesSTI: &STI::Images) -> ItemGraphicsArea
 	{
-		let mut g= group::Group::new(x, y, w, h, None);
-		g.set_frame(FrameType::FlatBox);
-		g.set_color(Color::White);
+		let mainWidth = 300; let mainHeight = 450;
+
+		// Main framed box. Everything else is located relative to this
+		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
+		let _ = Frame::default().with_size(60, 20).with_pos(x + 130, y - 10).with_label("Graphics").set_frame(FrameType::FlatBox);
 		
+		// Item images
+		let bigw = 104; let bigh = 74;
+		let medw = 74; let medh = 74;
+		let smallw = 34; let smallh = 34;
+	
+		let mut big = Frame::default().with_size(bigw, bigh).with_pos(x + 10, y + 20);
+		big.set_frame(FrameType::EngravedBox);
+		let mut med = Frame::default().with_size(medw, medh).below_of(&big, 20);
+		med.set_frame(FrameType::EngravedBox);
+		let mut small = Frame::default().with_size(smallw, smallh).below_of(&med, 20);
+		small.set_frame(FrameType::EngravedBox);
+		
+		let _ = Frame::default().with_size(20, 20).with_pos(x + 32, big.y() - 20).with_label("Big Image");
+		let _ = Frame::default().with_size(20, 20).with_pos(x + 50, med.y() - 20).with_label("Inventory Image");
+		let _ = Frame::default().with_size(20, 20).with_pos(x + 42, small.y() - 20).with_label("Ground Image");
+		let _ = Frame::default().with_size(20, 20).with_pos(x + 42, small.y() + small.h() + 5).with_label("Graphic Type");
+		let _ = Frame::default().with_size(20, 20).with_pos(x + 42, small.y() + small.h() + 50).with_label("Graphic Index");
+		
+		// Item graphic type & graphic index
+		let mut itemType = Choice::default().with_pos(x + 10, small.y() + small.h() + 25).with_size(100, 20);
+		itemType.emit(*s, Message::GraphicType);
+		itemType.add_choice("Guns");
+		for i in 1..imagesSTI.big.len()
+		{
+			let text = format!("P{}items", i);
+			itemType.add_choice(&text);
+		}
+
+		let mut itemIndex = input::IntInput::default().with_size(100, 20).with_pos(x + 10, small.y() + small.h() + 70);
+	
+		// Item scroll area
+		let mut scrollArea = Frame::default().with_size(150, 420).with_pos(x + 140, y + 20);
+		scrollArea.set_frame(FrameType::EmbossedBox);
+		scrollArea.set_color(Color::White);
+
 		let mut images = Vec::new();
 		let w = 104; let h = 54;
 		let padding = 5;
 		for i in 0..7
 		{
-			let mut image = Frame::default().with_size(w, h).with_pos(g.x()+5, g.y()+5 + (h+5)*i).with_label("title");
+			let mut image = Frame::default().with_size(w, h).with_pos(scrollArea.x() + 5, scrollArea.y() + 5 + (h+5)*i);
 			image.set_frame(FrameType::BorderBox);
+			image.set_color(Color::White);
+
 			images.push(image);
 		}
 		
 		let w = 20;
-		let mut s = Scrollbar::default().with_pos(g.x() + g.w() - w, g.y()).with_size(w, g.h());
-		s.emit(*sender, msg);
+		let mut scrollbar = Scrollbar::default().with_pos(scrollArea.x() + scrollArea.w() - w, scrollArea.y()).with_size(w, scrollArea.h());
+		scrollbar.emit(*s, Message::GraphicScroll);
+
+		return ItemGraphicsArea{big, med, small, images, scrollbar, itemType, itemIndex};
+	}
+
+	
+	fn updateScrollBarBounds(&mut self, sti: &STI::Images)
+	{
+		let mut i = self.itemType.value() as usize;
+		if i >= sti.big.len()
+		{
+			println!("!!! In updateScrollBarBounds !!!");
+    		println!("Tried to access nonexistent graphtype! images[{}]", i);
+    		println!("Defaulting to guns");
+			i = 0;
+		}
+		let max = sti.big[i].len() - self.images.len();
+
+		self.scrollbar.set_maximum(max as f64);
+		self.scrollbar.set_minimum(0.0);
+		self.scrollbar.set_step(1.0, 1); // increment by 1.0 at each 1 step
+    	self.scrollbar.set_value(0.0);
+	}
+
+	fn redrawScrollAreaImages(&mut self, sti: &STI::Images)
+	{
+		let w = self.images[0].w(); let h = self.images[0].h();
+		let start = self.scrollbar.value() as usize;
 		
-		g.end();
-		GraphicChooser{g, i: images, s}
+		let mut graphType = self.itemType.value() as usize;
+		if graphType >= sti.big.len()
+		{
+			println!("!!! In redrawScrollAreaImages !!!");
+    		println!("Tried to access nonexistent graphtype! images[{}]", graphType);
+    		println!("Defaulting to guns");
+			graphType = 0;
+		}
+
+		for j in 0..7
+		{
+			let index = start + j;
+			if index < sti.big[graphType].len()
+			{
+				let mut image = sti.big[graphType][index].clone();
+				image.scale(w-4, h-4, true, true);
+				
+				self.images[j].set_image(Some(image));
+			}
+			else 
+			{
+				self.images[j].set_image(None::<RgbImage>);
+			}
+		}
+	}
+
+	fn updateItemGraphics(&mut self, images: &STI::Images, stiType: usize, stiIndex: usize)
+	{
+		let margin = 4;
+		
+		let mut image = images.big[stiType][stiIndex].clone();
+		
+		let width = self.big.w() - margin;
+		let height = self.big.h() - margin;
+		image.scale(width, height, true, true);
+		self.big.set_image(Some(image));
+		
+		let mut image = images.med[stiType][stiIndex].clone();
+		let width = self.med.w() - margin;
+		let height = self.med.h() - margin;
+		image.scale(width, height, true, true);
+		self.med.set_image(Some(image));
+		
+		let mut image = images.small[stiType][stiIndex].clone();
+		let width = self.small.w() - margin;
+		let height = self.small.h() - margin;
+		image.scale(width, height, true, true);
+		self.small.set_image(Some(image));
+
+	}
+	
+	fn addGraphTypeChoices(&mut self, images: &STI::Images)
+	{
+		self.itemType.clear();
+		
+		self.itemType.add_choice("Guns");
+		for i in 1..images.big.len()
+		{
+			let text = format!("P{}items", i);
+			self.itemType.add_choice(&text);
+		}
+	}
+}
+
+
+struct ItemStatsArea
+{
+	ints: Vec<Listener<IntInput>>,
+	// price: IntInput,
+	// weight: IntInput,
+	// nperpocket: IntInput,
+	// size: IntInput,
+	// reliability: IntInput,
+	// repairease: IntInput,
+	cursor: Listener<Choice>,
+}
+impl ItemStatsArea
+{
+	fn initialize(x: i32, y: i32) -> ItemStatsArea
+	{
+		let mainWidth = 300; let mainHeight = 230;
+
+		// Main framed box. Everything else is located relative to this
+		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
+		let _ = Frame::default().with_size(60, 20).with_pos(x + 130, y - 10).with_label("Stats").set_frame(FrameType::FlatBox);
+
+		let xMargin = 5; let yMargin = 10;
+		let w = mainWidth/2 - 2*xMargin; let h = mainHeight - 2*yMargin;
+
+		// let mut flex = Flex::new(x + xMargin, y + yMargin, w, h, None);
+		// flex.set_type(FlexType::Column);
+		let mut flex = Pack::new(x + xMargin, y + yMargin, w, h, None);
+		flex.set_spacing(5);
+		let _ = Frame::default().with_size(60, 20).with_label("Price");
+		let _ = Frame::default().with_size(60, 20).with_label("Weight");
+		let _ = Frame::default().with_size(60, 20).with_label("# per pocket");
+		let _ = Frame::default().with_size(60, 20).with_label("Size");
+		let _ = Frame::default().with_size(60, 20).with_label("Reliability");
+		let _ = Frame::default().with_size(60, 20).with_label("Repair Ease");
+		let _ = Frame::default().with_size(60, 20).with_label("Cursor");
+		flex.end();
+
+		let mut ints = Vec::new();
+
+		let mut flex = Flex::default().with_pos(x + xMargin + w, y + yMargin).with_size(w, h);
+		flex.set_type(FlexType::Column);
+		// let mut flex = Pack::new(x + xMargin + w, y + yMargin, w, h, None);
+		// flex.set_spacing(5);
+		for i in 0..6
+		{
+			let mut input = IntInput::default();
+			flex.set_size(&mut input, 20);
+			ints.push(input.into());
+		}
+		let mut cursor = Choice::default();
+		flex.set_size(&mut cursor, 20);
+		flex.end();
+
+		let cursor = cursor.into();
+
+		return ItemStatsArea { ints, cursor }
+	}
+}
+
+struct ItemDescriptionArea
+{
+
+}
+impl ItemDescriptionArea
+{
+	fn initialize(x: i32, y: i32) -> ItemDescriptionArea
+	{
+		let mainWidth = 660; let mainHeight = 200;
+		// Main framed box. Everything else is located relative to this
+		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
+		let _ = Frame::default().with_size(80, 20).with_pos(x + 130, y - 10).with_label("Description").set_frame(FrameType::FlatBox);
+
+		let xOffset = 80;
+		let h1 = 30; let h2 = 100;
+		let w = 240;
+		
+		let mut flex = Pack::new(x + xOffset, y + 10, w, 300, None);
+		flex.set_spacing(10);
+		let _ = Input::default().with_size(300, h1).with_label("Name\n[80]");
+		let _ = Input::default().with_size(300, h1).with_label("Long Name\n[80]");
+		let _ = Input::default().with_size(300, h2).with_label("Description\n[400]");
+		flex.end();
+
+
+		let mut flex = Pack::new(flex.x()+flex.w() + 80, y + 10, w, 300, None);
+		flex.set_spacing(10);
+		let _ = Frame::default().with_size(300, h1).with_label("Bobby Ray's");
+		let _ = Input::default().with_size(300, h1).with_label("Name\n[80]");
+		let _ = Input::default().with_size(300, h2).with_label("Description\n[400]");
+		flex.end();
+
+
+		return ItemDescriptionArea {  };
 	}
 }
 //-----------------------------------------------------------------------------
@@ -804,6 +1027,7 @@ pub enum Message {
     ShowAttachments,
     Redraw,
     GraphicScroll,
+	GraphicType,
 }
 
     
