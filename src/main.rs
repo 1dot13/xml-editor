@@ -87,6 +87,7 @@ fn main()
 	let mut itemVision = ItemVisionArea::initialize(310+235+10, 485);
 	tab1.end();
     
+	itemVision.addChoicesToClothesTypes(&xmldata);
 
     let tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label("Tab2\t\t");
     let _but1 = Button::default().with_size(0, 30).with_label("Button").center_of(&itemWindow);
@@ -121,11 +122,11 @@ fn main()
  			if let Some(item) = tree.first_selected_item() 
  			{
                 println!("{} selected", item.label().unwrap());
-                let uiIndex = unsafe{item.user_data::<u32>()}.unwrap();
+                let uiIndex = unsafe{item.user_data::<u32>()}.unwrap() as usize;
                 println!("uiIndex {}", uiIndex);
                 
-                let stiType = xmldata.items.items[uiIndex as usize].ubGraphicType as usize;
-                let stiIndex = xmldata.items.items[uiIndex as usize].ubGraphicNum as usize;
+                let stiType = xmldata.items.items[uiIndex].ubGraphicType as usize;
+                let stiIndex = xmldata.items.items[uiIndex].ubGraphicNum as usize;
                 println!("Graphic index {}", stiIndex);
                 if stiType < images.big.len() && stiIndex < images.big[stiType].len()
                 {
@@ -146,7 +147,11 @@ fn main()
 					println!("Tried to access image [{}][{}]", stiType, stiIndex);
 				}
 			
-				itemDescription.update(&xmldata, uiIndex as usize);
+				itemDescription.update(&xmldata, uiIndex);
+				itemProperties.update(&xmldata, uiIndex);
+				itemStats.update(&xmldata, uiIndex);
+				itemKit.update(&xmldata, uiIndex);
+				itemVision.update(&xmldata, uiIndex);
 
 				itemWindow.redraw()
 			}
@@ -942,9 +947,53 @@ impl ItemStatsArea
 		flex.set_size(&mut cursor, 20);
 		flex.end();
 
+		// Cursor choices. Must match with Jaxml::enum::Cursor
+		cursor.add_choice("Invalid");
+		cursor.add_choice("Quest");
+		cursor.add_choice("Punch");
+		cursor.add_choice("Target");
+		cursor.add_choice("Knife");
+		cursor.add_choice("Aid");
+		cursor.add_choice("Throw");
+		cursor.add_choice("Mine");
+		cursor.add_choice("Lockpick");
+		cursor.add_choice("MineDetector");
+		cursor.add_choice("Crowbar");
+		cursor.add_choice("CCTV");
+		cursor.add_choice("Camera");
+		cursor.add_choice("Key");
+		cursor.add_choice("Saw");
+		cursor.add_choice("WireCutters");
+		cursor.add_choice("Remote");
+		cursor.add_choice("Bomb");
+		cursor.add_choice("Repair");
+		cursor.add_choice("Trajectory");
+		cursor.add_choice("Jar");
+		cursor.add_choice("Tincan");
+		cursor.add_choice("Refuel");
+		cursor.add_choice("Fortification");
+		cursor.add_choice("Handcuffs");
+		cursor.add_choice("ApplyItem");
+		cursor.add_choice("InteractiveAction");
+		cursor.add_choice("Bloodbag");
+		cursor.add_choice("Splint");
+
 		let cursor = cursor.into();
 
 		return ItemStatsArea { ints, cursor }
+	}
+
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+		self.ints[0].set_value(&format!("{}", item.usPrice));
+		self.ints[1].set_value(&format!("{}", item.ubWeight));
+		self.ints[2].set_value(&format!("{}", item.ubPerPocket));
+		self.ints[3].set_value(&format!("{}", item.ItemSize));
+		self.ints[4].set_value(&format!("{}", item.bReliability));
+		self.ints[5].set_value(&format!("{}", item.bRepairEase));
+
+		self.cursor.set_value(item.ubCursor as i32);
 	}
 }
 
@@ -988,11 +1037,11 @@ impl ItemDescriptionArea
 		return ItemDescriptionArea { inputs };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, index: usize)
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
 	{
-		if index < xmldata.items.items.len()
+		if uiIndex < xmldata.items.items.len()
 		{
-			let item = &xmldata.items.items[index];
+			let item = &xmldata.items.items[uiIndex];
 			self.inputs[0].set_value(&item.szItemName);
 			self.inputs[1].set_value(&item.szLongItemName);
 			self.inputs[2].set_value(&item.szItemDesc);
@@ -1012,7 +1061,7 @@ impl ItemDescriptionArea
 		}
 		else 
 		{
-			println!("!!! Out of bounds access!!! ITEMLIST [{}] ", index);
+			println!("!!! Out of bounds access!!! ITEMLIST [{}] ", uiIndex);
 		}
 	}
 }
@@ -1020,7 +1069,7 @@ impl ItemDescriptionArea
 
 struct ItemPropertiesArea
 {
-
+	inputs: Vec<Listener<CheckButton>>
 }
 impl ItemPropertiesArea
 {
@@ -1034,67 +1083,115 @@ impl ItemPropertiesArea
 		let xOffset = 10;
 		let h1 = 20; let h2 = 100;
 		let w = 165;
-		
+		let mut inputs = Vec::new();
+
 		let mut flex = Pack::new(x + xOffset, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(w, h1).with_label("Show Status");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Damageable");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Repairable");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Damaged by water");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Sinks");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Unaerodynamic");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Electronic");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Metal");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Two-Handed");
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Show Status").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Damageable").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Repairable").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Damaged by water").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Sinks").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Unaerodynamic").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Electronic").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Metal").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Two-Handed").into());
 		flex.end();
 
 		let mut flex = Pack::new(flex.x() + flex.w(), y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(w, h1).with_label("Tons of Guns");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Sci-Fi");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Nonbuyable");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Undroppable");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Not in editor");
-		let _ = CheckButton::default().with_size(w, h1).with_label("New Inventory Only");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Tripwire");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Activated by tripwire");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Remote trigger");
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Tons of Guns").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Sci-Fi").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Nonbuyable").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Undroppable").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Not in editor").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("New Inventory Only").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Tripwire").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Activated by tripwire").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Remote trigger").into());
 		flex.end();
 
 		let mut flex = Pack::new(flex.x() + flex.w(), y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(w, h1).with_label("Contains Liquid");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Canteen");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Gas Can");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Alcohol");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Jar");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Medicine / Drug");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Gasmask");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Robot remote control");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Walkman");
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Contains Liquid").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Canteen").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Gas Can").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Alcohol").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Jar").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Medicine / Drug").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Gasmask").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Robot remote control").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Walkman").into());
 		flex.end();
 
 		let mut flex = Pack::new(flex.x() + flex.w(), y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(w, h1).with_label("Rock");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Can and String");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Marbles");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Duckbill");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Wire Cutters");
-		let _ = CheckButton::default().with_size(w, h1).with_label("X-Ray scanner");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Metal Detector");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Is Battery");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Needs batteries");
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Rock").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Can and String").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Marbles").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Duckbill").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Wire Cutters").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("X-Ray scanner").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Metal Detector").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Is Battery").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Needs batteries").into());
 		flex.end();
 
-		return ItemPropertiesArea {  };
+		return ItemPropertiesArea { inputs };
+	}
+
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+
+		self.inputs[0].set_value(item.showstatus);
+		self.inputs[1].set_value(item.Damageable);
+		self.inputs[2].set_value(item.Repairable);
+		self.inputs[3].set_value(item.WaterDamages);
+		self.inputs[4].set_value(item.Sinks);
+		self.inputs[5].set_value(item.unaerodynamic);
+		self.inputs[6].set_value(item.electronic);
+		self.inputs[7].set_value(item.Metal);
+		self.inputs[8].set_value(item.twohanded);
+
+		self.inputs[9].set_value(item.biggunlist);
+		self.inputs[10].set_value(item.scifi);
+		self.inputs[11].set_value(item.notbuyable);
+		self.inputs[12].set_value(item.defaultundroppable);
+		self.inputs[13].set_value(item.notineditor);
+		self.inputs[14].set_value(item.newinv);
+		self.inputs[15].set_value(item.tripwire);
+		self.inputs[16].set_value(item.tripwireactivation);
+		self.inputs[17].set_value(item.remotetrigger);
+
+		self.inputs[18].set_value(item.containsliquid);
+		self.inputs[19].set_value(item.canteen);
+		self.inputs[20].set_value(item.gascan);
+		self.inputs[21].set_value(item.alcohol != 0.0);
+		self.inputs[22].set_value(item.jar);
+		self.inputs[23].set_value(item.medical);
+		self.inputs[24].set_value(item.gasmask);
+		self.inputs[25].set_value(item.robotremotecontrol);
+		self.inputs[26].set_value(item.walkman);
+
+		self.inputs[27].set_value(item.rock);
+		self.inputs[28].set_value(item.canandstring);
+		self.inputs[29].set_value(item.marbles);
+		self.inputs[30].set_value(item.duckbill);
+		self.inputs[31].set_value(item.wirecutters);
+		self.inputs[32].set_value(item.xray);
+		self.inputs[33].set_value(item.metaldetector);
+		self.inputs[34].set_value(item.batteries);
+		self.inputs[35].set_value(item.needsbatteries);
+
 	}
 }
 
 
 struct ItemKitArea
 {
-
+	inputs: Vec<Listener<CheckButton>>,
+	ints: Vec<Listener<IntInput>>
 }
 impl ItemKitArea
 {
@@ -1109,14 +1206,17 @@ impl ItemKitArea
 		let h1 = 20; let h2 = 100;
 		let w = 100;
 
+		let mut inputs = Vec::new();
+		let mut ints = Vec::new();
+
 		let mut flex = Pack::new(x + xOffset, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(w, h1).with_label("Hardware");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Tool Kit");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Locksmith Kit");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Camouflage Kit");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Medical Kit");
-		let _ = CheckButton::default().with_size(w, h1).with_label("First Aid Kit");
+		inputs.push( CheckButton::default().with_size(w, h1).with_label("Hardware").into() );
+		inputs.push( CheckButton::default().with_size(w, h1).with_label("Tool Kit").into() );
+		inputs.push( CheckButton::default().with_size(w, h1).with_label("Locksmith Kit").into() );
+		inputs.push( CheckButton::default().with_size(w, h1).with_label("Camouflage Kit").into() );
+		inputs.push( CheckButton::default().with_size(w, h1).with_label("Medical Kit").into() );
+		inputs.push( CheckButton::default().with_size(w, h1).with_label("First Aid Kit").into() );
 		// let _ = Frame::default().with_size(w, h1).with_label("Defusal Kit Bonus");
 		// let _ = Frame::default().with_size(w, h1).with_label("Sleep modifier");
 		// let _ = CheckButton::default().with_size(w, h1).with_label("");
@@ -1126,23 +1226,42 @@ impl ItemKitArea
 		let mut flex = Pack::new(flex.x() + flex.w() + 10, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(w, h1);
-		let _ = IntInput::default().with_size(w, h1);
-		let _ = IntInput::default().with_size(w, h1);
+		ints.push( IntInput::default().with_size(w, h1).into() );
+		ints.push( IntInput::default().with_size(w, h1).into() );
 		let _ = Frame::default().with_size(w, h1);
 		let _ = Frame::default().with_size(w, h1);
 		let _ = Frame::default().with_size(w, h1);
-		let _ = IntInput::default().with_size(w, h1).with_label("Defusal Kit Bonus");
-		let _ = IntInput::default().with_size(w, h1).with_label("Sleep Modifier");
+		ints.push( IntInput::default().with_size(w, h1).with_label("Defusal Kit Bonus").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Sleep Modifier").into() );
 		flex.end();
 
 
-		return ItemKitArea {  };
+		return ItemKitArea { inputs, ints };
+	}
+
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+
+		self.inputs[0].set_value(item.hardware);
+		self.inputs[1].set_value(item.toolkit);
+		self.inputs[2].set_value(item.locksmithkit);
+		self.inputs[3].set_value(item.camouflagekit);
+		self.inputs[4].set_value(item.medicalkit);
+		self.inputs[5].set_value(item.firstaidkit);
+
+		self.ints[0].set_value(&format!("{}", item.RepairModifier));
+		self.ints[1].set_value(&format!("{}", item.LockPickModifier));
+		self.ints[2].set_value(&format!("{}", item.DisarmModifier));
+		self.ints[3].set_value(&format!("{}", item.ubSleepModifier));
 	}
 }
 
 struct ItemVisionArea
 {
-
+	ints: Vec<Listener<IntInput>>,
+	thermal: Listener<CheckButton>,
+	clothesType: Listener<Choice>
 }
 impl ItemVisionArea
 {
@@ -1157,31 +1276,65 @@ impl ItemVisionArea
 		let h1 = 20; let h2 = 100;
 		let w = 60;
 
+		let mut ints = Vec::new();
+
 		let mut flex = Pack::new(x + xOffset, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		let _ = IntInput::default().with_size(w, h1).with_label("General");
-		let _ = IntInput::default().with_size(w, h1).with_label("Nighttime");
-		let _ = IntInput::default().with_size(w, h1).with_label("Daytime");
-		let _ = IntInput::default().with_size(w, h1).with_label("Cave");
-		let _ = IntInput::default().with_size(w, h1).with_label("Bright Light");
-		let _ = IntInput::default().with_size(w, h1).with_label("Tunnelvision");
-		let _ = IntInput::default().with_size(w, h1).with_label("Flashlight Range");
-		let _ = IntInput::default().with_size(w, h1).with_label("Spotting Modifier");
-		let _ = CheckButton::default().with_size(w, h1).with_label("Thermal Optics");
+		ints.push( IntInput::default().with_size(w, h1).with_label("General").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Nighttime").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Daytime").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Cave").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Bright Light").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Tunnelvision").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Flashlight Range").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Spotting Modifier").into() );
+		let thermal = CheckButton::default().with_size(w, h1).with_label("Thermal Optics").into();
 		flex.end();
 
 
 		let mut flex = Pack::new(flex.x() + flex.w() + 100, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		let _ = IntInput::default().with_size(w, h1).with_label("Woodland");
-		let _ = IntInput::default().with_size(w, h1).with_label("Urban");
-		let _ = IntInput::default().with_size(w, h1).with_label("Desert");
-		let _ = IntInput::default().with_size(w, h1).with_label("Snow");
-		let _ = IntInput::default().with_size(w, h1).with_label("Stealth");
-		let _ = Choice::default().with_size(w, h1).with_label("Clothes Type");
+		ints.push( IntInput::default().with_size(w, h1).with_label("Woodland").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Urban").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Desert").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Snow").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Stealth").into() );
+		let clothesType = Choice::default().with_size(w, h1).with_label("Clothes Type").into();
 		flex.end();
 
-		return ItemVisionArea {  };
+		return ItemVisionArea { ints, thermal, clothesType };
+	}
+
+	fn addChoicesToClothesTypes(&mut self, xmldata: &JAxml::JAxmlState)
+	{
+		self.clothesType.clear();
+		for cloth in &xmldata.clothes.items
+		{
+			self.clothesType.add_choice(&format!("{}", cloth.szName));
+		}
+	}
+
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+
+		self.ints[0].set_value(&format!("{}", item.visionrangebonus));
+		self.ints[1].set_value(&format!("{}", item.nightvisionrangebonus));
+		self.ints[2].set_value(&format!("{}", item.dayvisionrangebonus));
+		self.ints[3].set_value(&format!("{}", item.cavevisionrangebonus));
+		self.ints[4].set_value(&format!("{}", item.brightlightvisionrangebonus));
+		self.ints[5].set_value(&format!("{}", item.percenttunnelvision));
+		self.ints[6].set_value(&format!("{}", item.usFlashLightRange));
+		self.ints[7].set_value(&format!("{}", item.usSpotting));
+
+		self.ints[8].set_value(&format!("{}", item.camobonus));
+		self.ints[9].set_value(&format!("{}", item.urbanCamobonus));
+		self.ints[10].set_value(&format!("{}", item.desertCamobonus));
+		self.ints[11].set_value(&format!("{}", item.snowCamobonus));
+		self.ints[12].set_value(&format!("{}", item.stealthbonus));
+		
+		self.thermal.set_value(item.thermaloptics);
+		self.clothesType.set_value(item.clothestype as i32);
 	}
 }
 //-----------------------------------------------------------------------------

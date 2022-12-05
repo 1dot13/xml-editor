@@ -170,13 +170,14 @@ pub struct JAxmlState
 {
 	pub items: ITEMLIST,
 	pub weapons: WEAPONLIST,
-	pub armors: ARMOURLIST
+	pub armors: ARMOURLIST,
+	pub clothes: CLOTHESLIST
 }
 impl JAxmlState
 {
 	pub fn new() -> JAxmlState
 	{
-		JAxmlState { items: ITEMLIST::new(), weapons: WEAPONLIST::new(), armors: ARMOURLIST::new() }
+		JAxmlState { items: ITEMLIST::new(), weapons: WEAPONLIST::new(), armors: ARMOURLIST::new(), clothes: CLOTHESLIST::new() }
 	}
 	
 	pub fn loadData(&mut self, dataFolder: &PathBuf)
@@ -185,21 +186,24 @@ impl JAxmlState
 		tableDataPath.push("TableData");
 		
 		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..3
+		for _ in 0..4
 		{
 			paths.push(tableDataPath.clone());
 		}
 		paths[0].push("Items/Items.xml");
 		paths[1].push("Items/Weapons.xml");
 		paths[2].push("Items/Armours.xml");
+		paths[3].push("Items/Clothes.xml");
 
 		let items = ITEMLIST::loadItems(&paths[0]);
 		let weapons= WEAPONLIST::loadItems(&paths[1]);
 		let armors= ARMOURLIST::loadItems(&paths[2]);
+		let clothes = CLOTHESLIST::loadItems(&paths[3]);
 		
 		self.items = items;
 		self.weapons = weapons;
 		self.armors = armors;
+		self.clothes = clothes;
 		// return JAxmlState{items, weapons, armors};
 	}
 	
@@ -209,17 +213,19 @@ impl JAxmlState
 		tableDataPath.push("TableData");
 		
 		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..3
+		for _ in 0..4
 		{
 			paths.push(tableDataPath.clone());
 		}
 		paths[0].push("Items/Items.xml");
 		paths[1].push("Items/Weapons.xml");
 		paths[2].push("Items/Armours.xml");
+		paths[3].push("Items/Clothes.xml");
 		
 		self.items.save(&paths[0]);
 		self.weapons.save(&paths[1]);
 		self.armors.save(&paths[2]);
+		self.clothes.save(&paths[3]);
 	}
 	
 	pub fn findNamebyIndex(&self, uiIndex: u32) -> Option<String>
@@ -228,13 +234,31 @@ impl JAxmlState
 		{
 			if item.uiIndex == uiIndex
 			{
-						    return Some(item.szLongItemName.clone());
+				return Some(item.szLongItemName.clone());
 			}
 		}
 		
 		return None;
 	}	
 }
+
+
+impl CLOTHESLIST
+{
+	pub fn findNamebyIndex(&self, uiIndex: u32) -> Option<String>
+	{
+		for item in &self.items
+		{
+			if item.uiIndex == uiIndex
+			{
+				return Some(item.szName.clone());
+			}
+		}
+		
+		return None;
+	}	
+}
+
 
 pub struct STRUCTUREMOVE
 {
@@ -2112,10 +2136,10 @@ impl COMPATIBLEFACEITEM {
 
 pub struct CLOTHES
 {
-    uiIndex: u32,
-    szName: String,
-    Vest: String,
-    Pants: String,
+    pub uiIndex: u32,
+    pub szName: String,
+    pub Vest: String,
+    pub Pants: String,
 }
 impl CLOTHES {
     pub fn new() -> CLOTHES
@@ -4627,7 +4651,7 @@ macro_rules! back_to_enum {
 
 back_to_enum! {
 #[derive(Copy, Clone)]
-	pub enum ItemClass{
+	pub enum ItemClass {
 		None = 0x00000001,
 		Gun = 0x00000002,
 		Blade = 0x00000004,
@@ -4651,4 +4675,40 @@ back_to_enum! {
 		Money = 0x20000000,
 		Random = 0x40000000,
 	}
+}
+
+back_to_enum! {
+	#[derive(Copy, Clone)]
+	pub enum Cursor {
+		Invalid = 0,
+		Quest,
+		Punch,
+		Target,
+		Knife,
+		Aid,
+		Throw,
+		Mine,
+		Lockpick,
+		MineDetector,
+		Crowbar,
+		CCTV,
+		Camera,
+		Key,
+		Saw,
+		WireCutters,
+		Remote,
+		Bomb,
+		Repair,
+		Trajectory,
+		Jar,
+		Tincan,
+		Refuel,
+		Fortification,
+		Handcuffs,
+		ApplyItem,
+		InteractiveAction,
+		Bloodbag,
+		Splint,
+	}
+
 }
