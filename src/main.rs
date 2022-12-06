@@ -32,7 +32,6 @@ mod STI;
 // Add/Delete/Duplicate items
 // Change item uiIndex
 // Prompt to save work upon quitting if needed
-// Clear item image when switching treeview / deselecting everything. No clear_image() method for widgets?
 // Inventories
 // Merchants?
 // Error checking
@@ -75,7 +74,7 @@ fn main()
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
 	
-	let mut tab1 = Group::default().with_size(w, h).below_of(&tabs, 0).with_label("Tab1\t\t");
+	let mut tab1 = Group::default().with_size(w, h).below_of(&tabs, 0).with_label("General\t\t");
 	let x = 0;
 	let y = 25;
 	let mut itemGraphics = ItemGraphicsArea::initialize(x, y, &s, &images);
@@ -87,7 +86,7 @@ fn main()
 	tab1.end();
 
 
-    let mut tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label("Tab2\t\t");
+    let mut tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label("Weapon\t\t");
 	let x = 0;
 	let y = 25;
 	let mut weaponArea = WeaponArea::initialize(x, y);
@@ -142,6 +141,10 @@ fn main()
 				weaponArea.update(&xmldata, uiIndex);
 
 				itemWindow.redraw()
+			}
+			else 
+			{
+				itemGraphics.clearImages();
 			}
 		}
     	
@@ -1018,6 +1021,13 @@ impl ItemGraphicsArea
 			_ => { println!("!!! UNKNOWN ITEM CLASS !!!"); self.itemClass.set_value(-1); }
 		}
 	}
+
+	fn clearImages(&mut self)
+	{
+		self.big.set_image(None::<RgbImage>);
+		self.med.set_image(None::<RgbImage>);
+		self.small.set_image(None::<RgbImage>);
+	}
 }
 
 
@@ -1583,6 +1593,11 @@ struct WeaponAreaModifiers
 	reloadAP: Listener<IntInput>,
 	burstAP: Listener<IntInput>,
 	autofireAP: Listener<IntInput>,
+	// bonuses
+	bonusAP: Listener<IntInput>,
+	bonusHearing: Listener<IntInput>,
+	bonusKitStatus: Listener<IntInput>,
+	bonusSize: Listener<IntInput>,
 }
 struct WeaponArea
 {
@@ -1945,6 +1960,22 @@ impl WeaponArea
 		flex.end();
 
 
+		let (frame, _) = createBox(
+			frame.x() - 165 - 5,
+			frame.y(),
+			165, 185,
+			30, 120, "Bonuses"
+		);
+
+		let width = 45; let height = 20;
+		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
+		flex.set_spacing(5);
+		let bonusAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Action points").into() );
+		let bonusHearing: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Hearing Range").into() );
+		let bonusKitStatus: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Kit Status %").into() );
+		let bonusSize: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Size Adjustment").into() );
+		flex.end();
+
 		//-------------------------------------------------
 		// Temperature properties
 		let (frame, _) = createBox(
@@ -2042,6 +2073,11 @@ impl WeaponArea
 			reloadAP: modifierreloadAP,
 			burstAP: modifierburstAP,
 			autofireAP: modifierautofireAP,
+			// bonuses
+			bonusAP,
+			bonusHearing,
+			bonusKitStatus,
+			bonusSize,
 		};
 		
 		return WeaponArea { general, stats, properties, ncth, temp, modifiers, dirtDamageChance, dirtIncreaseFactor, bloodyItem }
@@ -2292,7 +2328,11 @@ impl WeaponArea
 		self.modifiers.reloadAP.set_value( &format!("{}", item.percentreloadtimeapreduction) );
 		self.modifiers.burstAP.set_value( &format!("{}", item.percentburstfireapreduction) );
 		self.modifiers.autofireAP.set_value( &format!("{}", item.percentautofireapreduction) );
-
+		// bonuses
+		self.modifiers.bonusAP.set_value( &format!("{}", item.APBonus) );
+		self.modifiers.bonusHearing.set_value( &format!("{}", item.hearingrangebonus) );
+		self.modifiers.bonusKitStatus.set_value( &format!("{}", item.percentstatusdrainreduction) );
+		self.modifiers.bonusSize.set_value( &format!("{}", item.ItemSizeBonus) );
 
 		self.dirtDamageChance.set_value( &format!("{}", item.usDamageChance) );
 		self.dirtIncreaseFactor.set_value( &format!("{}", item.dirtIncreaseFactor) );
