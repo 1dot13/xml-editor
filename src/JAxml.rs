@@ -2632,62 +2632,62 @@ pub struct WEAPON
     pub uiIndex: u32,
     pub szWeaponName: String, // Unused in 1.13 source. Copy item longname upon renaming
     pub ubWeaponClass: u8, // handgun/shotgun/rifle/knife
-    ubWeaponType: u8, // exact type (for display purposes)
-    ubCalibre: u8, // type of ammunition needed
-    ubReadyTime: u8, // APs to ready/unready weapon
-    ubShotsPer4Turns: f32, // maximum (mechanical) firing rate
-    ubShotsPerBurst: u8,
-    ubBurstPenalty: u8, // % penalty per shot after first
-    ubBulletSpeed: u8, // bullet's travelling speed
-    ubImpact: u8, // weapon's max damage impact (size & speed)
-    ubDeadliness: u8, // comparative ratings of guns
-    bAccuracy: i8, // accuracy or penalty used by OCTH
-    ubMagSize: u16,
-    usRange: u16,
-    usReloadDelay: u16,
-    ubAttackVolume: u8,
-    ubHitVolume: u8,
-    sSound: u16,
-    sBurstSound: u16,
-    sSilencedBurstSound: u16,
-    sReloadSound: u16,
-    sLocknLoadSound: u16,
-    bBurstAP: u8, // Snap: Burst AP cost replaces bBaseAutofireCost
-    bAutofireShotsPerFiveAP: u8, 
-    swapClips: bool,
-    silencedSound: u16,
-    APsToReload: u8,
-    maxdistformessydeath: u8,
-    NoSemiAuto: bool,
-    AutoPenalty: u8,
-    sAniDelay: i16, // Lesh: for burst animation delay
-    APsToReloadManually: u8,
-    ManualReloadSound: u16,
-    nAccuracy: i8, // accuracy or penalty used by NCTH
-    EasyUnjam: bool, // Guns where each bullet has its own chamber (like revolvers) are easyer to unjam 
-    bRecoilX: f32, // Recoil now measured in points of muzzle deviation X and Y.
-    bRecoilY: f32, // Positive values indicated upwards (Y) and rightwards (X). Negatives are down (-Y) and left (-X).
+    pub ubWeaponType: u8, // exact type (for display purposes)
+    pub ubCalibre: u8, // type of ammunition needed
+    pub ubReadyTime: u8, // APs to ready/unready weapon
+    pub ubShotsPer4Turns: f32, // maximum (mechanical) firing rate
+    pub ubShotsPerBurst: u8,
+    pub ubBurstPenalty: u8, // % penalty per shot after first
+    pub ubBulletSpeed: u8, // bullet's travelling speed
+    pub ubImpact: u8, // weapon's max damage impact (size & speed)
+    pub ubDeadliness: u8, // comparative ratings of guns
+    pub bAccuracy: i8, // accuracy or penalty used by OCTH
+    pub ubMagSize: u16,
+    pub usRange: u16,
+    pub usReloadDelay: u16,
+    pub ubAttackVolume: u8,
+    pub ubHitVolume: u8,
+    pub sSound: u16,
+    pub sBurstSound: u16,
+    pub sSilencedBurstSound: u16,
+    pub sReloadSound: u16,
+    pub sLocknLoadSound: u16,
+    pub bBurstAP: u8, // Snap: Burst AP cost replaces bBaseAutofireCost
+    pub bAutofireShotsPerFiveAP: u8, 
+    pub swapClips: bool,
+    pub silencedSound: u16,
+    pub APsToReload: u8,
+    pub maxdistformessydeath: u8,
+    pub NoSemiAuto: bool,
+    pub AutoPenalty: u8,
+    pub sAniDelay: i16, // Lesh: for burst animation delay
+    pub APsToReloadManually: u8,
+    pub ManualReloadSound: u16,
+    pub nAccuracy: i8, // accuracy or penalty used by NCTH
+    pub EasyUnjam: bool, // Guns where each bullet has its own chamber (like revolvers) are easyer to unjam 
+    pub bRecoilX: f32, // Recoil now measured in points of muzzle deviation X and Y.
+    pub bRecoilY: f32, // Positive values indicated upwards (Y) and rightwards (X). Negatives are down (-Y) and left (-X).
                     // Note that each value is an array. Each item in the array determines recoil
                     // for a different bullet in the sequence. Not all values have to be filled,
                     // but the last filled value will determine the recoil for longer volleys.
-    ubRecoilDelay: u8,
-    ubAimLevels: u8, // Dictates how many aiming levels this gun supports. If 0, the program
+    pub ubRecoilDelay: u8,
+    pub ubAimLevels: u8, // Dictates how many aiming levels this gun supports. If 0, the program
                      // chooses automatically based on the type of gun (see AllowedAimingLevels() ).
-    ubHandling: u8,	// This value replaces ubReadyTime for determining a weapons base handling characteristics.
-    usOverheatingJamThreshold: f32, // if a gun's temperature is above this treshold, it is increasingly prone to jamming
-    usOverheatingDamageThreshold: f32, // if a gun is fired while its temperature is above this value, it degrades much faster
-    usOverheatingSingleShotTemperature: f32, // a single shot raises a gun's temperature by this amount
-    HeavyGun: bool,	// a gun with this cannot be shouldered in standing position, part of shooting from hip feature
+    pub ubHandling: u8,	// This value replaces ubReadyTime for determining a weapons base handling characteristics.
+    pub usOverheatingJamThreshold: f32, // if a gun's temperature is above this treshold, it is increasingly prone to jamming
+    pub usOverheatingDamageThreshold: f32, // if a gun is fired while its temperature is above this value, it degrades much faster
+    pub usOverheatingSingleShotTemperature: f32, // a single shot raises a gun's temperature by this amount
+    pub HeavyGun: bool,	// a gun with this cannot be shouldered in standing position, part of shooting from hip feature
     // if the wielder possesses the 'GUNSLINGER_NT' trait, is using alternate hold scope mode, and has the second hand free, this gun can be used in burst mode
     // this is intended for guns that normally don't possess burst mode, like revolvers
-    fBurstOnlyByFanTheHammer: bool,
+    pub fBurstOnlyByFanTheHammer: bool,
     // Multi-barrel weapons can fire a variety of barrels at once in all firemodes.
     // This vector stores the possible configurations
-    barrelconfigurations: Vec<u8>,
+    pub barrelconfigurations: Vec<u8>,
     // NWSS data
-    ubNWSSCase: u8,
-    ubNWSSLast: u8,
-    szNWSSSound: String,
+    pub ubNWSSCase: u8,
+    pub ubNWSSLast: u8,
+    pub szNWSSSound: String,
 }
 impl WEAPON 
 {
