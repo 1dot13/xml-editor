@@ -1291,7 +1291,7 @@ impl ItemVisionArea
 		ints.push( IntInput::default().with_size(w, h1).with_label("Tunnelvision").into() );
 		ints.push( IntInput::default().with_size(w, h1).with_label("Flashlight Range").into() );
 		ints.push( IntInput::default().with_size(w, h1).with_label("Spotting Modifier").into() );
-		let thermal = CheckButton::default().with_size(w, h1).with_label("Thermal Optics").into();
+		let thermal = CheckButton::default().with_size(w, h1).with_label("Thermal Optics").with_align(Align::Left).into();
 		flex.end();
 
 
