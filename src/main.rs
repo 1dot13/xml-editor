@@ -8,7 +8,7 @@ use std::env::current_dir;
 use std::path::PathBuf;
 use std::time::{Instant};
 use fltk::button::{RadioButton, ToggleButton, CheckButton, LightButton, RepeatButton, RadioLightButton, RadioRoundButton};
-use fltk::enums::{Color, Align};
+use fltk::enums::{Color, Align, Font};
 use fltk::group::{Tabs, Group, FlexType, Pack};
 use fltk::input::{IntInput, Input, FloatInput};
 use fltk::menu::{MenuFlag, SysMenuBar, Choice};
@@ -75,7 +75,7 @@ fn main()
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
 	
-	let tab1 = Group::default().with_size(w, h).below_of(&tabs, 0).with_label("Tab1\t\t");
+	let mut tab1 = Group::default().with_size(w, h).below_of(&tabs, 0).with_label("Tab1\t\t");
 	let x = 0;
 	let y = 25;
 	let mut itemGraphics = ItemGraphicsArea::initialize(x, y, &s, &images);
@@ -85,24 +85,28 @@ fn main()
 	let mut itemKit = ItemKitArea::initialize(310, 485);
 	let mut itemVision = ItemVisionArea::initialize(310+235+10, 485);
 	tab1.end();
-    
 
-    let tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label("Tab2\t\t");
+
+    let mut tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label("Tab2\t\t");
 	let x = 0;
 	let y = 25;
 	let mut weaponArea = WeaponArea::initialize(x, y);
     tab2.end();
 
 
-    let tab3 = Group::default().with_size(w, h).right_of(&tab2, 0).with_label("Tab3\t\t");
+    let mut tab3 = Group::default().with_size(w, h).right_of(&tab2, 0).with_label("Tab3\t\t");
     let _but2 = RoundButton::default().with_size(0, 30).with_label("Round").center_of(&itemWindow);
     tab3.end();
 
 
-    let tab4 = Group::default().with_size(w, h).right_of(&tab3, 0).with_label("Tab4\t\t");
+    let mut tab4 = Group::default().with_size(w, h).right_of(&tab3, 0).with_label("Tab4\t\t");
     let _but3 = RoundButton::default().with_size(0, 30).with_label("Round2").center_of(&itemWindow);
     tab4.end();
 
+	tab1.emit(s, Message::Tab1);
+	tab2.emit(s, Message::Tab2);
+	tab3.emit(s, Message::Tab3);
+	tab4.emit(s, Message::Tab4);
 
     tabs.end();
 	itemWindow.end();
@@ -113,7 +117,7 @@ fn main()
 
 
 	itemVision.addChoicesToClothesTypes(&xmldata);
-
+	weaponArea.addChoices(&xmldata);
 	//-----------------------------------------------------------------------------
 	// Main loop
 	//-----------------------------------------------------------------------------    
@@ -128,33 +132,14 @@ fn main()
                 let uiIndex = unsafe{item.user_data::<u32>()}.unwrap() as usize;
                 println!("uiIndex {}", uiIndex);
                 
-                let stiType = xmldata.items.items[uiIndex].ubGraphicType as usize;
-                let stiIndex = xmldata.items.items[uiIndex].ubGraphicNum as usize;
-                println!("Graphic index {}", stiIndex);
-                if stiType < images.big.len() && stiIndex < images.big[stiType].len()
-                {
-					itemGraphics.updateItemGraphics(&images, stiType, stiIndex);
-
-					if stiType != itemGraphics.itemType.value() as usize
-					{
-						itemGraphics.itemType.set_value(stiType as i32);
-						itemGraphics.updateScrollBarBounds(&images);
-						itemGraphics.redrawScrollAreaImages(&images);
-					}
-					itemGraphics.itemIndex.set_value(&format!("{}", stiIndex));
-
-				}
-				else 
-				{
-					println!("Graphic index out of graphic vector bounds!");
-					println!("Tried to access image [{}][{}]", stiType, stiIndex);
-				}
-			
+				itemGraphics.update(&xmldata, &images, uiIndex);
 				itemDescription.update(&xmldata, uiIndex);
 				itemProperties.update(&xmldata, uiIndex);
 				itemStats.update(&xmldata, uiIndex);
 				itemKit.update(&xmldata, uiIndex);
 				itemVision.update(&xmldata, uiIndex);
+
+				weaponArea.update(&xmldata, uiIndex);
 
 				itemWindow.redraw()
 			}
@@ -203,6 +188,7 @@ fn main()
 					itemGraphics.redrawScrollAreaImages(&images);
 
 				}
+				Tab1  | Tab2 | Tab3 | Tab4 => { switchTab(&xmldata, msg); }
 				_ => {}
 	        }
         }
@@ -253,6 +239,30 @@ fn saveData(dataPath: &PathBuf, xmldata: &JAxml::JAxmlState)
 	let t = Instant::now();
 	xmldata.saveData(&dataPath);
 	println!("Saving xml data took: {:?}", t.elapsed());
+}
+
+fn switchTab(xmldata: &JAxml::JAxmlState, msg: Message)
+{
+	match msg
+	{
+		Message::Tab1 => 
+		{
+
+		}	
+		Message::Tab2 => 
+		{
+
+		}
+		Message::Tab3 =>
+		{
+
+		}
+		Message::Tab4 =>
+		{
+
+		}
+		_ => ()
+	}
 }
 
 fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: Message)
@@ -742,7 +752,9 @@ struct ItemGraphicsArea
 	images: Vec<Frame>,
 	scrollbar: Scrollbar,
 	itemType: Choice,
-	itemIndex: IntInput
+	itemIndex: IntInput,
+	itemClass: Choice,
+	uiIndex: IntInput
 }
 impl ItemGraphicsArea
 {
@@ -751,9 +763,13 @@ impl ItemGraphicsArea
 		let mainWidth = 300; let mainHeight = 450;
 
 		// Main framed box. Everything else is located relative to this
-		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(60, 20).with_pos(x + 130, y - 10).with_label("Graphics").set_frame(FrameType::FlatBox);
+		let (_, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			130, 60, "Graphics"
+		);
 		
+		//-------------------------------------------------
 		// Item images
 		let bigw = 104; let bigh = 74;
 		let medw = 74; let medh = 74;
@@ -772,6 +788,7 @@ impl ItemGraphicsArea
 		let _ = Frame::default().with_size(20, 20).with_pos(x + 42, small.y() + small.h() + 5).with_label("Graphic Type");
 		let _ = Frame::default().with_size(20, 20).with_pos(x + 42, small.y() + small.h() + 50).with_label("Graphic Index");
 		
+		//-------------------------------------------------
 		// Item graphic type & graphic index
 		let mut itemType = Choice::default().with_pos(x + 10, small.y() + small.h() + 25).with_size(100, 20);
 		itemType.emit(*s, Message::GraphicType);
@@ -781,9 +798,54 @@ impl ItemGraphicsArea
 			let text = format!("P{}items", i);
 			itemType.add_choice(&text);
 		}
-
 		let mut itemIndex = input::IntInput::default().with_size(100, 20).with_pos(x + 10, small.y() + small.h() + 70);
-	
+
+		//-------------------------------------------------
+		// Item class & uiIndex
+		let (frame2, _) = createBox(
+			x + 5, small.y() + small.h() + 100,
+			120, 80,
+			12, 80, "Item Class"
+		);
+
+		let _ = Frame::default().with_size(20, 20).with_pos(x + 42, small.y() + small.h() + 130).with_label("Item Index");
+
+		let mut itemClass = Choice::default().with_pos(x + 10, small.y() + small.h() + 110).with_size(100, 20);
+		itemClass.emit(*s, Message::ItemClass);
+
+		let classes = vec![
+			"None",
+			"Gun",
+			"Blade",
+			"ThrowingKnife",
+			"Launcher",
+			"Tentacle",
+			"Thrown",
+			"Punch",
+			"Grenade",
+			"Bomb",
+			"Ammo",
+			"Armor",
+			"Medkit",
+			"Kit",
+			"Appliable",
+			"Face",
+			"Key",
+			"LBE",
+			"BeltClip",
+			"Misc",
+			"Money",
+			"Random",
+		];
+
+		for class in classes
+		{
+			itemClass.add_choice(class);
+		}
+
+		let mut uiIndex = input::IntInput::default().with_size(100, 20).with_pos(x + 10, small.y() + small.h() + 150);
+
+		//-------------------------------------------------
 		// Item scroll area
 		let mut scrollArea = Frame::default().with_size(150, 420).with_pos(x + 140, y + 20);
 		scrollArea.set_frame(FrameType::EmbossedBox);
@@ -805,7 +867,7 @@ impl ItemGraphicsArea
 		let mut scrollbar = Scrollbar::default().with_pos(scrollArea.x() + scrollArea.w() - w, scrollArea.y()).with_size(w, scrollArea.h());
 		scrollbar.emit(*s, Message::GraphicScroll);
 
-		return ItemGraphicsArea{big, med, small, images, scrollbar, itemType, itemIndex};
+		return ItemGraphicsArea{big, med, small, images, scrollbar, itemType, itemIndex, uiIndex, itemClass};
 	}
 
 	
@@ -894,6 +956,68 @@ impl ItemGraphicsArea
 			self.itemType.add_choice(&text);
 		}
 	}
+
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, images: &STI::Images, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+
+		let stiType = item.ubGraphicType as usize;
+		let stiIndex = item.ubGraphicNum as usize;
+		println!("Graphic Type {}", stiType);
+		println!("Graphic index {}", stiIndex);
+
+		if stiType < images.big.len() && stiIndex < images.big[stiType].len()
+		{
+			self.updateItemGraphics(&images, stiType, stiIndex);
+
+			if stiType != self.itemType.value() as usize
+			{
+				self.itemType.set_value(stiType as i32);
+				self.updateScrollBarBounds(&images);
+				self.redrawScrollAreaImages(&images);
+			}
+			self.itemIndex.set_value(&format!("{}", stiIndex));
+			
+		}
+		else 
+		{
+			println!("Graphic index out of graphic vector bounds!");
+			println!("Tried to access image [{}][{}]", stiType, stiIndex);
+		}
+
+		self.uiIndex.set_value(&format!("{}", uiIndex));
+		self.updateItemClass(item.usItemClass as usize);
+	}
+
+	fn updateItemClass(&mut self, itemClass: usize)
+	{
+		match itemClass.try_into()
+		{
+			Ok(JAxml::ItemClass::None) => { self.itemClass.set_value(0); }
+			Ok(JAxml::ItemClass::Gun) => { self.itemClass.set_value(1); }
+			Ok(JAxml::ItemClass::Blade) => { self.itemClass.set_value(2); }
+			Ok(JAxml::ItemClass::ThrowingKnife) => { self.itemClass.set_value(3); }
+			Ok(JAxml::ItemClass::Launcher) => { self.itemClass.set_value(4); }
+			Ok(JAxml::ItemClass::Tentacle) => { self.itemClass.set_value(5); }
+			Ok(JAxml::ItemClass::Thrown) => { self.itemClass.set_value(6); }
+			Ok(JAxml::ItemClass::Punch) => { self.itemClass.set_value(7); }
+			Ok(JAxml::ItemClass::Grenade) => { self.itemClass.set_value(8); }
+			Ok(JAxml::ItemClass::Bomb) => { self.itemClass.set_value(9); }
+			Ok(JAxml::ItemClass::Ammo) => { self.itemClass.set_value(10); }
+			Ok(JAxml::ItemClass::Armor) => { self.itemClass.set_value(11); }
+			Ok(JAxml::ItemClass::Medkit) => { self.itemClass.set_value(12); }
+			Ok(JAxml::ItemClass::Kit) => { self.itemClass.set_value(13); }
+			Ok(JAxml::ItemClass::Appliable) => { self.itemClass.set_value(14); }
+			Ok(JAxml::ItemClass::Face) => { self.itemClass.set_value(15); }
+			Ok(JAxml::ItemClass::Key) => { self.itemClass.set_value(16); }
+			Ok(JAxml::ItemClass::LBE) => { self.itemClass.set_value(17); }
+			Ok(JAxml::ItemClass::BeltClip) => { self.itemClass.set_value(18); }
+			Ok(JAxml::ItemClass::Misc) => { self.itemClass.set_value(19); }
+			Ok(JAxml::ItemClass::Money) => { self.itemClass.set_value(20); }
+			Ok(JAxml::ItemClass::Random) => { self.itemClass.set_value(21); }
+			_ => { println!("!!! UNKNOWN ITEM CLASS !!!"); self.itemClass.set_value(-1); }
+		}
+	}
 }
 
 
@@ -915,14 +1039,15 @@ impl ItemStatsArea
 		let mainWidth = 300; let mainHeight = 230;
 
 		// Main framed box. Everything else is located relative to this
-		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(60, 20).with_pos(x + 130, y - 10).with_label("Stats").set_frame(FrameType::FlatBox);
+		let (_, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			130, 60, "Stats"
+		);
 
 		let xMargin = 5; let yMargin = 10;
 		let w = mainWidth/2 - 2*xMargin; let h = mainHeight - 2*yMargin;
 
-		// let mut flex = Flex::new(x + xMargin, y + yMargin, w, h, None);
-		// flex.set_type(FlexType::Column);
 		let mut flex = Pack::new(x + xMargin, y + yMargin, w, h, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(60, 20).with_label("Price");
@@ -938,8 +1063,6 @@ impl ItemStatsArea
 
 		let mut flex = Flex::default().with_pos(x + xMargin + w, y + yMargin).with_size(w, h);
 		flex.set_type(FlexType::Column);
-		// let mut flex = Pack::new(x + xMargin + w, y + yMargin, w, h, None);
-		// flex.set_spacing(5);
 		for i in 0..6
 		{
 			let mut input = IntInput::default();
@@ -1010,8 +1133,11 @@ impl ItemDescriptionArea
 	{
 		let mainWidth = 660; let mainHeight = 200;
 		// Main framed box. Everything else is located relative to this
-		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(80, 20).with_pos(x + 130, y - 10).with_label("Description").set_frame(FrameType::FlatBox);
+		let (_, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			130, 80, "Description"
+		);
 
 		let mut inputs: Vec<Listener<Input>> = Vec::new();
 		let xOffset = 80;
@@ -1080,8 +1206,11 @@ impl ItemPropertiesArea
 	{
 		let mainWidth = 660; let mainHeight = 240;
 		// Main framed box. Everything else is located relative to this
-		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(80, 20).with_pos(x + 130, y - 10).with_label("Properties").set_frame(FrameType::FlatBox);
+		let (_, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			130, 80, "Properties"
+		);
 
 		let xOffset = 10;
 		let h1 = 20; let h2 = 100;
@@ -1202,8 +1331,11 @@ impl ItemKitArea
 	{
 		let mainWidth = 235; let mainHeight = 230;
 		// Main framed box. Everything else is located relative to this
-		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(60, 20).with_pos(x + 130, y - 10).with_label("Kits").set_frame(FrameType::FlatBox);
+		let (_, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			130, 60, "Kits"
+		);
 
 		let xOffset = 10;
 		let h1 = 20; let h2 = 100;
@@ -1272,8 +1404,11 @@ impl ItemVisionArea
 	{
 		let mainWidth = 660-245; let mainHeight = 230;
 		// Main framed box. Everything else is located relative to this
-		let _ = Frame::default().with_size(mainWidth, mainHeight).with_pos(x, y).set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(150, 20).with_pos(x + 100, y - 10).with_label("Vision and Camouflage").set_frame(FrameType::FlatBox);
+		let (_, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			100, 150, "Vision and Camouflage"
+		);
 
 		let xOffset = 120;
 		let h1 = 20; let h2 = 100;
@@ -1342,162 +1477,290 @@ impl ItemVisionArea
 }
 
 
+struct WeaponAreaGeneral
+{
+	class: Listener<Choice>,
+	guntype: Listener<Choice>,
+	caliber: Listener<Choice>,
+	magsize: Listener<IntInput>
+}
+
+struct WeaponAreaStats
+{
+	range: Listener<IntInput>,
+	accuracy: Listener<IntInput>,
+	damage: Listener<IntInput>,
+	deadliness: Listener<IntInput>,
+	messydeath: Listener<IntInput>,
+	meleeDamage: Listener<IntInput>,
+	crowbarBonus: Listener<IntInput>,
+	autofirespeed: Listener<IntInput>,
+	autofirepenalty: Listener<IntInput>,
+	burstshots: Listener<IntInput>,
+	burstpenalty: Listener<IntInput>,
+	burstAPcost: Listener<IntInput>,
+	reloadAP: Listener<IntInput>,
+	manualreloadAP: Listener<IntInput>,
+	readyAP: Listener<IntInput>,
+	shotsper4turns: Listener<IntInput>,
+	brRateOfFire: Listener<IntInput>,
+	reloadAnimDelay: Listener<IntInput>,
+	burstfireAnimDelay: Listener<IntInput>,
+	bulletspeed: Listener<IntInput>,
+}
+struct WeaponAreaProperties
+{
+	crowbar: Listener<CheckButton>,
+	brassknuckles: Listener<CheckButton>,
+	fullauto: Listener<CheckButton>,
+	rocketrifle: Listener<CheckButton>,
+	fingerprintid: Listener<CheckButton>,
+	easyunjam: Listener<CheckButton>,
+	heavyweapon: Listener<CheckButton>,
+	hidemuzzleflash: Listener<CheckButton>,
+	barrel: Listener<CheckButton>,
+}
+struct WeaponAreaNCTH
+{
+	flatbase: Vec<Listener<IntInput>>,
+	flataim: Vec<Listener<IntInput>>,
+	base: Vec<Listener<IntInput>>,
+	cap: Vec<Listener<IntInput>>,
+	handling: Vec<Listener<IntInput>>,
+	tracking: Vec<Listener<IntInput>>,
+	dropCompensation: Vec<Listener<IntInput>>,
+	maxCounterforce: Vec<Listener<IntInput>>,
+	CFaccuracy: Vec<Listener<IntInput>>,
+	CFfrequency: Vec<Listener<IntInput>>,
+	aimlevel: Vec<Listener<IntInput>>,
+	// Items.xml
+	scopeMagFactor: Listener<FloatInput>,
+	laserProjFactor: Listener<IntInput>,
+	recoilXmodifier: Listener<FloatInput>,
+	recoilYmodifier: Listener<FloatInput>,
+	recoilModifier: Listener<IntInput>,
+	accuracyModifier: Listener<IntInput>,
+	// Weapons.xml
+	NCTHaccuracy: Listener<IntInput>,
+	recoilX: Listener<FloatInput>,
+	recoilY: Listener<FloatInput>,
+	recoilDelay: Listener<IntInput>,
+	defaultAimLevels: Listener<IntInput>,
+	weaponHandling: Listener<IntInput>,
+}
+struct WeaponAreaTemperature
+{
+	jamThreshold: Listener<FloatInput>,
+	dmgThreshold: Listener<FloatInput>,
+	increasePerShot: Listener<FloatInput>,
+	cooldownFactor: Listener<FloatInput>,
+	cooldownModifier: Listener<FloatInput>,
+	tempModifier: Listener<FloatInput>,
+	jamThresholdModifier: Listener<FloatInput>,
+	damageThresholdModifier: Listener<FloatInput>,
+}
+struct WeaponAreaModifiers
+{
+	// ranged
+	damage: Listener<IntInput>,
+	range: Listener<IntInput>,
+	magSize: Listener<IntInput>,
+	burstSize: Listener<IntInput>,
+	shotsper4turns: Listener<IntInput>,
+	bulletspeed: Listener<IntInput>,
+	noiseReduction: Listener<IntInput>,
+	// to hit
+	general: Listener<IntInput>,
+	aimedShot: Listener<IntInput>,
+	bipodProne: Listener<IntInput>,
+	burst: Listener<IntInput>,
+	autofire: Listener<IntInput>,
+	laserRange: Listener<IntInput>,
+	minRange: Listener<IntInput>,
+	// AP reductions
+	generalAP: Listener<IntInput>,
+	readyAP: Listener<IntInput>,
+	reloadAP: Listener<IntInput>,
+	burstAP: Listener<IntInput>,
+	autofireAP: Listener<IntInput>,
+}
 struct WeaponArea
 {
-	inputs: Vec<Listener<Choice>>,
-	flags: Vec<Listener<CheckButton>>,
-	ints: Vec<Listener<IntInput>>,
-	floats: Vec<Listener<FloatInput>>
+	general: WeaponAreaGeneral,
+	stats: WeaponAreaStats,
+	properties: WeaponAreaProperties,
+	ncth: WeaponAreaNCTH,
+	temp: WeaponAreaTemperature,
+	modifiers: WeaponAreaModifiers,
+	dirtDamageChance: Listener<IntInput>,
+	dirtIncreaseFactor: Listener<FloatInput>,
+	bloodyItem: Listener<Choice>
 }
 impl WeaponArea
 {
 	fn initialize(x: i32, y: i32) -> WeaponArea
 	{
-		let mut inputs: Vec<Listener<Choice>> = Vec::new();
-		let mut flags: Vec<Listener<CheckButton>> = Vec::new();
-		let mut ints:Vec<Listener<IntInput>> = Vec::new();
-		let mut floats:Vec<Listener<FloatInput>> = Vec::new();
-
 		let mainWidth = 300; let mainHeight = 700;
 		// Main framed box. Everything else is located relative to this
-		let mut main = Frame::default().with_size(mainWidth, mainHeight - 10).with_pos(x, y);
-		main.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(80, 20).with_pos(x + 110, y - 10).with_label("General").set_frame(FrameType::FlatBox);
+		let (main, _) = createBox(
+			x, y,
+			mainWidth, mainHeight - 10,
+			110, 80, "General"
+		);
 
 		//-------------------------------------------------
 		// General
 		let width = 150; let height = 20;
 		let mut flex = Pack::new(main.x() + 40, main.y() + 10, 120, main.h() - 10, None);
 		flex.set_spacing(5);
-		inputs.push( Choice::default().with_size(width, height).with_label("Class").into() );
-		inputs.push( Choice::default().with_size(width, height).with_label("Type").into() );
+		let class = Choice::default().with_size(width, height).with_label("Class").into();
+		let guntype = Choice::default().with_size(width, height).with_label("Type").into();
 		flex.end();
+		
 		let mut flex = Pack::new(main.x() + main.w() - 80, main.y() + 10, 70, main.h() - 10, None);
 		flex.set_spacing(5);
-		inputs.push( Choice::default().with_size(width, height).with_label("Caliber").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("Capacity").into() );
+		let caliber = Choice::default().with_size(width, height).with_label("Caliber").into();
+		let magsize = IntInput::default().with_size(width, height).with_label("Capacity").into();
 		flex.end();
 
 
 		let w = 100;
 		//-------------------------------------------------
 		// Range & Damage
-		let mut frame = Frame::default().with_size(mainWidth, 160).with_pos(main.x(), y + 70);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(50, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() - 10).with_label("Stats").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			main.x(), y + 70,
+			mainWidth, 160,
+			(mainWidth-w)/2, 50, "Stats"
+		);
 
 		let mut flex = Pack::new(frame.x() + 70, frame.y() + 10, 70, frame.h() - 10, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(width, height).with_label("Range").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("Accuracy").into() );
+		let range = IntInput::default().with_size(width, height).with_label("Range").into();
+		let accuracy = IntInput::default().with_size(width, height).with_label("Accuracy").into();
 		flex.end();
 		let mut flex = Pack::new(frame.x() + frame.w() - 80, frame.y() + 10, 70, frame.h() - 10, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(width, height).with_label("Damage").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("Deadliness").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("Messy Death Dist.").into() );
+		let damage = IntInput::default().with_size(width, height).with_label("Damage").into();
+		let deadliness = IntInput::default().with_size(width, height).with_label("Deadliness").into();
+		let messydeath =  IntInput::default().with_size(width, height).with_label("Messy Death Dist.").into();
 		flex.end();
 
 		//-------------------------------------------------
 		// Melee weapons
-		let mut frame2 = Frame::default().with_size(frame.w()-10, 55).with_pos(frame.x() + 5, frame.y() + frame.h() - 65);
+		let (mut frame2, _) = createBox(
+			frame.x() + 5,
+			frame.y() + frame.h() - 65,
+			frame.w()-10, 55,
+			20, 120, "Melee Weapons"
+		);
 		frame2.set_frame(FrameType::BorderBox);
-		let _ = Frame::default().with_size(120, 20).with_pos(frame2.x() + 20, frame2.y() - 10).with_label("Melee Weapons").set_frame(FrameType::FlatBox);
 
 		let mut flex = Pack::new(frame2.x() + 5, frame2.y() + 5, 70, frame2.h() - 10, None);
 		flex.set_spacing(5);
-		flags.push( CheckButton::default().with_size(width, height).with_label("Brass Knuckles").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("Crowbar").into() );
+		let brassknuckles = CheckButton::default().with_size(width, height).with_label("Brass Knuckles").into();
+		let crowbar = CheckButton::default().with_size(width, height).with_label("Crowbar").into();
 		flex.end();
 		let mut flex = Pack::new(frame2.x() + frame2.w() - 80, frame2.y() + 5, 70, frame2.h() - 10, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(width, height).with_label("Damage").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("Crowbar bonus").into() );
+		let meleeDamage = IntInput::default().with_size(width, height).with_label("Dmg bonus").into();
+		let crowbarBonus = IntInput::default().with_size(width, height).with_label("Crowbar bonus").into();
 		flex.end();
 
 
 		//-------------------------------------------------
 		// Auto / Burst Fire
-		let mut frame = Frame::default().with_size(mainWidth, 95).below_of(&frame, 0);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(120, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() - 10).with_label("Auto / Burst Fire").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x(),
+			frame.y()+frame.h(),
+			frame.w(), 95,
+			(frame.w()-w)/2, 120, "Auto / Burst Fire"
+		);
 
 		let mut flex = Pack::new(frame.x() + 100, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(width, height).with_label("Shots / 5 APs").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("To-Hit Penalty").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("Full Auto only").with_align(Align::Left).into() );
+		let autofirespeed = IntInput::default().with_size(width, height).with_label("Shots / 5 APs").into();
+		let autofirepenalty = IntInput::default().with_size(width, height).with_label("To-Hit Penalty").into();
+		let fullauto = CheckButton::default().with_size(width, height).with_label("Full Auto only").with_align(Align::Left).into();
 		flex.end();
 		let mut flex = Pack::new(frame.x() + frame.w() - 55, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(width, height).with_label("Shots / Burst").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("To-Hit Penalty").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("AP Cost").into() );
+		let burstshots = IntInput::default().with_size(width, height).with_label("Shots / Burst").into();
+		let burstpenalty = IntInput::default().with_size(width, height).with_label("To-Hit Penalty").into();
+		let burstAPcost = IntInput::default().with_size(width, height).with_label("AP Cost").into();
 		flex.end();
 
 
 		//-------------------------------------------------
 		// AP Costs
-		let mut frame = Frame::default().with_size(mainWidth, 95).below_of(&frame, 0);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(w, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() - 10).with_label("AP Costs").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x(),
+			frame.y()+frame.h(),
+			frame.w(), 95,
+			(frame.w()-w)/2, 100, "AP Costs"
+		);
 
 		let mut flex = Pack::new(frame.x() + 100, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(width, height).with_label("Reload").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("Manual Reload").into() );
+		let reloadAP = IntInput::default().with_size(width, height).with_label("Reload").into();
+		let manualreloadAP = IntInput::default().with_size(width, height).with_label("Manual Reload").into();
 		flex.end();
 		let mut flex = Pack::new(frame.x() + frame.w() - 55, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(width, height).with_label("Ready Weapon").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("Shots / 4 turns").into() );
-		ints.push( IntInput::default().with_size(width, height).with_label("BR ROF").into() );
+		let readyAP = IntInput::default().with_size(width, height).with_label("Ready Weapon").into();
+		let shotsper4turns = IntInput::default().with_size(width, height).with_label("Shots / 4 turns").into();
+		let brRateOfFire = IntInput::default().with_size(width, height).with_label("BR ROF").into();
 		flex.end();
 
 
 		//-------------------------------------------------
 		// Animation
-		let mut frame = Frame::default().with_size(mainWidth, 100).below_of(&frame, 0);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(w, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() - 10).with_label("Animation").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x(),
+			frame.y()+frame.h(),
+			frame.w(), 100,
+			(frame.w()-w)/2, 100, "Animation"
+		);
 
-		ints.push( IntInput::new(x + mainWidth - width - 10, frame.y() + 10, width, height, "Reload Delay").into() );
-		ints.push( IntInput::new(x + mainWidth - width - 10, frame.y() + 40, width, height, "Burst Fire Delay").into() );
-		ints.push( IntInput::new(x + mainWidth - width - 10, frame.y() + 70, width, height, "Bullet Speed").into() );
+		let reloadAnimDelay = IntInput::new(x + mainWidth - width - 10, frame.y() + 10, width, height, "Reload Delay").into();
+		let burstfireAnimDelay = IntInput::new(x + mainWidth - width - 10, frame.y() + 40, width, height, "Burst Fire Delay").into();
+		let bulletspeed = IntInput::new(x + mainWidth - width - 10, frame.y() + 70, width, height, "Bullet Speed").into();
 
 
 		//-------------------------------------------------
 		// Properties
-		let mut frame = Frame::default().with_size(mainWidth, 170).below_of(&frame, 0);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(100, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() - 10).with_label("Properties").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x(),
+			frame.y()+frame.h(),
+			frame.w(), 170,
+			(frame.w()-w)/2, 100, "Properties"
+		);
 
 		let mut flex = Pack::new(frame.x() + 10, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		flags.push( CheckButton::default().with_size(width, height).with_label("Rocket Rifle").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("Fingerprint ID").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("Easy Unjam").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("Heavy Weapon").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("Hide Muzzleflash").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("Barrel").into() );
+		let rocketrifle = CheckButton::default().with_size(width, height).with_label("Rocket Rifle").into();
+		let fingerprintid = CheckButton::default().with_size(width, height).with_label("Fingerprint ID").into();
+		let easyunjam = CheckButton::default().with_size(width, height).with_label("Easy Unjam").into();
+		let heavyweapon = CheckButton::default().with_size(width, height).with_label("Heavy Weapon").into();
+		let hidemuzzleflash = CheckButton::default().with_size(width, height).with_label("Hide Muzzleflash").into();
+		let barrel = CheckButton::default().with_size(width, height).with_label("Barrel").into();
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w() + 80, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w() + 50, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
-		flags.push( CheckButton::default().with_size(width, height).with_label("").into() );
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
 		flex.end();
 
 
@@ -1505,192 +1768,548 @@ impl WeaponArea
 		//-------------------------------------------------
 		// NCTH
 		let mainWidth = 665; let mainHeight = 350;
-		let mut main = Frame::default().with_size(mainWidth, mainHeight).with_pos(980 - mainWidth - 10, y);
-		main.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(60, 20).with_pos(main.x() + 100, main.y() - 10).with_label("NCTH").set_frame(FrameType::FlatBox);
+		let (main, _) = createBox(
+			980 - mainWidth - 10,
+			y,
+			mainWidth, mainHeight,
+			100, 60, "NCTH"
+		);
+
+		let mut flatbase: Vec<Listener<IntInput>> = Vec::new();
+		let mut flataim: Vec<Listener<IntInput>> = Vec::new();
+		let mut base: Vec<Listener<IntInput>> = Vec::new();
+		let mut cap: Vec<Listener<IntInput>> = Vec::new();
+		let mut handling: Vec<Listener<IntInput>> = Vec::new();
+		let mut tracking: Vec<Listener<IntInput>> = Vec::new();
+		let mut dropCompensation: Vec<Listener<IntInput>> = Vec::new();
+		let mut maxCounterforce: Vec<Listener<IntInput>> = Vec::new();
+		let mut CFaccuracy: Vec<Listener<IntInput>> = Vec::new();
+		let mut CFfrequency: Vec<Listener<IntInput>> = Vec::new();
+		let mut aimlevel: Vec<Listener<IntInput>> = Vec::new();
+	
 
 		let width = 75; let height = 20;
 		let mut flex = Pack::new(main.x() + 150, main.y(), width, 300, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Standing");
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Flat Base").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Flat Aim").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Base %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Cap %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Handling % ").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Tracking %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Drop Compensation %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Max Counterforce %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("CF Accuracy %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("CF Frequency %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Aimlevel Modifier").into() );
+		flatbase.push( IntInput::default().with_size(width, height).with_label("Flat Base").into() );
+		flataim.push( IntInput::default().with_size(width, height).with_label("Flat Aim").into() );
+		base.push( IntInput::default().with_size(width, height).with_label("Base %").into() );
+		cap.push( IntInput::default().with_size(width, height).with_label("Cap %").into() );
+		handling.push( IntInput::default().with_size(width, height).with_label("Handling % ").into() );
+		tracking.push( IntInput::default().with_size(width, height).with_label("Tracking %").into() );
+		dropCompensation.push( IntInput::default().with_size(width, height).with_label("Drop Compensation %").into() );
+		maxCounterforce.push( IntInput::default().with_size(width, height).with_label("Max Counterforce %").into() );
+		CFaccuracy.push( IntInput::default().with_size(width, height).with_label("CF Accuracy %").into() );
+		CFfrequency.push( IntInput::default().with_size(width, height).with_label("CF Frequency %").into() );
+		aimlevel.push( IntInput::default().with_size(width, height).with_label("Aimlevel Modifier").into() );
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w(), flex.y(), width, 300, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Crouching");
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
+		flatbase.push( IntInput::default().with_size(width, height).into() );
+		flataim.push( IntInput::default().with_size(width, height).into() );
+		base.push( IntInput::default().with_size(width, height).into() );
+		cap.push( IntInput::default().with_size(width, height).into() );
+		handling.push( IntInput::default().with_size(width, height).into() );
+		tracking.push( IntInput::default().with_size(width, height).into() );
+		dropCompensation.push( IntInput::default().with_size(width, height).into() );
+		maxCounterforce.push( IntInput::default().with_size(width, height).into() );
+		CFaccuracy.push( IntInput::default().with_size(width, height).into() );
+		CFfrequency.push( IntInput::default().with_size(width, height).into() );
+		aimlevel.push( IntInput::default().with_size(width, height).into() );
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w(), flex.y(), width, 300, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Prone");
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).into() );
+		flatbase.push( IntInput::default().with_size(width, height).into() );
+		flataim.push( IntInput::default().with_size(width, height).into() );
+		base.push( IntInput::default().with_size(width, height).into() );
+		cap.push( IntInput::default().with_size(width, height).into() );
+		handling.push( IntInput::default().with_size(width, height).into() );
+		tracking.push( IntInput::default().with_size(width, height).into() );
+		dropCompensation.push( IntInput::default().with_size(width, height).into() );
+		maxCounterforce.push( IntInput::default().with_size(width, height).into() );
+		CFaccuracy.push( IntInput::default().with_size(width, height).into() );
+		CFfrequency.push( IntInput::default().with_size(width, height).into() );
+		aimlevel.push( IntInput::default().with_size(width, height).into() );
 		flex.end();
 
 
 		//-------------------------------------------------
 		// NCTH Items.xml
-		let mut frame = Frame::default().with_size(240, 160).with_pos(main.x() + 420, main.y()+12);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(w, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() - 10).with_label("Items.xml").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			main.x()+420,
+			main.y()+12,
+			240, 160,
+			(240-w)/2, w, "Items.xml"
+		);
 
 		let width = 75; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Scope Mag Factor").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Laser Proj. Factor").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil X Modifier").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Y Modifier").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Modifier %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Accuracy Modifier %").into() );
+		let scopeMagFactor: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Scope Mag Factor").into() );
+		let laserProjFactor: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Laser Proj. Factor").into() );
+		let recoilXmodifier: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil X Modifier").into() );
+		let recoilYmodifier: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil Y Modifier").into() );
+		let recoilModifier: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Modifier %").into() );
+		let accuracyModifier: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Accuracy Modifier %").into() );
 		flex.end();
 
 
 		//-------------------------------------------------
 		// NCTH Weapons.xml
-		let mut frame = Frame::default().with_size(frame.w(), 160).with_pos(frame.x(), frame.y() + frame.h() + 10);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(w, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() - 10).with_label("Weapons.xml").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x(),
+			frame.y()+frame.h()+10,
+			frame.w(), 160,
+			(240-w)/2, w, "Weapons.xml"
+		);
 
 		let width = 75; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("NCTH Accuracy").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil X").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Y").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Delay").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Default Aim Levels").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Weapon Handling").into() );
+		let NCTHaccuracy: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("NCTH Accuracy").into() );
+		let recoilX: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil X").into() );
+		let recoilY: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil Y").into() );
+		let recoilDelay: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Delay").into() );
+		let defaultAimLevels: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Default Aim Levels").into() );
+		let weaponHandling: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Weapon Handling").into() );
 		flex.end();
 
 
 		//-------------------------------------------------
 		// Modifiers
-		let mut frame = Frame::default().with_size(mainWidth/2+15, 350).with_pos(main.x() + main.w() - mainWidth/2-15, main.y() + main.h());
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(100, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() + 1).with_label("Modifiers").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			main.x() + main.w() - mainWidth/2-15,
+			main.y() + main.h(),
+			mainWidth/2+15, 350, 
+			(mainWidth/2+15-w)/2, 100, "Modifiers"
+		);
 
-
-		let mut frame = Frame::default().with_size(165, 185).with_pos(frame.x()+5, frame.y() + 25);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(120, 20).with_pos(frame.x() + 30, frame.y() - 10).with_label("Ranged Weapons").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x() + 5,
+			frame.y() + 25,
+			165, 185,
+			30, 120, "Ranged Weapons"
+		);
 
 		let width = 45; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Damage").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Range").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Mag Size").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst Size").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Shots / 4 turns").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Bullet Speed").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Noise Reduction").into() );
+		let modifierdamage: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Damage").into() );
+		let modifierrange: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Range").into() );
+		let modifiermagSize: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Mag Size").into() );
+		let modifierburstSize: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst Size").into() );
+		let modifiershotsper4turns: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Shots / 4 turns").into() );
+		let modifierbulletspeed: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Bullet Speed").into() );
+		let modifiernoiseReduction: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Noise Reduction").into() );
 		flex.end();
 
 
-		let mut frame = Frame::default().with_size(165, 185).with_pos(frame.x() + frame.w()+5, frame.y());
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(60, 20).with_pos(frame.x() + 30, frame.y() - 10).with_label("To-Hit").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x() + frame.w() + 5,
+			frame.y(),
+			165, 185,
+			30, 60, "To-Hit"
+		);
 
 		let width = 45; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("General %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Aimed Shot %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Bipod/Prone %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Autofire %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Laser Range").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Min. Range").into() );
+		let modifiergeneral: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("General %").into() );
+		let modifieraimedShot: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Aimed Shot %").into() );
+		let modifierbipodProne: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Bipod/Prone %").into() );
+		let modifierburst: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst %").into() );
+		let modifierautofire: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Autofire %").into() );
+		let modifierlaserRange: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Laser Range").into() );
+		let modifierminRange: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Min. Range").into() );
 		flex.end();
 
 
-		let mut frame = Frame::default().with_size(165, 185).with_pos(frame.x(), frame.y() + frame.h() + 5);
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(120, 20).with_pos(frame.x() + 30, frame.y() - 10).with_label("AP Reductions").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			frame.x(),
+			frame.y() + frame.h() + 5,
+			165, 185,
+			30, 120, "AP Reductions"
+		);
 
 		let width = 45; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("General %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Ready %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Reload %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst %").into() );
-		let _: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Autofire %").into() );
+		let modifiergeneralAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("General %").into() );
+		let modifierreadyAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Ready %").into() );
+		let modifierreloadAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Reload %").into() );
+		let modifierburstAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst %").into() );
+		let modifierautofireAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Autofire %").into() );
 		flex.end();
 
 
 		//-------------------------------------------------
 		// Temperature properties
-		let mut frame = Frame::default().with_size(mainWidth/2-15, 350).with_pos(main.x(), main.y() + main.h());
-		frame.set_frame(FrameType::EngravedBox);
-		let _ = Frame::default().with_size(120, 20).with_pos(frame.x() + (frame.w()-w)/2, frame.y() + 1).with_label("Temperature").set_frame(FrameType::FlatBox);
+		let (frame, _) = createBox(
+			main.x(),
+			main.y() + main.h(),
+			mainWidth/2 - 15, 160,
+			(mainWidth/2 - 15 - w )/2 +50, 120, "Temperature"
+		);
 
-		let mut flex = Pack::new(frame.x() + 70, frame.y() + 10, 70, frame.h() - 10, None);
+		let mut flex = Pack::new(frame.x() + 100, frame.y() + 10, 50, frame.h() - 10, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Weapon");
-		floats.push( FloatInput::default().with_size(width, height).with_label("Jam Threshold").into() );
-		floats.push( FloatInput::default().with_size(width, height).with_label("Damage Threshold").into() );
-		floats.push( FloatInput::default().with_size(width, height).with_label("Per Shot Increase").into() );
+		let jamThreshold = FloatInput::default().with_size(width, height).with_label("Jam Threshold").into();
+		let dmgThreshold = FloatInput::default().with_size(width, height).with_label("Dmg Threshold").into();
+		let increasePerShot = FloatInput::default().with_size(width, height).with_label("Increase / Shot").into();
 		flex.end();
-		let mut flex = Pack::new(frame.x() + frame.w() - 80, frame.y() + 10, 70, frame.h() - 10, None);
+		let mut flex = Pack::new(frame.x() + frame.w() - 50, frame.y() + 10, 40, frame.h() - 10, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Item");
-		floats.push( FloatInput::default().with_size(width, height).with_label("Cooldown Factor").into() );
-		floats.push( FloatInput::default().with_size(width, height).with_label("Cooldown Modifier").into() );
-		floats.push( FloatInput::default().with_size(width, height).with_label("Temp. Modifier").into() );
-		floats.push( FloatInput::default().with_size(width, height).with_label("Jam Threshold Modifier").into() );
-		floats.push( FloatInput::default().with_size(width, height).with_label("Damage Threshold Modifier").into() );
+		let cooldownFactor = FloatInput::default().with_size(width, height).with_label("Cooldown Factor").into();
+		let cooldownModifier = FloatInput::default().with_size(width, height).with_label("Cooldown Modifier").into();
+		let tempModifier = FloatInput::default().with_size(width, height).with_label("Temp. Modifier").into();
+		let jamThresholdModifier = FloatInput::default().with_size(width, height).with_label("Jam Threshold Modifier").into();
+		let damageThresholdModifier = FloatInput::default().with_size(width, height).with_label("Damage Threshold Modifier").into();
 		flex.end();
 
 
-		// for dev
-		inputs[0].add_choice("None|Handgun|Submachinegun|Rifle|Machinegun|Shotgun|Knife|Monster");
-		inputs[1].add_choice("Not gun|Pistol|Machine Pistol|Submachinegun|Rifle|Sniper rifle|Assault rifle|Light machinegun|Shotgun");
-		inputs[0].set_value(2);
-		inputs[1].set_value(7);
+		//-------------------------------------------------
+		// Dirt
+		let (frame, _) = createBox(
+			main.x(),
+			frame.y() + frame.h(),
+			mainWidth/2 - 15, 70,
+			(mainWidth/2 - 15 - w )/2, 50, "Dirt"
+		);
+
+		let mut flex = Pack::new(frame.x() + frame.w() - 55, frame.y() + 10, 50, frame.h() - 10, None);
+		flex.set_spacing(5);
+		let dirtDamageChance: Listener<IntInput> = IntInput::default().with_size(width, height).with_label("Damage Chance").into();
+		let dirtIncreaseFactor = FloatInput::default().with_size(width, height).with_label("Increase Factor").into();
+		flex.end();
 
 
-		return WeaponArea { inputs, flags, ints, floats };
+		let (frame, _) = createBox(
+			main.x(),
+			frame.y() + frame.h(),
+			mainWidth/2 - 15, 40,
+			(mainWidth/2 - 15 - w )/2, 120, "Throwing Knives"
+		);
+
+		let mut flex = Pack::new(frame.x() + frame.w() - 155, frame.y() + 10, 150, frame.h() - 10, None);
+		flex.set_spacing(5);
+		let bloodyItem: Listener<Choice> = Choice::default().with_size(width, height).with_label("Bloody Item").into();
+		flex.end();
+
+
+
+
+		let general = WeaponAreaGeneral{ caliber, class, guntype, magsize };
+		let stats = WeaponAreaStats { 
+			range, accuracy, damage, deadliness, messydeath, meleeDamage, crowbarBonus, autofirespeed, autofirepenalty, burstshots, burstpenalty,
+			burstAPcost, reloadAP, manualreloadAP, readyAP, shotsper4turns, brRateOfFire, reloadAnimDelay, burstfireAnimDelay, bulletspeed 
+		};
+		let properties = WeaponAreaProperties { 
+			crowbar, brassknuckles, fullauto, rocketrifle, fingerprintid, easyunjam, heavyweapon, hidemuzzleflash, barrel 
+		};
+		let ncth = WeaponAreaNCTH { 
+			flatbase, flataim, base, cap, handling, tracking, dropCompensation, maxCounterforce, CFaccuracy, CFfrequency, aimlevel, scopeMagFactor,
+			laserProjFactor, recoilXmodifier, recoilYmodifier, recoilModifier, accuracyModifier, NCTHaccuracy, recoilX, recoilY, recoilDelay,
+			defaultAimLevels, weaponHandling 
+		};
+		let temp = WeaponAreaTemperature { 
+			jamThreshold, dmgThreshold, increasePerShot, cooldownFactor, cooldownModifier, tempModifier, jamThresholdModifier, damageThresholdModifier 
+		};
+		let modifiers = WeaponAreaModifiers{
+			// ranged
+			damage: modifierdamage,
+			range: modifierrange,
+			magSize: modifiermagSize,
+			burstSize: modifierburstSize,
+			shotsper4turns: modifiershotsper4turns,
+			bulletspeed: modifierbulletspeed,
+			noiseReduction: modifiernoiseReduction,
+			// to hit
+			general: modifiergeneral,
+			aimedShot: modifieraimedShot,
+			bipodProne: modifierbipodProne,
+			burst: modifierburst,
+			autofire: modifierautofire,
+			laserRange: modifierlaserRange,
+			minRange: modifierminRange,
+			// AP reductions
+			generalAP: modifiergeneralAP,
+			readyAP: modifierreadyAP,
+			reloadAP: modifierreloadAP,
+			burstAP: modifierburstAP,
+			autofireAP: modifierautofireAP,
+		};
+		
+		return WeaponArea { general, stats, properties, ncth, temp, modifiers, dirtDamageChance, dirtIncreaseFactor, bloodyItem }
 	}
 
 	fn addChoices(&mut self, xmldata: &JAxml::JAxmlState)
 	{
-		self.inputs[0].clear();
-		self.inputs[1].clear();
-		self.inputs[0].add_choice("None|Handgun|Submachinegun|Rifle|Machinegun|Shotgun|Knife|Monster");
-		self.inputs[1].add_choice("Not gun|Pistol|Machine Pistol|Submachinegun|Rifle|Sniper rifle|Assault rifle|Light machinegun|Shotgun");
+		self.general.class.clear();
+		self.general.guntype.clear();
+		self.general.caliber.clear();
 
+
+		self.general.class.add_choice("None|Handgun|Submachinegun|Rifle|Machinegun|Shotgun|Knife|Monster");
+		self.general.guntype.add_choice("Not gun|Pistol|Machine Pistol|Submachinegun|Rifle|Sniper rifle|Assault rifle|Light machinegun|Shotgun");
+		for caliber in &xmldata.calibers.items
+		{
+			self.general.caliber.add_choice(&caliber.AmmoCaliber);
+		}
 	}
+
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+		
+		// Update weapon related widgets only if we find a match
+		if let Some(weapon) = xmldata.getWeapon(uiIndex as u32)
+		{
+			self.general.class.activate();
+			self.general.guntype.activate();
+			self.general.caliber.activate();
+			self.general.magsize.activate();
+			self.stats.range.activate();
+			self.stats.accuracy.activate();
+			self.stats.damage.activate();
+			self.stats.deadliness.activate();
+			self.stats.messydeath.activate();
+			self.stats.meleeDamage.activate();
+			self.stats.crowbarBonus.activate();
+			self.stats.autofirespeed.activate();
+			self.stats.autofirepenalty.activate();
+			self.stats.burstshots.activate();
+			self.stats.burstpenalty.activate();
+			self.stats.burstAPcost.activate();
+			self.stats.reloadAP.activate();
+			self.stats.manualreloadAP.activate();
+			self.stats.readyAP.activate();
+			self.stats.shotsper4turns.activate();
+			self.stats.brRateOfFire.activate();
+			self.stats.reloadAnimDelay.activate();
+			self.stats.burstfireAnimDelay.activate();
+			self.stats.bulletspeed.activate();
+			self.properties.fullauto.activate();
+			self.properties.easyunjam.activate();
+			self.properties.heavyweapon.activate();
+			self.ncth.NCTHaccuracy.activate();
+			self.ncth.recoilX.activate();
+			self.ncth.recoilY.activate();
+			self.ncth.recoilDelay.activate();
+			self.ncth.defaultAimLevels.activate();
+			self.ncth.weaponHandling.activate();
+			self.temp.jamThreshold.activate();
+			self.temp.dmgThreshold.activate();
+			self.temp.increasePerShot.activate();
+
+			self.general.class.set_value(weapon.ubWeaponClass as i32);
+			self.general.guntype.set_value(weapon.ubWeaponType as i32);
+			self.general.caliber.set_value(weapon.ubCalibre as i32);
+			self.general.magsize.set_value(&format!("{}", weapon.ubMagSize));
+
+			self.stats.range.set_value( &format!("{}", weapon.usRange) );
+			self.stats.accuracy.set_value( &format!("{}", weapon.bAccuracy) );
+			self.stats.damage.set_value( &format!("{}", weapon.ubImpact) );
+			self.stats.deadliness.set_value( &format!("{}", weapon.ubDeadliness) );
+			self.stats.messydeath.set_value( &format!("{}", weapon.maxdistformessydeath) );
+			self.stats.meleeDamage.set_value( &format!("{}", item.meleedamagebonus) );
+			self.stats.crowbarBonus.set_value( &format!("{}", item.CrowbarModifier) );
+			self.stats.autofirespeed.set_value( &format!("{}", weapon.bAutofireShotsPerFiveAP) );
+			self.stats.autofirepenalty.set_value( &format!("{}", weapon.AutoPenalty) );
+			self.stats.burstshots.set_value( &format!("{}", weapon.ubShotsPerBurst) );
+			self.stats.burstpenalty.set_value( &format!("{}", weapon.ubBurstPenalty) );
+			self.stats.burstAPcost.set_value( &format!("{}", weapon.bBurstAP) );
+			self.stats.reloadAP.set_value( &format!("{}", weapon.APsToReload) );
+			self.stats.manualreloadAP.set_value( &format!("{}", weapon.APsToReloadManually) );
+			self.stats.readyAP.set_value( &format!("{}", weapon.ubReadyTime) );
+			self.stats.shotsper4turns.set_value( &format!("{}", weapon.ubShotsPer4Turns) );
+			self.stats.brRateOfFire.set_value( &format!("{}", item.BR_ROF) );
+			self.stats.reloadAnimDelay.set_value( &format!("{}", weapon.usReloadDelay) );
+			self.stats.burstfireAnimDelay.set_value( &format!("{}", weapon.sAniDelay) );
+			self.stats.bulletspeed.set_value( &format!("{}", weapon.ubBulletSpeed) );
+
+			self.properties.fullauto.set_value(weapon.NoSemiAuto);
+			self.properties.easyunjam.set_value(weapon.EasyUnjam);
+			self.properties.heavyweapon.set_value(weapon.HeavyGun);
+
+			self.ncth.NCTHaccuracy.set_value( &format!("{}", weapon.nAccuracy) );
+			self.ncth.recoilX.set_value( &format!("{}", weapon.bRecoilX) );
+			self.ncth.recoilY.set_value( &format!("{}", weapon.bRecoilY) );
+			self.ncth.recoilDelay.set_value( &format!("{}", weapon.ubRecoilDelay) );
+			self.ncth.defaultAimLevels.set_value( &format!("{}", weapon.ubAimLevels) );
+			self.ncth.weaponHandling.set_value( &format!("{}", weapon.ubHandling) );
+	
+			self.temp.jamThreshold.set_value( &format!("{}", weapon.usOverheatingJamThreshold) );
+			self.temp.dmgThreshold.set_value( &format!("{}", weapon.usOverheatingDamageThreshold) );
+			self.temp.increasePerShot.set_value( &format!("{}", weapon.usOverheatingSingleShotTemperature) );
+		}
+		else
+		{
+			self.general.class.deactivate();
+			self.general.guntype.deactivate();
+			self.general.caliber.deactivate();
+			self.general.magsize.deactivate();
+			self.stats.range.deactivate();
+			self.stats.accuracy.deactivate();
+			self.stats.damage.deactivate();
+			self.stats.deadliness.deactivate();
+			self.stats.messydeath.deactivate();
+			self.stats.meleeDamage.deactivate();
+			self.stats.crowbarBonus.deactivate();
+			self.stats.autofirespeed.deactivate();
+			self.stats.autofirepenalty.deactivate();
+			self.stats.burstshots.deactivate();
+			self.stats.burstpenalty.deactivate();
+			self.stats.burstAPcost.deactivate();
+			self.stats.reloadAP.deactivate();
+			self.stats.manualreloadAP.deactivate();
+			self.stats.readyAP.deactivate();
+			self.stats.shotsper4turns.deactivate();
+			self.stats.brRateOfFire.deactivate();
+			self.stats.reloadAnimDelay.deactivate();
+			self.stats.burstfireAnimDelay.deactivate();
+			self.stats.bulletspeed.deactivate();
+			self.properties.fullauto.deactivate();
+			self.properties.easyunjam.deactivate();
+			self.properties.heavyweapon.deactivate();
+			self.ncth.NCTHaccuracy.deactivate();
+			self.ncth.recoilX.deactivate();
+			self.ncth.recoilY.deactivate();
+			self.ncth.recoilDelay.deactivate();
+			self.ncth.defaultAimLevels.deactivate();
+			self.ncth.weaponHandling.deactivate();
+			self.temp.jamThreshold.deactivate();
+			self.temp.dmgThreshold.deactivate();
+			self.temp.increasePerShot.deactivate();
+
+
+
+			self.general.class.set_value(-1);
+			self.general.guntype.set_value(-1);
+			self.general.caliber.set_value(-1);
+
+			self.properties.fullauto.set_value(false);
+			self.properties.easyunjam.set_value(false);
+			self.properties.heavyweapon.set_value(false);
+
+			self.general.magsize.set_value("");
+			self.stats.range.set_value( "" );
+			self.stats.accuracy.set_value( "" );
+			self.stats.damage.set_value( "" );
+			self.stats.deadliness.set_value( "" );
+			self.stats.messydeath.set_value( "" );
+			self.stats.meleeDamage.set_value( "" );
+			self.stats.crowbarBonus.set_value( "" );
+			self.stats.autofirespeed.set_value( "" );
+			self.stats.autofirepenalty.set_value( "" );
+			self.stats.burstshots.set_value( "" );
+			self.stats.burstpenalty.set_value( "" );
+			self.stats.burstAPcost.set_value( "" );
+			self.stats.reloadAP.set_value( "" );
+			self.stats.manualreloadAP.set_value( "" );
+			self.stats.readyAP.set_value( "" );
+			self.stats.shotsper4turns.set_value( "" );
+			self.stats.brRateOfFire.set_value( "" );
+			self.stats.reloadAnimDelay.set_value( "" );
+			self.stats.burstfireAnimDelay.set_value( "" );
+			self.stats.bulletspeed.set_value( "" );
+			self.ncth.NCTHaccuracy.set_value( "" );
+			self.ncth.recoilX.set_value( "" );
+			self.ncth.recoilY.set_value( "" );
+			self.ncth.recoilDelay.set_value( "" );
+			self.ncth.defaultAimLevels.set_value( "" );
+			self.ncth.weaponHandling.set_value( "" );
+			self.temp.jamThreshold.set_value( "" );
+			self.temp.dmgThreshold.set_value( "" );
+			self.temp.increasePerShot.set_value( "" );
+
+		}
+
+
+
+
+		self.properties.crowbar.set_value(item.crowbar);
+		self.properties.brassknuckles.set_value(item.brassknuckles);
+		self.properties.rocketrifle.set_value(item.rocketrifle);
+		self.properties.fingerprintid.set_value(item.fingerprintid);
+		self.properties.hidemuzzleflash.set_value(item.hidemuzzleflash);
+		self.properties.barrel.set_value(item.barrel);
+
+
+		for i in 0..3
+		{
+			self.ncth.flatbase[i].set_value( &format!("{}", item.flatbasemodifier[i]) );
+			self.ncth.flataim[i].set_value( &format!("{}", item.flataimmodifier[i]) );
+			self.ncth.base[i].set_value( &format!("{}", item.percentbasemodifier[i]) );
+			self.ncth.cap[i].set_value( &format!("{}", item.percentcapmodifier[i]) );
+			self.ncth.handling[i].set_value( &format!("{}", item.percenthandlingmodifier[i]) );
+			self.ncth.tracking[i].set_value( &format!("{}", item.targettrackingmodifier[i]) );
+			self.ncth.dropCompensation[i].set_value( &format!("{}", item.percentdropcompensationmodifier[i]) );
+			self.ncth.maxCounterforce[i].set_value( &format!("{}", item.maxcounterforcemodifier[i]) );
+			self.ncth.CFaccuracy[i].set_value( &format!("{}", item.counterforceaccuracymodifier[i]) );
+			self.ncth.CFfrequency[i].set_value( &format!("{}", item.counterforcefrequency[i]) );
+			self.ncth.aimlevel[i].set_value( &format!("{}", item.aimlevelsmodifier[i]) );
+		}
+
+		self.ncth.scopeMagFactor.set_value( &format!("{}", item.scopemagfactor) );
+		self.ncth.laserProjFactor.set_value( &format!("{}", item.bestlaserrange) );
+		self.ncth.recoilXmodifier.set_value( &format!("{}", item.RecoilModifierX) );
+		self.ncth.recoilYmodifier.set_value( &format!("{}", item.RecoilModifierY) );
+		self.ncth.recoilModifier.set_value( &format!("{}", item.PercentRecoilModifier) );
+		self.ncth.accuracyModifier.set_value( &format!("{}", item.percentaccuracymodifier) );
+
+
+		self.temp.cooldownFactor.set_value( &format!("{}", item.usOverheatingCooldownFactor) );
+		self.temp.cooldownModifier.set_value( &format!("{}", item.overheatCooldownModificator) );
+		self.temp.tempModifier.set_value( &format!("{}", item.overheatTemperatureModificator) );
+		self.temp.jamThresholdModifier.set_value( &format!("{}", item.overheatJamThresholdModificator) );
+		self.temp.damageThresholdModifier.set_value( &format!("{}", item.overheatDamageThresholdModificator) );
+
+
+		// ranged
+		self.modifiers.damage.set_value( &format!("{}", item.damagebonus) );
+		self.modifiers.range.set_value( &format!("{}", item.rangebonus) );
+		self.modifiers.magSize.set_value( &format!("{}", item.magsizebonus) );
+		self.modifiers.burstSize.set_value( &format!("{}", item.burstsizebonus) );
+		self.modifiers.shotsper4turns.set_value( &format!("{}", item.rateoffirebonus) );
+		self.modifiers.bulletspeed.set_value( &format!("{}", item.bulletspeedbonus) );
+		self.modifiers.noiseReduction.set_value( &format!("{}", item.stealthbonus) );
+		// to hit
+		self.modifiers.general.set_value( &format!("{}", item.tohitbonus) );
+		self.modifiers.aimedShot.set_value( &format!("{}", item.aimbonus) );
+		self.modifiers.bipodProne.set_value( &format!("{}", item.bipod) );
+		self.modifiers.burst.set_value( &format!("{}", item.bursttohitbonus) );
+		self.modifiers.autofire.set_value( &format!("{}", item.autofiretohitbonus) );
+		self.modifiers.laserRange.set_value( &format!("{}", item.bestlaserrange) );
+		self.modifiers.minRange.set_value( &format!("{}", item.minrangeforaimbonus) );
+		// AP reductions
+		self.modifiers.generalAP.set_value( &format!("{}", item.percentapreduction) );
+		self.modifiers.readyAP.set_value( &format!("{}", item.percentreadytimeapreduction) );
+		self.modifiers.reloadAP.set_value( &format!("{}", item.percentreloadtimeapreduction) );
+		self.modifiers.burstAP.set_value( &format!("{}", item.percentburstfireapreduction) );
+		self.modifiers.autofireAP.set_value( &format!("{}", item.percentautofireapreduction) );
+
+
+		self.dirtDamageChance.set_value( &format!("{}", item.usDamageChance) );
+		self.dirtIncreaseFactor.set_value( &format!("{}", item.dirtIncreaseFactor) );
+	}
+}
+
+
+fn createBox(x: i32, y: i32, w: i32, h: i32, xtitle: i32, widthtitle: i32, label: &str) -> (Frame, Frame)
+{
+	let mut main = Frame::default().with_size(w, h).with_pos(x, y);
+	main.set_frame(FrameType::EngravedBox);
+
+	let mut title = Frame::default().with_size(widthtitle, 20).with_pos(x + xtitle, y - 10).with_label(label);
+	title.set_frame(FrameType::FlatBox);
+	title.set_label_font(enums::Font::HelveticaBold);
+
+	return (main, title);
 }
 //-----------------------------------------------------------------------------
 // Enums
@@ -1743,6 +2362,11 @@ pub enum Message {
     Redraw,
     GraphicScroll,
 	GraphicType,
+	ItemClass,
+	Tab1,
+	Tab2,
+	Tab3,
+	Tab4
 }
 
     

@@ -171,13 +171,14 @@ pub struct JAxmlState
 	pub items: ITEMLIST,
 	pub weapons: WEAPONLIST,
 	pub armors: ARMOURLIST,
-	pub clothes: CLOTHESLIST
+	pub clothes: CLOTHESLIST,
+	pub calibers: AMMOLIST,
 }
 impl JAxmlState
 {
 	pub fn new() -> JAxmlState
 	{
-		JAxmlState { items: ITEMLIST::new(), weapons: WEAPONLIST::new(), armors: ARMOURLIST::new(), clothes: CLOTHESLIST::new() }
+		JAxmlState { items: ITEMLIST::new(), weapons: WEAPONLIST::new(), armors: ARMOURLIST::new(), clothes: CLOTHESLIST::new(), calibers: AMMOLIST::new() }
 	}
 	
 	pub fn loadData(&mut self, dataFolder: &PathBuf)
@@ -186,7 +187,7 @@ impl JAxmlState
 		tableDataPath.push("TableData");
 		
 		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..4
+		for _ in 0..5
 		{
 			paths.push(tableDataPath.clone());
 		}
@@ -194,16 +195,19 @@ impl JAxmlState
 		paths[1].push("Items/Weapons.xml");
 		paths[2].push("Items/Armours.xml");
 		paths[3].push("Items/Clothes.xml");
+		paths[4].push("Items/AmmoStrings.xml");
 
 		let items = ITEMLIST::loadItems(&paths[0]);
 		let weapons= WEAPONLIST::loadItems(&paths[1]);
 		let armors= ARMOURLIST::loadItems(&paths[2]);
 		let clothes = CLOTHESLIST::loadItems(&paths[3]);
+		let calibers = AMMOLIST::loadItems(&paths[4]);
 		
 		self.items = items;
 		self.weapons = weapons;
 		self.armors = armors;
 		self.clothes = clothes;
+		self.calibers = calibers;
 		// return JAxmlState{items, weapons, armors};
 	}
 	
@@ -213,7 +217,7 @@ impl JAxmlState
 		tableDataPath.push("TableData");
 		
 		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..4
+		for _ in 0..5
 		{
 			paths.push(tableDataPath.clone());
 		}
@@ -221,11 +225,13 @@ impl JAxmlState
 		paths[1].push("Items/Weapons.xml");
 		paths[2].push("Items/Armours.xml");
 		paths[3].push("Items/Clothes.xml");
+		paths[4].push("Items/AmmoStrings.xml");
 		
 		self.items.save(&paths[0]);
 		self.weapons.save(&paths[1]);
 		self.armors.save(&paths[2]);
 		self.clothes.save(&paths[3]);
+		self.calibers.save(&paths[4]);
 	}
 	
 	pub fn findNamebyIndex(&self, uiIndex: u32) -> Option<String>
@@ -239,7 +245,18 @@ impl JAxmlState
 		}
 		
 		return None;
-	}	
+	}
+
+	pub fn getWeapon(&self, uiIndex: u32) -> Option<&WEAPON>
+	{
+		for weapon in &self.weapons.items
+		{
+			if weapon.uiIndex == uiIndex { return Some(weapon); }
+		}
+		
+		return None;
+	}
+
 }
 
 
@@ -252,6 +269,21 @@ impl CLOTHESLIST
 			if item.uiIndex == uiIndex
 			{
 				return Some(item.szName.clone());
+			}
+		}
+		
+		return None;
+	}	
+}
+impl AMMOLIST
+{
+	pub fn findNamebyIndex(&self, uiIndex: u32) -> Option<String>
+	{
+		for item in &self.items
+		{
+			if item.uiIndex == uiIndex
+			{
+				return Some(item.AmmoCaliber.clone());
 			}
 		}
 		
@@ -2902,6 +2934,7 @@ impl WEAPON
 
 		write!(file, "\t</WEAPON>\n").unwrap();
 	}
+
 }
 
 pub struct MAGAZINE
@@ -2975,10 +3008,10 @@ impl MAGAZINE {
 
 pub struct AMMOSTRING
 {
-    uiIndex: u32,
-    AmmoCaliber: String,
-    BRCaliber: String,
-    NWSSCaliber: String,
+    pub uiIndex: u32,
+    pub AmmoCaliber: String,
+    pub BRCaliber: String,
+    pub NWSSCaliber: String,
 }
 impl AMMOSTRING {
     pub fn new() -> AMMOSTRING
