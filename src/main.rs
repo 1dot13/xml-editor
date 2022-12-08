@@ -7,11 +7,13 @@ use std::env::current_dir;
 // use std::str;
 use std::path::PathBuf;
 use std::time::{Instant};
-use fltk::button::{RadioButton, ToggleButton, CheckButton, LightButton, RepeatButton, RadioLightButton, RadioRoundButton};
+use fltk::app::event_inside_widget;
+use fltk::button::{RadioButton, ToggleButton, CheckButton, LightButton, RepeatButton, RadioLightButton, RadioRoundButton, ReturnButton};
 use fltk::enums::{Color, Align, Font};
-use fltk::group::{Tabs, Group, FlexType, Pack};
+use fltk::group::{Tabs, Group, FlexType, Pack, ColorChooser};
 use fltk::input::{IntInput, Input, FloatInput};
-use fltk::menu::{MenuFlag, SysMenuBar, Choice};
+use fltk::menu::{MenuFlag, SysMenuBar, Choice, MenuButton};
+use fltk::output::Output;
 use fltk::valuator::{Scrollbar, ScrollbarType};
 // use quick_xml::events::{Event, BytesStart};
 // use quick_xml::events::attributes::{Attributes, Attribute};
@@ -67,53 +69,68 @@ fn main()
 	// Item info
 	let mut itemWindow = Window::default()
 		.with_size(980, 720)
-		.with_pos(300, 0);
-	
-	let mut tabs = Tabs::new(0, 0, itemWindow.w(), 20, "");
-	tabs.emit(s, Message::Redraw);
+		.with_pos(300, 0)
+		.with_label("itemWindow"
+	);
+
+
+	//-----------------------------------------------------------------------------
+	// Okay, so this is stupid, but I can't get the widgets to work without defining them outside of tabs when using app.wait()
+	// With app.run() it works as expected, but I need app.wait() for better event handling via messages and fltk_evented crate
+	let tabLabels = vec!["General\t\t", "Weapon\t\t", "Tab3\t\t", "Tab4\t\t"];
+	let mut tabs = Tabs::new(0, 0, itemWindow.w(), 20, "tabs");
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
 	
-	let mut tab1 = Group::default().with_size(w, h).below_of(&tabs, 0).with_label("General\t\t");
+	let tab0 = Group::default().with_size(w, h).below_of(&tabs, 0).with_label(tabLabels[0]);
+	tab0.end();
+    let tab1 = Group::default().with_size(w, h).right_of(&tab0, 0).with_label(tabLabels[1]);
+    tab1.end();
+    let tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label(tabLabels[2]);
+    tab2.end();
+    let tab3 = Group::default().with_size(w, h).right_of(&tab2, 0).with_label(tabLabels[3]);
+    tab3.end();
+    tabs.end();
+	tabs.emit(s, Message::Tabs);
+
+
+	let mut tabGroups = Vec::new();
 	let x = 0;
 	let y = 25;
+	
+	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
 	let mut itemGraphics = ItemGraphicsArea::initialize(x, y, &s, &images);
 	let mut itemStats = ItemStatsArea::initialize(x, 485);
 	let mut itemDescription = ItemDescriptionArea::initialize(310, y);
 	let mut itemProperties = ItemPropertiesArea::initialize(310, y + 210);
 	let mut itemKit = ItemKitArea::initialize(310, 485);
 	let mut itemVision = ItemVisionArea::initialize(310+235+10, 485);
-	tab1.end();
+	g.end();
+	tabGroups.push( g );
 
-
-    let mut tab2 = Group::default().with_size(w, h).right_of(&tab1, 0).with_label("Weapon\t\t");
-	let x = 0;
-	let y = 25;
+	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
 	let mut weaponArea = WeaponArea::initialize(x, y);
-    tab2.end();
+	g.end();
+	g.hide();
+	tabGroups.push( g );
 
+	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
+	let magArea = MagazineArea::initialize(x, y);
+	g.end();
+	g.hide();
+	tabGroups.push( g );
 
-    let mut tab3 = Group::default().with_size(w, h).right_of(&tab2, 0).with_label("Tab3\t\t");
-    let _but2 = RoundButton::default().with_size(0, 30).with_label("Round").center_of(&itemWindow);
-    tab3.end();
+	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
+	g.end();
+	g.hide();
+	tabGroups.push( g );
+	//-----------------------------------------------------------------------------
 
-
-    let mut tab4 = Group::default().with_size(w, h).right_of(&tab3, 0).with_label("Tab4\t\t");
-    let _but3 = RoundButton::default().with_size(0, 30).with_label("Round2").center_of(&itemWindow);
-    tab4.end();
-
-	tab1.emit(s, Message::Tab1);
-	tab2.emit(s, Message::Tab2);
-	tab3.emit(s, Message::Tab3);
-	tab4.emit(s, Message::Tab4);
-
-    tabs.end();
+	
 	itemWindow.end();
- 	
 	mainWindow.end();
 	// mainWindow.make_resizable(true);
 	mainWindow.show();
-
 
 	itemVision.addChoicesToClothesTypes(&xmldata);
 	weaponArea.addChoices(&xmldata);
@@ -123,6 +140,11 @@ fn main()
     let mut index = 0;
     while a.wait() 
     {
+		// if let Some(w) = app::belowmouse::<widget::Widget>()
+		// {
+		// 	println!("{}", w.label());
+		// }
+
 		if tree.triggered()
 		{
  			if let Some(item) = tree.first_selected_item() 
@@ -191,7 +213,23 @@ fn main()
 					itemGraphics.redrawScrollAreaImages(&images);
 
 				}
-				Tab1  | Tab2 | Tab3 | Tab4 => { switchTab(&xmldata, msg); }
+				Tabs => 
+				{
+					for tab in &mut tabGroups { tab.hide(); }
+					
+					let tab = tabs.value().unwrap().label();
+					match tab
+					{
+						x if x == tabLabels[0] => { tabGroups[0].show(); }
+						x if x == tabLabels[1] => { tabGroups[1].show(); }
+						x if x == tabLabels[2] => { tabGroups[2].show(); }
+						x if x == tabLabels[3] => { tabGroups[3].show(); }
+						_ => ()
+					}
+
+					//  let color = dialog::color_chooser("name", dialog::ColorMode::Rgb);
+					itemWindow.redraw();
+				}
 				_ => {}
 	        }
         }
@@ -242,30 +280,6 @@ fn saveData(dataPath: &PathBuf, xmldata: &JAxml::JAxmlState)
 	let t = Instant::now();
 	xmldata.saveData(&dataPath);
 	println!("Saving xml data took: {:?}", t.elapsed());
-}
-
-fn switchTab(xmldata: &JAxml::JAxmlState, msg: Message)
-{
-	match msg
-	{
-		Message::Tab1 => 
-		{
-
-		}	
-		Message::Tab2 => 
-		{
-
-		}
-		Message::Tab3 =>
-		{
-
-		}
-		Message::Tab4 =>
-		{
-
-		}
-		_ => ()
-	}
 }
 
 fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: Message)
@@ -756,7 +770,7 @@ struct ItemGraphicsArea
 	scrollbar: Scrollbar,
 	itemType: Choice,
 	itemIndex: IntInput,
-	itemClass: Choice,
+	itemClass: Listener<Choice>,
 	uiIndex: IntInput
 }
 impl ItemGraphicsArea
@@ -814,7 +828,7 @@ impl ItemGraphicsArea
 		let _ = Frame::default().with_size(20, 20).with_pos(x + 42, small.y() + small.h() + 130).with_label("Item Index");
 
 		let mut itemClass = Choice::default().with_pos(x + 10, small.y() + small.h() + 110).with_size(100, 20);
-		itemClass.emit(*s, Message::ItemClass);
+		// itemClass.emit(*s, Message::ItemClass);
 
 		let classes = vec![
 			"None",
@@ -870,7 +884,7 @@ impl ItemGraphicsArea
 		let mut scrollbar = Scrollbar::default().with_pos(scrollArea.x() + scrollArea.w() - w, scrollArea.y()).with_size(w, scrollArea.h());
 		scrollbar.emit(*s, Message::GraphicScroll);
 
-		return ItemGraphicsArea{big, med, small, images, scrollbar, itemType, itemIndex, uiIndex, itemClass};
+		return ItemGraphicsArea{big, med, small, images, scrollbar, itemType, itemIndex, uiIndex, itemClass: itemClass.into()};
 	}
 
 	
@@ -1529,6 +1543,7 @@ struct WeaponAreaProperties
 	heavyweapon: Listener<CheckButton>,
 	hidemuzzleflash: Listener<CheckButton>,
 	barrel: Listener<CheckButton>,
+	magazinefed: Listener<CheckButton>,
 }
 struct WeaponAreaNCTH
 {
@@ -1761,21 +1776,21 @@ impl WeaponArea
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w() + 80, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let magazinefed = CheckButton::default().with_size(width, height).with_label("Magazine Fed").into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w() + 50, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("");//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
 		flex.end();
 
 
@@ -2040,7 +2055,7 @@ impl WeaponArea
 			burstAPcost, reloadAP, manualreloadAP, readyAP, shotsper4turns, brRateOfFire, reloadAnimDelay, burstfireAnimDelay, bulletspeed 
 		};
 		let properties = WeaponAreaProperties { 
-			crowbar, brassknuckles, fullauto, rocketrifle, fingerprintid, easyunjam, heavyweapon, hidemuzzleflash, barrel 
+			crowbar, brassknuckles, fullauto, rocketrifle, fingerprintid, easyunjam, heavyweapon, hidemuzzleflash, barrel, magazinefed 
 		};
 		let ncth = WeaponAreaNCTH { 
 			flatbase, flataim, base, cap, handling, tracking, dropCompensation, maxCounterforce, CFaccuracy, CFfrequency, aimlevel, scopeMagFactor,
@@ -2132,6 +2147,7 @@ impl WeaponArea
 			self.properties.fullauto.activate();
 			self.properties.easyunjam.activate();
 			self.properties.heavyweapon.activate();
+			self.properties.magazinefed.activate();
 			self.ncth.NCTHaccuracy.activate();
 			self.ncth.recoilX.activate();
 			self.ncth.recoilY.activate();
@@ -2171,6 +2187,7 @@ impl WeaponArea
 			self.properties.fullauto.set_value(weapon.NoSemiAuto);
 			self.properties.easyunjam.set_value(weapon.EasyUnjam);
 			self.properties.heavyweapon.set_value(weapon.HeavyGun);
+			self.properties.magazinefed.set_value(weapon.swapClips);
 
 			self.ncth.NCTHaccuracy.set_value( &format!("{}", weapon.nAccuracy) );
 			self.ncth.recoilX.set_value( &format!("{}", weapon.bRecoilX) );
@@ -2212,6 +2229,7 @@ impl WeaponArea
 			self.properties.fullauto.deactivate();
 			self.properties.easyunjam.deactivate();
 			self.properties.heavyweapon.deactivate();
+			self.properties.magazinefed.deactivate();
 			self.ncth.NCTHaccuracy.deactivate();
 			self.ncth.recoilX.deactivate();
 			self.ncth.recoilY.deactivate();
@@ -2340,6 +2358,85 @@ impl WeaponArea
 }
 
 
+struct AmmoTypesArea
+{
+	index: Listener<IntInput>,
+	rgb: (u8, u8, u8),
+
+}
+struct AmmoStringsArea
+{
+	index: Listener<IntInput>,
+	caliber: Listener<Input>,
+	brcaliber: Listener<Input>,
+	nwsscaliber: Listener<Input>,
+}
+struct MagazineArea
+{
+	caliber: Listener<Choice>,
+	ammotype: Listener<Choice>,
+	magsize: Listener<IntInput>,
+	magtype: Listener<Choice>,
+	ammostrings: AmmoStringsArea,
+	color: Listener<Button>
+}
+impl MagazineArea
+{
+	fn initialize(x: i32, y: i32) -> MagazineArea
+	{
+		let mainWidth = 220; let mainHeight = 110;
+
+		// Main framed box. Everything else is located relative to this
+		let (frame, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			20, 60, "Magazine"
+		);
+
+		let width = 100; let height = 20;
+		let mut flex = Pack::new(frame.x() + frame.w() - (width+5), frame.y() + 10, width, frame.h() - 10, None);
+		flex.set_spacing(5);
+		let caliber: Listener<Choice> = Choice::default().with_size(width, height).with_label("Caliber").into();
+		let ammotype = Choice::default().with_size(width, height).with_label("Ammo type").into();
+		let magsize = IntInput::default().with_size(width, height).with_label("Magazine size").into();
+		let magtype = Choice::default().with_size(width, height).with_label("Magazine type").into();
+		flex.end();
+
+
+
+		let (frame, _) = createBox(
+			x, frame.y()+frame.h(),
+			mainWidth, mainHeight,
+			20, 60, "Caliber"
+		);
+
+		let width = 100; let height = 20;
+		let mut flex = Pack::new(frame.x() + frame.w() - (width+5), frame.y() + 10, width, frame.h() - 10, None);
+		flex.set_spacing(5);
+		let index = IntInput::default().with_size(width, height).with_label("Index").into();
+		let ammocaliber = Input::default().with_size(width, height).with_label("Caliber").into();
+		let brcaliber = Input::default().with_size(width, height).with_label("Bobby Ray's").into();
+		let nwsscaliber = Input::default().with_size(width, height).with_label("NWSS").into();
+		flex.end();
+		let ammostrings = AmmoStringsArea { index, caliber: ammocaliber, brcaliber, nwsscaliber };
+
+
+
+		let (frame, _) = createBox(
+			x, frame.y()+frame.h(),
+			mainWidth, 300,
+			10, 100, "Ammo Type"
+		);
+
+		// let mut color = ColorChooser::new(frame.x()+10, frame.y() + frame.h() - 100, 200, 95, "Ammo count color");
+		// color.set_selection_color(Color::Red);
+		let mut color = Button::new(frame.x()+10, frame.y() + frame.h() - 100, 200, 95, "Ammo count color").into();
+
+		return MagazineArea{ammotype, caliber, magsize, magtype, ammostrings, color};
+	}
+}
+
+
 fn createBox(x: i32, y: i32, w: i32, h: i32, xtitle: i32, widthtitle: i32, label: &str) -> (Frame, Frame)
 {
 	let mut main = Frame::default().with_size(w, h).with_pos(x, y);
@@ -2403,10 +2500,7 @@ pub enum Message {
     GraphicScroll,
 	GraphicType,
 	ItemClass,
-	Tab1,
-	Tab2,
-	Tab3,
-	Tab4
+	Tabs,
 }
 
     

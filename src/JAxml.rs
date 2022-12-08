@@ -173,21 +173,53 @@ pub struct JAxmlState
 	pub armors: ARMOURLIST,
 	pub clothes: CLOTHESLIST,
 	pub calibers: AMMOLIST,
+	pub ammotypes: AMMOTYPELIST,
+	pub magazines: MAGAZINELIST,
+	pub attachments: ATTACHMENTLIST,
+	pub attachmentslots: ATTACHMENTSLOTLIST,
+	pub attachmentinfo: ATTACHMENTINFOLIST,
+	pub attachmentmerges: ATTACHMENTCOMBOMERGELIST,
+	pub incompatibleattachments: INCOMPATIBLEATTACHMENTLIST,
+	pub compatiblefaceitems: COMPATIBLEFACEITEMLIST,
+	pub drugs: DRUGSLIST,
+	pub explosiondata: EXPDATALIST,
+	pub explosives: EXPLOSIVELIST,
+	pub foods: FOODSLIST,
+	pub foodopinions: FOODOPINIONSLIST,
+	pub transformations: TRANSFORMATIONS_LIST,
+	pub launchables: LAUNCHABLELIST,
+	pub lbe: LOADBEARINGEQUIPMENTLIST,
+	pub merges: MERGELIST,
+	pub pockets: POCKETLIST,
+	pub randomitems: RANDOMITEMLIST,
+	pub structconstructs: STRUCTURECONSTRUCTLIST,
+	pub structdeconstructs: STRUCTUREDECONSTRUCTLIST,
+	pub structmoves: STRUCTUREMOVELIST,
+
 }
 impl JAxmlState
 {
 	pub fn new() -> JAxmlState
 	{
-		JAxmlState { items: ITEMLIST::new(), weapons: WEAPONLIST::new(), armors: ARMOURLIST::new(), clothes: CLOTHESLIST::new(), calibers: AMMOLIST::new() }
+		JAxmlState { 
+			items: ITEMLIST::new(), weapons: WEAPONLIST::new(), armors: ARMOURLIST::new(), clothes: CLOTHESLIST::new(), calibers: AMMOLIST::new(),
+			ammotypes: AMMOTYPELIST::new(), attachmentinfo: ATTACHMENTINFOLIST::new(), attachmentmerges: ATTACHMENTCOMBOMERGELIST::new(),
+			attachments: ATTACHMENTLIST::new(), attachmentslots: ATTACHMENTSLOTLIST::new(), compatiblefaceitems: COMPATIBLEFACEITEMLIST::new(),
+			drugs: DRUGSLIST::new(), explosiondata: EXPDATALIST::new(), explosives: EXPLOSIVELIST::new(), foods: FOODSLIST::new(),
+			foodopinions: FOODOPINIONSLIST::new(), incompatibleattachments: INCOMPATIBLEATTACHMENTLIST::new(), launchables: LAUNCHABLELIST::new(),
+			lbe: LOADBEARINGEQUIPMENTLIST::new(), magazines: MAGAZINELIST::new(), merges: MERGELIST::new(), pockets: POCKETLIST::new(),
+			randomitems: RANDOMITEMLIST::new(), transformations: TRANSFORMATIONS_LIST::new(), structconstructs: STRUCTURECONSTRUCTLIST::new(),
+			structdeconstructs: STRUCTUREDECONSTRUCTLIST::new(), structmoves: STRUCTUREMOVELIST::new() 
+		}
 	}
 	
-	pub fn loadData(&mut self, dataFolder: &PathBuf)
+	fn paths(dataFolder: &PathBuf) -> Vec<PathBuf>
 	{
 		let mut tableDataPath = dataFolder.clone();
 		tableDataPath.push("TableData");
 		
 		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..5
+		for _ in 0..27
 		{
 			paths.push(tableDataPath.clone());
 		}
@@ -196,42 +228,124 @@ impl JAxmlState
 		paths[2].push("Items/Armours.xml");
 		paths[3].push("Items/Clothes.xml");
 		paths[4].push("Items/AmmoStrings.xml");
+		paths[5].push("Items/AmmoTypes.xml");
+		paths[6].push("Items/Magazines.xml");
+		paths[7].push("Items/Attachments.xml");
+		paths[8].push("Items/AttachmentSlots.xml");
+		paths[9].push("Items/AttachmentInfo.xml");
+		paths[10].push("Items/AttachmentComboMerges.xml");
+		paths[11].push("Items/IncompatibleAttachments.xml");
+		paths[12].push("Items/CompatibleFaceItems.xml");
+		paths[13].push("Items/Drugs.xml");
+		paths[14].push("Items/ExplosionData.xml");
+		paths[15].push("Items/Explosives.xml");
+		paths[16].push("Items/Food.xml");
+		paths[17].push("Items/FoodOpinion.xml");
+		paths[18].push("Items/Item_Transformations.xml");
+		paths[19].push("Items/Launchables.xml");
+		paths[20].push("Items/LoadBearingEquipment.xml");
+		paths[21].push("Items/Merges.xml");
+		paths[22].push("Items/Pockets.xml");
+		paths[23].push("Items/RandomItem.xml");
+		paths[24].push("Items/StructureConstruct.xml");
+		paths[25].push("Items/StructureDeconstruct.xml");
+		paths[26].push("Items/StructureMove.xml");
+
+		return paths;
+	}
+
+	pub fn loadData(&mut self, dataFolder: &PathBuf)
+	{
+		let paths = JAxmlState::paths(dataFolder);
 
 		let items = ITEMLIST::loadItems(&paths[0]);
 		let weapons= WEAPONLIST::loadItems(&paths[1]);
 		let armors= ARMOURLIST::loadItems(&paths[2]);
 		let clothes = CLOTHESLIST::loadItems(&paths[3]);
 		let calibers = AMMOLIST::loadItems(&paths[4]);
-		
+		let ammotypes = AMMOTYPELIST::loadItems(&paths[5]);
+		let magazines = MAGAZINELIST::loadItems(&paths[6]);
+		let attachments = ATTACHMENTLIST::loadItems(&paths[7]);
+		let attachmentslots = ATTACHMENTSLOTLIST::loadItems(&paths[8]);
+		let attachmentinfo = ATTACHMENTINFOLIST::loadItems(&paths[9]);
+		let attachmentmerges = ATTACHMENTCOMBOMERGELIST::loadItems(&paths[10]);
+		let incompatibleattachments = INCOMPATIBLEATTACHMENTLIST::loadItems(&paths[11]);
+		let compatiblefaceitems = COMPATIBLEFACEITEMLIST::loadItems(&paths[12]);
+		let drugs = DRUGSLIST::loadItems(&paths[13]);
+		let explosiondata = EXPDATALIST::loadItems(&paths[14]);
+		let explosives = EXPLOSIVELIST::loadItems(&paths[15]);
+		let foods = FOODSLIST::loadItems(&paths[16]);
+		let foodopinions = FOODOPINIONSLIST::loadItems(&paths[17]);
+		let transformations = TRANSFORMATIONS_LIST::loadItems(&paths[18]);
+		let launchables = LAUNCHABLELIST::loadItems(&paths[19]);
+		let lbe = LOADBEARINGEQUIPMENTLIST::loadItems(&paths[20]);
+		let merges = MERGELIST::loadItems(&paths[21]);
+		let pockets = POCKETLIST::loadItems(&paths[22]);
+		let randomitems = RANDOMITEMLIST::loadItems(&paths[23]);
+		let structconstructs = STRUCTURECONSTRUCTLIST::loadItems(&paths[24]);
+		let structdeconstructs = STRUCTUREDECONSTRUCTLIST::loadItems(&paths[25]);
+		let structmoves = STRUCTUREMOVELIST::loadItems(&paths[26]);
+
 		self.items = items;
 		self.weapons = weapons;
 		self.armors = armors;
 		self.clothes = clothes;
 		self.calibers = calibers;
-		// return JAxmlState{items, weapons, armors};
+		self.ammotypes = ammotypes;
+		self.magazines = magazines;
+		self.attachments = attachments;
+		self.attachmentslots = attachmentslots;
+		self.attachmentinfo = attachmentinfo;
+		self.attachmentmerges = attachmentmerges;
+		self.incompatibleattachments = incompatibleattachments;
+		self.compatiblefaceitems = compatiblefaceitems;
+		self.drugs = drugs;
+		self.explosiondata = explosiondata;
+		self.explosives = explosives;
+		self.foods = foods;
+		self.foodopinions = foodopinions;
+		self.transformations = transformations;
+		self.launchables = launchables;
+		self.lbe = lbe;
+		self.merges = merges;
+		self.pockets = pockets;
+		self.randomitems = randomitems;
+		self.structconstructs = structconstructs;
+		self.structdeconstructs = structdeconstructs;
+		self.structmoves = structmoves;
 	}
 	
 	pub fn saveData(&self, dataFolder: &PathBuf)
 	{
-		let mut tableDataPath = dataFolder.clone();
-		tableDataPath.push("TableData");
-		
-		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..5
-		{
-			paths.push(tableDataPath.clone());
-		}
-		paths[0].push("Items/Items.xml");
-		paths[1].push("Items/Weapons.xml");
-		paths[2].push("Items/Armours.xml");
-		paths[3].push("Items/Clothes.xml");
-		paths[4].push("Items/AmmoStrings.xml");
+		let paths = JAxmlState::paths(dataFolder);
 		
 		self.items.save(&paths[0]);
 		self.weapons.save(&paths[1]);
 		self.armors.save(&paths[2]);
 		self.clothes.save(&paths[3]);
 		self.calibers.save(&paths[4]);
+		self.ammotypes.save(&paths[5]);
+		self.magazines.save(&paths[6]);
+		self.attachments.save(&paths[7]);
+		self.attachmentslots.save(&paths[8]);
+		self.attachmentinfo.save(&paths[9]);
+		self.attachmentmerges.save(&paths[10]);
+		self.incompatibleattachments.save(&paths[11]);
+		self.compatiblefaceitems.save(&paths[12]);
+		self.drugs.save(&paths[13]);
+		self.explosiondata.save(&paths[14]);
+		self.explosives.save(&paths[15]);
+		self.foods.save(&paths[16]);
+		self.foodopinions.save(&paths[17]);
+		self.transformations.save(&paths[18]);
+		self.launchables.save(&paths[19]);
+		self.lbe.save(&paths[20]);
+		self.merges.save(&paths[21]);
+		self.pockets.save(&paths[22]);
+		self.randomitems.save(&paths[23]);
+		self.structconstructs.save(&paths[24]);
+		self.structdeconstructs.save(&paths[25]);
+		self.structmoves.save(&paths[26]);
 	}
 	
 	pub fn findNamebyIndex(&self, uiIndex: u32) -> Option<String>
