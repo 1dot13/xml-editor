@@ -48,7 +48,7 @@ mod STI;
 fn main() 
 {
 	let dataPath = PathBuf::from("H:\\JA2 Dev\\Data-1.13"); // <-- Temporary start path while developing
-	let mut xmldata = JAxml::JAxmlState::new();
+	let mut xmldata = JAxml::Data::new();
 	let mut images = STI::Images::new();
 	loadData(&mut xmldata, &mut images, &dataPath);
 	//-----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ fn main()
 	//-----------------------------------------------------------------------------
 	// Okay, so this is stupid, but I can't get the widgets to work without defining them outside of tabs when using app.wait()
 	// With app.run() it works as expected, but I need app.wait() for better event handling via messages and fltk_evented crate
-	let tabLabels = vec!["General\t\t", "Weapon\t\t", "Ammo / Explosives\t", "Tab4\t\t"];
+	let tabLabels = vec!["Item\t\t", "Item / Weapon\t", "Ammo / Explosives\t", "Tab4\t\t"];
 	let mut tabs = Tabs::new(0, 0, itemWindow.w(), 20, "tabs");
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
@@ -140,6 +140,8 @@ fn main()
 	itemVision.addChoicesToClothesTypes(&xmldata);
 	weaponArea.addChoices(&xmldata);
 	magArea.addChoices(&xmldata);
+
+	let mut uidata = UIdata{ images, itemDescription, itemGraphics, itemKit, itemProperties, itemStats, itemVision, magArea, weaponArea, state: State::Item };
 	//-----------------------------------------------------------------------------
 	// Main loop
 	//-----------------------------------------------------------------------------    
@@ -159,21 +161,30 @@ fn main()
                 let uiIndex = unsafe{item.user_data::<u32>()}.unwrap() as usize;
                 println!("uiIndex {}", uiIndex);
                 
-				itemGraphics.update(&xmldata, &images, uiIndex);
-				itemDescription.update(&xmldata, uiIndex);
-				itemProperties.update(&xmldata, uiIndex);
-				itemStats.update(&xmldata, uiIndex);
-				itemKit.update(&xmldata, uiIndex);
-				itemVision.update(&xmldata, uiIndex);
-
-				weaponArea.update(&xmldata, uiIndex);
-				magArea.update(&xmldata, uiIndex);
+				use State::*;
+				match uidata.state
+				{
+					Item => 
+					{
+						uidata.updateItem(&xmldata, uiIndex);
+						uidata.updateWeapon(&xmldata, uiIndex);
+						uidata.updateMagazine(&xmldata, uiIndex);
+					}
+					AmmoCalibers => 
+					{
+						uidata.magArea.updateCaliber(&xmldata, uiIndex);
+					}
+					AmmoTypes => 
+					{
+						uidata.magArea.updateAmmoType(&xmldata, uiIndex);
+					}
+				}
 
 				itemWindow.redraw()
 			}
 			else 
 			{
-				itemGraphics.clearImages();
+				uidata.itemGraphics.clearImages();
 			}
 		}
     	
@@ -185,7 +196,7 @@ fn main()
 				// Toolbar menus
 				Open =>
 				{
-					openFileDialog(&mut xmldata, &mut images, &mut tree);
+					openFileDialog(&mut xmldata, &mut uidata.images, &mut tree);
 				}
 				Save =>
 				{
@@ -200,9 +211,10 @@ fn main()
 				ShowRandom | ShowMerges | ShowAttachmentMerges | ShowLaunchables | ShowCompatibleFaceGear | 
 				ShowTransforms | ShowRandomItems | ShowAttachmentList | ShowAttachmentInfo | ShowIncompatibleAttachments | 
 				ShowMedical | ShowScifi | ShowNonScifi | ShowTonsOfGuns | ShowReducedGuns | ShowAttachments |
-				ShowDrugs => 
+				ShowDrugs | ShowAmmoTypeData | ShowCaliberData => 
 				{
 					fillTree(&mut tree, &xmldata, msg);
+					uidata.changeState(msg);
 				}
 				// Item Window
 				Redraw => 
@@ -211,13 +223,13 @@ fn main()
 				}
 				GraphicScroll =>
 				{
-					itemGraphics.redrawScrollAreaImages(&images);
+					uidata.itemGraphics.redrawScrollAreaImages(&uidata.images);
 					itemWindow.redraw();
 				}
 				GraphicType =>
 				{
-					itemGraphics.updateScrollBarBounds(&images);
-					itemGraphics.redrawScrollAreaImages(&images);
+					uidata.itemGraphics.updateScrollBarBounds(&uidata.images);
+					uidata.itemGraphics.redrawScrollAreaImages(&uidata.images);
 
 				}
 				Tabs => 
@@ -243,10 +255,10 @@ fn main()
 }
 
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 // Functions
-//-----------------------------------------------------------------------------
-fn openFileDialog(xmldata: &mut JAxml::JAxmlState, images: &mut STI::Images, tree: &mut Listener<tree::Tree>)
+//---------------------------------------------------------------------------------------------------------------------
+fn openFileDialog(xmldata: &mut JAxml::Data, images: &mut STI::Images, tree: &mut Listener<tree::Tree>)
 {
 	let mut dialog = dialog::NativeFileChooser::new(dialog::NativeFileChooserType::BrowseDir);
 	dialog.set_directory(&current_dir().unwrap());
@@ -259,7 +271,7 @@ fn openFileDialog(xmldata: &mut JAxml::JAxmlState, images: &mut STI::Images, tre
 	}
 }
 
-fn saveFileDialog(xmldata: &JAxml::JAxmlState)
+fn saveFileDialog(xmldata: &JAxml::Data)
 {
 	let mut dialog = dialog::NativeFileChooser::new(dialog::NativeFileChooserType::BrowseDir);
 	dialog.set_directory(&current_dir().unwrap());
@@ -271,7 +283,7 @@ fn saveFileDialog(xmldata: &JAxml::JAxmlState)
 	}
 }
 
-fn loadData(xmldata: &mut JAxml::JAxmlState, images: &mut STI::Images, dataPath: &PathBuf)
+fn loadData(xmldata: &mut JAxml::Data, images: &mut STI::Images, dataPath: &PathBuf)
 {
 	let t = Instant::now();
 	xmldata.loadData(&dataPath);
@@ -281,14 +293,14 @@ fn loadData(xmldata: &mut JAxml::JAxmlState, images: &mut STI::Images, dataPath:
 	println!("Loading sti files took: {:?}", t.elapsed());
 }
 
-fn saveData(dataPath: &PathBuf, xmldata: &JAxml::JAxmlState)
+fn saveData(dataPath: &PathBuf, xmldata: &JAxml::Data)
 {
 	let t = Instant::now();
 	xmldata.saveData(&dataPath);
 	println!("Saving xml data took: {:?}", t.elapsed());
 }
 
-fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: Message)
+fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message)
 {
   	tree.clear();
   	match msg
@@ -484,13 +496,67 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::JAxmlState, msg: M
     	{
     		
     	}
+		Message::ShowAmmoTypeData => 
+		{
+			for item in &xmldata.ammotypes.items
+			{
+				let name: String;
+				if item.name.contains("/")
+				{
+					name = item.name.replace("/", "\\/");
+				}
+				else
+				{
+					name = item.name.clone();
+				}
+
+				if item.uiIndex < 10
+				{
+					tree.add(&format!("[{}]      {}", item.uiIndex, name) );
+				}
+				else
+				{
+					tree.add(&format!("[{}]    {}", item.uiIndex, name) );
+				}
+
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(item.uiIndex);
+			}
+		}
+		Message::ShowCaliberData => 
+		{
+			for item in &xmldata.calibers.items
+			{
+				let name: String;
+				if item.AmmoCaliber.contains("/")
+				{
+					name = item.AmmoCaliber.replace("/", "\\/");
+				}
+				else
+				{
+					name = item.AmmoCaliber.clone();
+				}
+
+				if item.uiIndex < 10
+				{
+					tree.add(&format!("[{}]      {}", item.uiIndex, name) );
+				}
+				else
+				{
+					tree.add(&format!("[{}]    {}", item.uiIndex, name) );
+				}
+					
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(item.uiIndex);
+			}
+		}
 		_ => {}
 	}
 
 	tree.redraw();
 }
 
-fn matchItemClass(xmldata: &JAxml::JAxmlState, tree: &mut Listener<tree::Tree>, itemClass: JAxml::ItemClass)
+fn matchItemClass(xmldata: &JAxml::Data, tree: &mut Listener<tree::Tree>, itemClass: JAxml::ItemClass)
 {
 	for item in &xmldata.items.items
 	{
@@ -761,11 +827,102 @@ fn createMenuBar(s: &app::Sender<Message>) -> menu::SysMenuBar
 		*s,
 		Message::ShowRandomItems
 	);
-	
+	menu.add_emit(
+	    "&Data/Ammo Calibers\t",
+		Shortcut::None,
+		MenuFlag::Normal,
+		*s,
+		Message::ShowCaliberData
+	);
+	menu.add_emit(
+	    "&Data/Ammo Types\t",
+		Shortcut::None,
+		MenuFlag::Normal,
+		*s,
+		Message::ShowAmmoTypeData
+	);
+	menu.add_emit(
+	    "&Data/Explosion Data\t",
+		Shortcut::None,
+		MenuFlag::Normal,
+		*s,
+		Message::ShowExplosionData
+	);
+	menu.add_emit(
+	    "&Data/Sounds\t",
+		Shortcut::None,
+		MenuFlag::Normal,
+		*s,
+		Message::ShowSoundData
+	);
+	menu.add_emit(
+	    "&Data/Burst Sounds\t",
+		Shortcut::None,
+		MenuFlag::Normal,
+		*s,
+		Message::ShowBurstSoundData
+	);	
+	menu.add_emit(
+	    "&Data/Clothes\t",
+		Shortcut::None,
+		MenuFlag::Normal,
+		*s,
+		Message::ShowClothesData
+	);
+
 	return menu;
 }
 
 
+//---------------------------------------------------------------------------------------------------------------------
+// Structs
+//---------------------------------------------------------------------------------------------------------------------
+struct UIdata
+{
+	images: STI::Images,
+	itemGraphics: ItemGraphicsArea,
+	itemDescription: ItemDescriptionArea,
+	itemProperties: ItemPropertiesArea,
+	itemStats: ItemStatsArea,
+	itemKit: ItemKitArea,
+	itemVision: ItemVisionArea,
+	weaponArea: WeaponArea,
+	magArea: MagazineArea,
+	state: State,
+}
+impl UIdata
+{
+	fn updateItem(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		self.itemGraphics.update(&xmldata, &self.images, uiIndex);
+		self.itemDescription.update(&xmldata, uiIndex);
+		self.itemProperties.update(&xmldata, uiIndex);
+		self.itemStats.update(&xmldata, uiIndex);
+		self.itemKit.update(&xmldata, uiIndex);
+		self.itemVision.update(&xmldata, uiIndex);
+	}
+
+	fn updateWeapon(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		self.weaponArea.update(&xmldata, uiIndex);
+	}
+
+	fn updateMagazine(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		self.magArea.update(&xmldata, uiIndex);
+	}
+
+	fn changeState(&mut self, msg: Message)
+	{
+		use Message::*;
+		match msg
+		{
+			ShowAmmoTypeData => { self.state = State::AmmoTypes; }
+			ShowCaliberData => { self.state = State::AmmoCalibers; }
+			_ => { self.state = State::Item }
+		}
+	}
+}
 
 struct ItemGraphicsArea
 {
@@ -980,7 +1137,7 @@ impl ItemGraphicsArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, images: &STI::Images, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, images: &STI::Images, uiIndex: usize)
 	{
 		let item = &xmldata.items.items[uiIndex];
 
@@ -1053,13 +1210,12 @@ impl ItemGraphicsArea
 
 struct ItemStatsArea
 {
-	ints: Vec<Listener<IntInput>>,
-	// price: IntInput,
-	// weight: IntInput,
-	// nperpocket: IntInput,
-	// size: IntInput,
-	// reliability: IntInput,
-	// repairease: IntInput,
+	price: Listener<IntInput>,
+	weight: Listener<IntInput>,
+	nperpocket: Listener<IntInput>,
+	size: Listener<IntInput>,
+	reliability: Listener<IntInput>,
+	repairease: Listener<IntInput>,
 	cursor: Listener<Choice>,
 }
 impl ItemStatsArea
@@ -1089,16 +1245,33 @@ impl ItemStatsArea
 		let _ = Frame::default().with_size(60, 20).with_label("Cursor");
 		flex.end();
 
-		let mut ints = Vec::new();
-
 		let mut flex = Flex::default().with_pos(x + xMargin + w, y + yMargin).with_size(w, h);
 		flex.set_type(FlexType::Column);
-		for i in 0..6
-		{
-			let mut input = IntInput::default();
-			flex.set_size(&mut input, 20);
-			ints.push(input.into());
-		}
+
+		let mut price = IntInput::default();
+		flex.set_size(&mut price, 20);
+		let price = price.into();
+
+		let mut weight = IntInput::default();
+		flex.set_size(&mut weight, 20);
+		let weight = weight.into();
+
+		let mut nperpocket = IntInput::default();
+		flex.set_size(&mut nperpocket, 20);
+		let nperpocket = nperpocket.into();
+
+		let mut size = IntInput::default();
+		flex.set_size(&mut size, 20);
+		let size = size.into();
+
+		let mut reliability = IntInput::default();
+		flex.set_size(&mut reliability, 20);
+		let reliability = reliability.into();
+
+		let mut repairease = IntInput::default();
+		flex.set_size(&mut repairease, 20);
+		let repairease = repairease.into();
+
 		let mut cursor = Choice::default();
 		flex.set_size(&mut cursor, 20);
 		flex.end();
@@ -1136,18 +1309,18 @@ impl ItemStatsArea
 
 		let cursor = cursor.into();
 
-		return ItemStatsArea { ints, cursor }
+		return ItemStatsArea { price, nperpocket, reliability, repairease, size, weight, cursor }
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.items.items[uiIndex];
-		self.ints[0].set_value(&format!("{}", item.usPrice));
-		self.ints[1].set_value(&format!("{}", item.ubWeight));
-		self.ints[2].set_value(&format!("{}", item.ubPerPocket));
-		self.ints[3].set_value(&format!("{}", item.ItemSize));
-		self.ints[4].set_value(&format!("{}", item.bReliability));
-		self.ints[5].set_value(&format!("{}", item.bRepairEase));
+		self.price.set_value(&format!("{}", item.usPrice));
+		self.weight.set_value(&format!("{}", item.ubWeight));
+		self.nperpocket.set_value(&format!("{}", item.ubPerPocket));
+		self.size.set_value(&format!("{}", item.ItemSize));
+		self.reliability.set_value(&format!("{}", item.bReliability));
+		self.repairease.set_value(&format!("{}", item.bRepairEase));
 
 		self.cursor.set_value(item.ubCursor as i32);
 	}
@@ -1199,7 +1372,7 @@ impl ItemDescriptionArea
 		return ItemDescriptionArea { name, longname, BRname, description, BRdescription };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		if uiIndex < xmldata.items.items.len()
 		{
@@ -1305,7 +1478,7 @@ impl ItemPropertiesArea
 		return ItemPropertiesArea { inputs };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.items.items[uiIndex];
 
@@ -1407,7 +1580,7 @@ impl ItemKitArea
 		return ItemKitArea { inputs, ints };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.items.items[uiIndex];
 
@@ -1476,7 +1649,7 @@ impl ItemVisionArea
 		return ItemVisionArea { ints, thermal, clothesType };
 	}
 
-	fn addChoicesToClothesTypes(&mut self, xmldata: &JAxml::JAxmlState)
+	fn addChoicesToClothesTypes(&mut self, xmldata: &JAxml::Data)
 	{
 		self.clothesType.clear();
 		for cloth in &xmldata.clothes.items
@@ -1485,7 +1658,7 @@ impl ItemVisionArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.items.items[uiIndex];
 
@@ -2107,7 +2280,7 @@ impl WeaponArea
 		return WeaponArea { general, stats, properties, ncth, temp, modifiers, dirtDamageChance, dirtIncreaseFactor, bloodyItem }
 	}
 
-	fn addChoices(&mut self, xmldata: &JAxml::JAxmlState)
+	fn addChoices(&mut self, xmldata: &JAxml::Data)
 	{
 		self.general.class.clear();
 		self.general.guntype.clear();
@@ -2122,7 +2295,7 @@ impl WeaponArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.items.items[uiIndex];
 		
@@ -2588,7 +2761,7 @@ impl MagazineArea
 	}
 
 
-	fn addChoices(&mut self, xmldata: &JAxml::JAxmlState)
+	fn addChoices(&mut self, xmldata: &JAxml::Data)
 	{
 		self.caliber.clear();
 		self.ammotype.clear();
@@ -2615,6 +2788,7 @@ impl MagazineArea
 			}
 		}
 		self.magtype.add_choice("Magazine|Bullet(s)|Box|Crate");
+		self.ammotypes.explosionsize.add_choice("None|Small|Medium|Large|Flame Retardant");
 	}
 
 	fn changeColor(&mut self)
@@ -2625,7 +2799,7 @@ impl MagazineArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.items.items[uiIndex];
 		let itemclass = item.usItemClass;
@@ -2645,7 +2819,7 @@ impl MagazineArea
 		}
 	}
 
-	fn updateAmmoType(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn updateAmmoType(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.ammotypes.items[uiIndex];
 		self.ammotypes.index.set_value(&format!("{}", item.uiIndex));
@@ -2686,7 +2860,7 @@ impl MagazineArea
 		self.ammotypes.dirtModifier.set_value(&format!("{}", item.dirtModificator));
 	}
 
-	fn updateCaliber(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	fn updateCaliber(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		let item = &xmldata.calibers.items[uiIndex];
 
@@ -2710,9 +2884,9 @@ fn createBox(x: i32, y: i32, w: i32, h: i32, xtitle: i32, widthtitle: i32, label
 
 	return (main, title);
 }
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 // Enums
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 #[derive(Copy, Clone)]
 pub enum Message {
     Changed,
@@ -2758,6 +2932,12 @@ pub enum Message {
     ShowReducedGuns,
     ShowDrugs,
     ShowAttachments,
+	ShowCaliberData,
+	ShowAmmoTypeData,
+	ShowExplosionData,
+	ShowSoundData,
+	ShowBurstSoundData,
+	ShowClothesData,
     Redraw,
     GraphicScroll,
 	GraphicType,
@@ -2766,3 +2946,9 @@ pub enum Message {
 }
 
     
+#[derive(Copy, Clone)]
+pub enum State {
+	Item,
+	AmmoTypes,
+	AmmoCalibers,
+}

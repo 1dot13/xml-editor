@@ -166,7 +166,7 @@ generateListStructs!{
     STRUCTUREMOVELIST, STRUCTUREMOVE, b"STRUCTURE"
 }
 
-pub struct JAxmlState
+pub struct Data
 {
 	pub items: ITEMLIST,
 	pub weapons: WEAPONLIST,
@@ -197,11 +197,11 @@ pub struct JAxmlState
 	pub structmoves: STRUCTUREMOVELIST,
 
 }
-impl JAxmlState
+impl Data
 {
-	pub fn new() -> JAxmlState
+	pub fn new() -> Data
 	{
-		JAxmlState { 
+		Data { 
 			items: ITEMLIST::new(), weapons: WEAPONLIST::new(), armors: ARMOURLIST::new(), clothes: CLOTHESLIST::new(), calibers: AMMOLIST::new(),
 			ammotypes: AMMOTYPELIST::new(), attachmentinfo: ATTACHMENTINFOLIST::new(), attachmentmerges: ATTACHMENTCOMBOMERGELIST::new(),
 			attachments: ATTACHMENTLIST::new(), attachmentslots: ATTACHMENTSLOTLIST::new(), compatiblefaceitems: COMPATIBLEFACEITEMLIST::new(),
@@ -256,7 +256,7 @@ impl JAxmlState
 
 	pub fn loadData(&mut self, dataFolder: &PathBuf)
 	{
-		let paths = JAxmlState::paths(dataFolder);
+		let paths = Data::paths(dataFolder);
 
 		let items = ITEMLIST::loadItems(&paths[0]);
 		let weapons= WEAPONLIST::loadItems(&paths[1]);
@@ -317,7 +317,7 @@ impl JAxmlState
 	
 	pub fn saveData(&self, dataFolder: &PathBuf)
 	{
-		let paths = JAxmlState::paths(dataFolder);
+		let paths = Data::paths(dataFolder);
 		
 		self.items.save(&paths[0]);
 		self.weapons.save(&paths[1]);
