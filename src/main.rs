@@ -7,11 +7,11 @@ use std::env::current_dir;
 // use std::str;
 use std::path::PathBuf;
 use std::time::{Instant};
-use fltk::app::event_inside_widget;
+use fltk::app::{event_inside_widget, frame_border_radius_max};
 use fltk::button::{RadioButton, ToggleButton, CheckButton, LightButton, RepeatButton, RadioLightButton, RadioRoundButton, ReturnButton};
 use fltk::enums::{Color, Align, Font};
 use fltk::group::{Tabs, Group, FlexType, Pack, ColorChooser};
-use fltk::input::{IntInput, Input, FloatInput};
+use fltk::input::{IntInput, Input, FloatInput, MultilineInput};
 use fltk::menu::{MenuFlag, SysMenuBar, Choice, MenuButton};
 use fltk::output::Output;
 use fltk::valuator::{Scrollbar, ScrollbarType};
@@ -77,7 +77,7 @@ fn main()
 	//-----------------------------------------------------------------------------
 	// Okay, so this is stupid, but I can't get the widgets to work without defining them outside of tabs when using app.wait()
 	// With app.run() it works as expected, but I need app.wait() for better event handling via messages and fltk_evented crate
-	let tabLabels = vec!["General\t\t", "Weapon\t\t", "Tab3\t\t", "Tab4\t\t"];
+	let tabLabels = vec!["General\t\t", "Weapon\t\t", "Ammo / Explosives\t", "Tab4\t\t"];
 	let mut tabs = Tabs::new(0, 0, itemWindow.w(), 20, "tabs");
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
@@ -96,7 +96,7 @@ fn main()
 
 	let mut tabGroups = Vec::new();
 	let x = 0;
-	let y = 25;
+	let y = 30;
 	
 	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
 	let mut itemGraphics = ItemGraphicsArea::initialize(x, y, &s, &images);
@@ -115,7 +115,7 @@ fn main()
 	tabGroups.push( g );
 
 	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
-	let magArea = MagazineArea::initialize(x, y);
+	let mut magArea = MagazineArea::initialize(x, y);
 	g.end();
 	g.hide();
 	tabGroups.push( g );
@@ -134,6 +134,7 @@ fn main()
 
 	itemVision.addChoicesToClothesTypes(&xmldata);
 	weaponArea.addChoices(&xmldata);
+	magArea.addChoices(&xmldata);
 	//-----------------------------------------------------------------------------
 	// Main loop
 	//-----------------------------------------------------------------------------    
@@ -161,6 +162,7 @@ fn main()
 				itemVision.update(&xmldata, uiIndex);
 
 				weaponArea.update(&xmldata, uiIndex);
+				magArea.update(&xmldata, uiIndex);
 
 				itemWindow.redraw()
 			}
@@ -227,7 +229,6 @@ fn main()
 						_ => ()
 					}
 
-					//  let color = dialog::color_chooser("name", dialog::ColorMode::Rgb);
 					itemWindow.redraw();
 				}
 				_ => {}
@@ -1149,7 +1150,11 @@ impl ItemStatsArea
 
 struct ItemDescriptionArea
 {
-	inputs: Vec<Listener<Input>>
+	name: Listener<Input>,
+	longname: Listener<Input>,
+	BRname: Listener<Input>,
+	description: Listener<MultilineInput>,
+	BRdescription: Listener<MultilineInput>
 }
 impl ItemDescriptionArea
 {
@@ -1163,31 +1168,30 @@ impl ItemDescriptionArea
 			130, 80, "Description"
 		);
 
-		let mut inputs: Vec<Listener<Input>> = Vec::new();
 		let xOffset = 80;
 		let h1 = 30; let h2 = 100;
 		let w = 240;
 		
 		let mut flex = Pack::new(x + xOffset, y + 10, w, 180, None);
 		flex.set_spacing(10);
-		inputs.push(Input::default().with_size(0, h1).with_label("Name\n[80]").into());
-		inputs.push(Input::default().with_size(0, h1).with_label("Long Name\n[80]").into());
-		inputs.push(Input::default().with_size(0, h2).with_label("Description\n[400]").into());
+		let name = Input::default().with_size(0, h1).with_label("Name\n[80]").into();
+		let longname = Input::default().with_size(0, h1).with_label("Long Name\n[80]").into();
+		let mut description: Listener<_> = MultilineInput::default().with_size(0, h2).with_label("Description\n[400]").into();
 		flex.end();
-		inputs.last_mut().unwrap().set_wrap(true);
-
-
+		
+		
 		let mut flex = Pack::new(flex.x()+flex.w() + 80, y + 10, w, 180, None);
 		flex.set_spacing(10);
 		let _ = Frame::default().with_size(0, h1).with_label("Bobby Ray's");
-		inputs.push(Input::default().with_size(0, h1).with_label("Name\n[80]").into());
-		inputs.push(Input::default().with_size(0, h2).with_label("Description\n[400]").into());
-		inputs.last_mut().unwrap().set_wrap(true);
+		let BRname = Input::default().with_size(0, h1).with_label("Name\n[80]").into();
+		let mut BRdescription: Listener<_> = MultilineInput::default().with_size(0, h2).with_label("Description\n[400]").into();
 		flex.end();
+		
+		
+		description.set_wrap(true);
+		BRdescription.set_wrap(true);
 
-
-
-		return ItemDescriptionArea { inputs };
+		return ItemDescriptionArea { name, longname, BRname, description, BRdescription };
 	}
 
 	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
@@ -1195,22 +1199,22 @@ impl ItemDescriptionArea
 		if uiIndex < xmldata.items.items.len()
 		{
 			let item = &xmldata.items.items[uiIndex];
-			self.inputs[0].set_value(&item.szItemName);
-			self.inputs[1].set_value(&item.szLongItemName);
-			self.inputs[2].set_value(&item.szItemDesc);
-			self.inputs[3].set_value(&item.szBRName);
-			self.inputs[4].set_value(&item.szBRDesc);
+			self.name.set_value(&item.szItemName);
+			self.longname.set_value(&item.szLongItemName);
+			self.description.set_value(&item.szItemDesc);
+			self.BRname.set_value(&item.szBRName);
+			self.BRdescription.set_value(&item.szBRDesc);
 
 			let label = format!("Name\n[{}]", 80 - item.szItemName.len());
-			self.inputs[0].set_label(&label);
+			self.name.set_label(&label);
 			let label = format!("Long Name\n[{}]", 80 - item.szLongItemName.len());
-			self.inputs[1].set_label(&label);
+			self.longname.set_label(&label);
 			let label = format!("Description\n[{}]", 400 - item.szItemDesc.len());
-			self.inputs[2].set_label(&label);
+			self.description.set_label(&label);
 			let label = format!("Name\n[{}]", 80 - item.szBRName.len());
-			self.inputs[3].set_label(&label);
+			self.BRname.set_label(&label);
 			let label = format!("Description\n[{}]", 400 - item.szBRDesc.len());
-			self.inputs[4].set_label(&label);
+			self.BRdescription.set_label(&label);
 		}
 		else 
 		{
@@ -1783,15 +1787,15 @@ impl WeaponArea
 		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
 		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
 		flex.end();
-		let mut flex = Pack::new(flex.x() + flex.w() + 50, frame.y() + 10, 45, frame.h() - 10, None);
-		flex.set_spacing(5);
-		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
-		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
-		flex.end();
+		// let mut flex = Pack::new(flex.x() + flex.w() + 50, frame.y() + 10, 45, frame.h() - 10, None);
+		// flex.set_spacing(5);
+		// let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		// let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		// let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		// let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		// let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		// let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
+		// flex.end();
 
 
 
@@ -2361,8 +2365,46 @@ impl WeaponArea
 struct AmmoTypesArea
 {
 	index: Listener<IntInput>,
+	name: Listener<Input>,
+	nbullets: Listener<IntInput>,
+	explosionid: Listener<Choice>,
+	explosionsize: Listener<Choice>,
 	rgb: (u8, u8, u8),
-
+	standardissue: Listener<CheckButton>,
+	dart: Listener<CheckButton>,
+	knife: Listener<CheckButton>,
+	acidic: Listener<CheckButton>,
+	ignorearmor: Listener<CheckButton>,
+	tracer: Listener<CheckButton>,
+	zeromindamage: Listener<CheckButton>,
+	monsterspit: Listener<CheckButton>,
+	structImpactMultiplier: Listener<IntInput>,
+	armorImpactMultiplier: Listener<IntInput>,
+	beforeArmorMultpilier: Listener<IntInput>,
+	afterArmorMultiplier: Listener<IntInput>,
+	bulletsMultiplier	: Listener<IntInput>,
+	structImpactDivisor: Listener<IntInput>,
+	armorImpactDivisor: Listener<IntInput>,
+	beforeArmorDivisor: Listener<IntInput>,
+	afterArmorDivisor: Listener<IntInput>,
+	bulletsDivisor: Listener<IntInput>,
+	healthModifier: Listener<FloatInput>,
+	breathModifier: Listener<FloatInput>,
+	tankModifier: Listener<FloatInput>,
+	armoredVehicleModifier: Listener<FloatInput>,
+	civilianVehicleModifier: Listener<FloatInput>,
+	zombieModifier: Listener<FloatInput>,
+	lockModifier: Listener<IntInput>,
+	pierceModifier: Listener<IntInput>,
+	temperatureModifier: Listener<FloatInput>,
+	dirtModifier: Listener<FloatInput>,
+	freezingFlag: Listener<CheckButton>,
+	blindingFlag: Listener<CheckButton>,
+	antimaterialFlag: Listener<CheckButton>,
+	smoketrailFlag: Listener<CheckButton>,
+	firetrailFlag: Listener<CheckButton>,
+	shotAnimation: Listener<Input>,
+	spreadpattern: Listener<Choice>,
 }
 struct AmmoStringsArea
 {
@@ -2378,13 +2420,14 @@ struct MagazineArea
 	magsize: Listener<IntInput>,
 	magtype: Listener<Choice>,
 	ammostrings: AmmoStringsArea,
+	ammotypes: AmmoTypesArea,
 	color: Listener<Button>
 }
 impl MagazineArea
 {
 	fn initialize(x: i32, y: i32) -> MagazineArea
 	{
-		let mainWidth = 220; let mainHeight = 110;
+		let mainWidth = 240; let mainHeight = 115;
 
 		// Main framed box. Everything else is located relative to this
 		let (frame, _) = createBox(
@@ -2405,8 +2448,8 @@ impl MagazineArea
 
 
 		let (frame, _) = createBox(
-			x, frame.y()+frame.h(),
-			mainWidth, mainHeight,
+			frame.x()+frame.w(), frame.y(),
+			200, mainHeight,
 			20, 60, "Caliber"
 		);
 
@@ -2424,15 +2467,166 @@ impl MagazineArea
 
 		let (frame, _) = createBox(
 			x, frame.y()+frame.h(),
-			mainWidth, 300,
+			440, 470,
 			10, 100, "Ammo Type"
 		);
 
-		// let mut color = ColorChooser::new(frame.x()+10, frame.y() + frame.h() - 100, 200, 95, "Ammo count color");
-		// color.set_selection_color(Color::Red);
-		let mut color = Button::new(frame.x()+10, frame.y() + frame.h() - 100, 200, 95, "Ammo count color").into();
+		let width = 100; let height = 20;
+		let firstColumnX = frame.x() + frame.w() - 100;
 
-		return MagazineArea{ammotype, caliber, magsize, magtype, ammostrings, color};
+
+		let mut flex = Pack::new(frame.x()+50, frame.y()+10, 30, 20, None);
+		flex.set_type(group::PackType::Horizontal);
+		flex.set_spacing(45);
+		let index = IntInput::default().with_size(40, height).with_label("Index").into();
+		let name = Input::default().with_size(80, height).with_label("Name").into();
+		flex.end();
+
+		let mut flex = Pack::new(frame.x()+155, flex.y()+flex.h()+10, 60, 20, None);
+		flex.set_spacing(5);
+		let nbullets = IntInput::default().with_size(40, height).with_label("Bullets / shot").into();
+		let explosionid = Choice::default().with_size(40, height).with_label("Explosion Item Id").into();
+		let explosionsize = Choice::default().with_size(40, height).with_label("Explosion Size").into();
+		flex.end();
+
+
+		let mut flex = Pack::new(frame.x()+220, frame.y()+10, 30, 80, None);
+		flex.set_spacing(5);
+		let standardissue = CheckButton::default().with_size(width, height).with_label("Std. Issue").into();
+		let dart = CheckButton::default().with_size(width, height).with_label("Dart").into();
+		let knife = CheckButton::default().with_size(width, height).with_label("Knife").into();
+		let acidic = CheckButton::default().with_size(width, height).with_label("Acidic").into();
+		flex.end();
+
+
+		let mut flex = Pack::new(flex.x() + flex.w() + 60, flex.y(), 30, 80, None);
+		flex.set_spacing(5);
+		let ignorearmor = CheckButton::default().with_size(width, height).with_label("Ignore Armor").into();
+		let tracer = CheckButton::default().with_size(width, height).with_label("Tracer Effect").into();
+		let zeromindamage = CheckButton::default().with_size(width, height).with_label("Zero Min. Dmg").into();
+		let monsterspit = CheckButton::default().with_size(width, height).with_label("Monster Spit").into();
+		flex.end();
+
+
+
+		let mut flex = Pack::new(firstColumnX, flex.y()+flex.h()+20, 30, 100, None);
+		flex.set_spacing(5);
+		let mut title = Frame::default().with_size(width, height).with_label("Multiplier");
+		title.set_label_font(Font::HelveticaBold);
+		let structImpactMultiplier = IntInput::default().with_size(width, height).with_label("Struct. Impact Red.").into();
+		let armorImpactMultiplier = IntInput::default().with_size(width, height).with_label("Armor Impact Red.").into();
+		let beforeArmorMultpilier = IntInput::default().with_size(width, height).with_label("Before Armor Dmg").into();
+		let afterArmorMultiplier = IntInput::default().with_size(width, height).with_label("After Armor Dmg").into();
+		let bulletsMultiplier = IntInput::default().with_size(width, height).with_label("Multiple Bullet Dmg").into();
+		flex.end();
+
+		let mut flex = Pack::new(flex.x() + flex.w() + 25, flex.y(), 30, 100, None);
+		flex.set_spacing(5);
+		let mut title = Frame::default().with_size(width, height).with_label("Divisor");
+		title.set_label_font(Font::HelveticaBold);
+		let structImpactDivisor = IntInput::default().with_size(width, height).into();
+		let armorImpactDivisor = IntInput::default().with_size(width, height).into();
+		let beforeArmorDivisor = IntInput::default().with_size(width, height).into();
+		let afterArmorDivisor = IntInput::default().with_size(width, height).into();
+		let bulletsDivisor = IntInput::default().with_size(width, height).into();
+		flex.end();
+
+
+		let mut title = Frame::default().with_size(width, height).with_pos(frame.x()+170, flex.y()+flex.h()+50).with_label("Modifiers");
+		title.set_label_font(Font::HelveticaBold);
+
+		let mut flex = Pack::new(frame.x()+155, flex.y()+flex.h()+70, 30, 100, None);
+		flex.set_spacing(5);
+		let healthModifier = FloatInput::default().with_size(width, height).with_label("Life Dmg").into();
+		let breathModifier = FloatInput::default().with_size(width, height).with_label("Breath Dmg").into();
+		let tankModifier = FloatInput::default().with_size(width, height).with_label("Tank Dmg").into();
+		let armoredVehicleModifier = FloatInput::default().with_size(width, height).with_label("Armoured Vehicle Dmg").into();
+		let civilianVehicleModifier = FloatInput::default().with_size(width, height).with_label("Civilian Vehicle Dmg").into();
+		flex.end();
+
+		let mut flex = Pack::new(flex.x() + 200, flex.y(), 30, 100, None);
+		flex.set_spacing(5);
+		let zombieModifier = FloatInput::default().with_size(width, height).with_label("Zombie Dmg").into();
+		let lockModifier = IntInput::default().with_size(width, height).with_label("Lock Bonus Dmg").into();
+		let pierceModifier = IntInput::default().with_size(width, height).with_label("Pierce person chance").into();
+		let temperatureModifier = FloatInput::default().with_size(width, height).with_label("Temperature").into();
+		let dirtModifier = FloatInput::default().with_size(width, height).with_label("Dirt").into();
+		flex.end();
+
+		
+		let mut title = Frame::default().with_size(width, height).with_pos(frame.x()+50, frame.y()+110).with_label("Ammo bitflags");
+		title.set_label_font(Font::HelveticaBold);
+		let mut flex = Pack::new(frame.x()+10, title.y()+15, 30, 100, None);
+		flex.set_spacing(5);
+		let freezingFlag = CheckButton::default().with_size(width, height).with_label("Freezing").into();
+		let blindingFlag = CheckButton::default().with_size(width, height).with_label("Blinding").into();
+		let antimaterialFlag = CheckButton::default().with_size(width, height).with_label("Anti-Material").into();
+		let smoketrailFlag = CheckButton::default().with_size(width, height).with_label("White Smoketrail").into();
+		let firetrailFlag = CheckButton::default().with_size(width, height).with_label("Fire trail").into();
+		flex.end();
+		
+		
+		let shotAnimation = Input::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-30).with_label("Shot Animation").into();
+		let spreadpattern = Choice::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-60).with_label("Spread Pattern").into();
+		let mut color: Listener<_> = Button::new(frame.x()+10, frame.y() + frame.h() - 40, 80, 30, "Ammo color").into();
+		
+		let ammotypes = AmmoTypesArea{ 
+			index, name, nbullets, rgb: (255, 255, 255), standardissue, zeromindamage, acidic, afterArmorDivisor, afterArmorMultiplier,
+			antimaterialFlag, armorImpactDivisor, armorImpactMultiplier, armoredVehicleModifier, beforeArmorDivisor, beforeArmorMultpilier,
+			blindingFlag, breathModifier, bulletsDivisor, bulletsMultiplier, civilianVehicleModifier, dart, dirtModifier, explosionid,
+			explosionsize, firetrailFlag, freezingFlag, healthModifier, ignorearmor, knife, lockModifier, monsterspit, pierceModifier,
+			smoketrailFlag, structImpactDivisor, structImpactMultiplier, tankModifier, temperatureModifier, tracer, zombieModifier,
+			shotAnimation, spreadpattern
+		};
+
+		return MagazineArea{ammotype, caliber, magsize, magtype, ammostrings, color, ammotypes};
+	}
+
+
+	fn addChoices(&mut self, xmldata: &JAxml::JAxmlState)
+	{
+		self.caliber.clear();
+		self.ammotype.clear();
+		self.magtype.clear();
+		self.ammotypes.explosionid.clear();
+		self.ammotypes.explosionsize.clear();
+		self.ammotypes.spreadpattern.clear();
+
+
+		for item in &xmldata.calibers.items
+		{
+			self.caliber.add_choice(&format!("{}", item.AmmoCaliber));
+		}
+		for item in &xmldata.ammotypes.items
+		{
+			self.ammotype.add_choice(&format!("{}", item.name));
+		}
+		self.magtype.add_choice("Magazine|Bullet(s)|Box|Crate");
+	}
+
+	fn changeColor(&mut self)
+	{
+		if let Some(color) = dialog::color_chooser("", dialog::ColorMode::Byte)
+		{
+			self.ammotypes.rgb = color;
+		}
+	}
+
+	fn update(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+		let itemclass = item.usItemClass;
+		let classIndex = item.ubClassIndex;
+
+		if itemclass == JAxml::ItemClass::Ammo as u32
+		{
+			let mag = &xmldata.magazines.items[classIndex as usize];
+
+			self.caliber.set_value(mag.ubCalibre as i32);
+			self.ammotype.set_value(mag.ubAmmoType as i32);
+			self.magtype.set_value(mag.ubMagType as i32);
+			self.magsize.set_value(&format!("{}", mag.ubMagSize));
+		}
 	}
 }
 

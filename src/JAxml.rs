@@ -3053,11 +3053,11 @@ impl WEAPON
 
 pub struct MAGAZINE
 {
-    uiIndex: u32,
-    ubCalibre: u8,
-    ubMagSize: u16, 
-    ubAmmoType: u8,
-    ubMagType: u8
+    pub uiIndex: u32,
+    pub ubCalibre: u8,
+    pub ubMagSize: u16, 
+    pub ubAmmoType: u8,
+    pub ubMagType: u8
 }
 impl MAGAZINE {
     pub fn new() -> MAGAZINE
@@ -3187,45 +3187,45 @@ impl AMMOSTRING {
 
 pub struct AMMOTYPE
 {
-    uiIndex: u32,
-    name: String,
-    red: u8,
-    green: u8,
-    blue: u8,
-    structureImpactReductionMultiplier: u8,
-    structureImpactReductionDivisor: u8,
-    armourImpactReductionMultiplier: u8,
-    armourImpactReductionDivisor: u8,
-    beforeArmourDamageMultiplier: u8,
-    beforeArmourDamageDivisor: u8,
-    afterArmourDamageMultiplier: u8,
-    afterArmourDamageDivisor: u8,
-    zeroMinimumDamage: bool,
-    usPiercePersonChanceModifier: u16,
-    standardIssue: bool,
-    numberOfBullets: u16,
-    multipleBulletDamageMultiplier: u8,
-    multipleBulletDamageDivisor: u8,
-    highExplosive: u32,
-    explosionSize: u8,
-    dart: bool,
-    knife: bool,
-    monsterSpit: bool,
-    acidic: bool, 
-    ignoreArmour: bool,
-    lockBustingPower: u16,
-    tracerEffect: bool,
-    spreadPattern: String,
-    temperatureModificator: f32,
-    dirtModificator: f32,
-    ammoflag: u32,
-    dDamageModifierLife: f32,
-    dDamageModifierBreath: f32,
-    dDamageModifierTank: f32,
-    dDamageModifierArmouredVehicle: f32,
-    dDamageModifierCivilianVehicle: f32,
-    dDamageModifierZombie: f32,
-    shotAnimation: String,
+    pub uiIndex: u32,
+    pub name: String,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
+    pub structureImpactReductionMultiplier: u8,
+    pub structureImpactReductionDivisor: u8,
+    pub armourImpactReductionMultiplier: u8,
+    pub armourImpactReductionDivisor: u8,
+    pub beforeArmourDamageMultiplier: u8,
+    pub beforeArmourDamageDivisor: u8,
+    pub afterArmourDamageMultiplier: u8,
+    pub afterArmourDamageDivisor: u8,
+    pub zeroMinimumDamage: bool,
+    pub usPiercePersonChanceModifier: u16,
+    pub standardIssue: bool,
+    pub numberOfBullets: u16,
+    pub multipleBulletDamageMultiplier: u8,
+    pub multipleBulletDamageDivisor: u8,
+    pub highExplosive: u32,
+    pub explosionSize: u8,
+    pub dart: bool,
+    pub knife: bool,
+    pub monsterSpit: bool,
+    pub acidic: bool, 
+    pub ignoreArmour: bool,
+    pub lockBustingPower: u16,
+    pub tracerEffect: bool,
+    pub spreadPattern: String,
+    pub temperatureModificator: f32,
+    pub dirtModificator: f32,
+    pub ammoflag: u32,
+    pub dDamageModifierLife: f32,
+    pub dDamageModifierBreath: f32,
+    pub dDamageModifierTank: f32,
+    pub dDamageModifierArmouredVehicle: f32,
+    pub dDamageModifierCivilianVehicle: f32,
+    pub dDamageModifierZombie: f32,
+    pub shotAnimation: String,
 }
 impl AMMOTYPE {
     pub fn new() -> AMMOTYPE
@@ -4857,5 +4857,28 @@ back_to_enum! {
 		Bloodbag,
 		Splint,
 	}
+}
 
+back_to_enum! {
+	#[derive(Copy, Clone)]
+	pub enum MagazineType {
+		Magazine = 0,
+		Bullets,
+		Box,
+		Crate,
+	}
+}
+
+impl fmt::Display for MagazineType
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
+    {
+        match self
+        {
+            MagazineType::Magazine => write!(f, "Magazine"),
+            MagazineType::Bullets => write!(f, "Bullet(s)"),
+            MagazineType::Box => write!(f, "Box"),
+            MagazineType::Crate => write!(f, "Crate"),
+        }
+    }
 }
