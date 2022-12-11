@@ -27,6 +27,7 @@ use fltk_evented::Listener;
 mod JAxml;
 mod STI;
 
+
 // TODO
 // Build item info layout
 // Display existing items' data
@@ -38,6 +39,10 @@ mod STI;
 // Merchants?
 // Error checking
 // Only allow saving of valid data
+// Update Caliber & Ammo Type sections if Caliber or ammotype is changed for the selected Magazine
+// Explosion item id, explosion size & spread pattern choices for Ammo Type
+// Color chooser for ammo color
+// Ammotype bitflag
 
 
 fn main() 
@@ -2535,7 +2540,7 @@ impl MagazineArea
 		let mut title = Frame::default().with_size(width, height).with_pos(frame.x()+170, flex.y()+flex.h()+50).with_label("Modifiers");
 		title.set_label_font(Font::HelveticaBold);
 
-		let mut flex = Pack::new(frame.x()+155, flex.y()+flex.h()+70, 30, 100, None);
+		let mut flex = Pack::new(frame.x()+155, flex.y()+flex.h()+70, 35, 100, None);
 		flex.set_spacing(5);
 		let healthModifier = FloatInput::default().with_size(width, height).with_label("Life Dmg").into();
 		let breathModifier = FloatInput::default().with_size(width, height).with_label("Breath Dmg").into();
@@ -2544,7 +2549,7 @@ impl MagazineArea
 		let civilianVehicleModifier = FloatInput::default().with_size(width, height).with_label("Civilian Vehicle Dmg").into();
 		flex.end();
 
-		let mut flex = Pack::new(flex.x() + 200, flex.y(), 30, 100, None);
+		let mut flex = Pack::new(flex.x() + 200, flex.y(), 35, 100, None);
 		flex.set_spacing(5);
 		let zombieModifier = FloatInput::default().with_size(width, height).with_label("Zombie Dmg").into();
 		let lockModifier = IntInput::default().with_size(width, height).with_label("Lock Bonus Dmg").into();
@@ -2599,7 +2604,15 @@ impl MagazineArea
 		}
 		for item in &xmldata.ammotypes.items
 		{
-			self.ammotype.add_choice(&format!("{}", item.name));
+			if item.name.contains("/")
+			{
+				let name = item.name.replace("/", "\\/");
+				self.ammotype.add_choice(&format!("{}", name));
+			} 
+			else
+			{
+				self.ammotype.add_choice(&format!("{}", item.name));
+			}
 		}
 		self.magtype.add_choice("Magazine|Bullet(s)|Box|Crate");
 	}
@@ -2626,8 +2639,63 @@ impl MagazineArea
 			self.ammotype.set_value(mag.ubAmmoType as i32);
 			self.magtype.set_value(mag.ubMagType as i32);
 			self.magsize.set_value(&format!("{}", mag.ubMagSize));
+
+			self.updateAmmoType(xmldata, mag.ubAmmoType as usize);
+			self.updateCaliber(xmldata, mag.ubCalibre as usize);
 		}
 	}
+
+	fn updateAmmoType(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.ammotypes.items[uiIndex];
+		self.ammotypes.index.set_value(&format!("{}", item.uiIndex));
+		self.ammotypes.name.set_value(&format!("{}", item.name));
+		self.ammotypes.rgb = (item.red, item.green, item.blue);
+		self.ammotypes.nbullets.set_value(&format!("{}", item.numberOfBullets));
+		self.ammotypes.shotAnimation.set_value(&format!("{}", item.shotAnimation));
+
+		self.ammotypes.structImpactMultiplier.set_value(&format!("{}", item.structureImpactReductionMultiplier));
+		self.ammotypes.structImpactDivisor.set_value(&format!("{}", item.structureImpactReductionDivisor));
+		self.ammotypes.armorImpactMultiplier.set_value(&format!("{}", item.armourImpactReductionMultiplier));
+		self.ammotypes.armorImpactDivisor.set_value(&format!("{}", item.armourImpactReductionDivisor));
+		self.ammotypes.beforeArmorMultpilier.set_value(&format!("{}", item.beforeArmourDamageMultiplier));
+		self.ammotypes.beforeArmorDivisor.set_value(&format!("{}", item.beforeArmourDamageDivisor));
+		self.ammotypes.afterArmorMultiplier.set_value(&format!("{}", item.afterArmourDamageMultiplier));
+		self.ammotypes.afterArmorDivisor.set_value(&format!("{}", item.afterArmourDamageDivisor));
+		self.ammotypes.bulletsMultiplier.set_value(&format!("{}", item.multipleBulletDamageMultiplier));
+		self.ammotypes.bulletsDivisor.set_value(&format!("{}", item.multipleBulletDamageDivisor));
+		
+		self.ammotypes.acidic.set_value(item.acidic);
+		self.ammotypes.dart.set_value(item.dart);
+		self.ammotypes.standardissue.set_value(item.standardIssue);
+		self.ammotypes.knife.set_value(item.knife);
+		self.ammotypes.ignorearmor.set_value(item.ignoreArmour);
+		self.ammotypes.tracer.set_value(item.tracerEffect);
+		self.ammotypes.zeromindamage.set_value(item.zeroMinimumDamage);
+		self.ammotypes.monsterspit.set_value(item.monsterSpit);
+
+		self.ammotypes.healthModifier.set_value(&format!("{}", item.dDamageModifierLife));
+		self.ammotypes.breathModifier.set_value(&format!("{}", item.dDamageModifierBreath));
+		self.ammotypes.tankModifier.set_value(&format!("{}", item.dDamageModifierTank));
+		self.ammotypes.armoredVehicleModifier.set_value(&format!("{}", item.dDamageModifierArmouredVehicle));
+		self.ammotypes.civilianVehicleModifier.set_value(&format!("{}", item.dDamageModifierCivilianVehicle));
+		self.ammotypes.zombieModifier.set_value(&format!("{}", item.dDamageModifierZombie));
+		self.ammotypes.lockModifier.set_value(&format!("{}", item.lockBustingPower));
+		self.ammotypes.pierceModifier.set_value(&format!("{}", item.usPiercePersonChanceModifier));
+		self.ammotypes.temperatureModifier.set_value(&format!("{}", item.temperatureModificator));
+		self.ammotypes.dirtModifier.set_value(&format!("{}", item.dirtModificator));
+	}
+
+	fn updateCaliber(&mut self, xmldata: &JAxml::JAxmlState, uiIndex: usize)
+	{
+		let item = &xmldata.calibers.items[uiIndex];
+
+		self.ammostrings.index.set_value(&format!("{}", item.uiIndex));
+		self.ammostrings.caliber.set_value(&format!("{}", item.AmmoCaliber));
+		self.ammostrings.brcaliber.set_value(&format!("{}", item.BRCaliber));
+		self.ammostrings.nwsscaliber.set_value(&format!("{}", item.NWSSCaliber));
+	}
+
 }
 
 
