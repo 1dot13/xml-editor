@@ -164,6 +164,7 @@ generateListStructs!{
     STRUCTURECONSTRUCTLIST, STRUCTURECONSTRUCT, b"STRUCTURE"
     STRUCTUREDECONSTRUCTLIST, STRUCTUREDECONSTRUCT, b"STRUCTURE"
     STRUCTUREMOVELIST, STRUCTUREMOVE, b"STRUCTURE"
+	SPREADPATTERNLIST, SPREADPATTERN, b"SPREADPATTERN"
 }
 
 pub struct Data
@@ -195,7 +196,7 @@ pub struct Data
 	pub structconstructs: STRUCTURECONSTRUCTLIST,
 	pub structdeconstructs: STRUCTUREDECONSTRUCTLIST,
 	pub structmoves: STRUCTUREMOVELIST,
-
+	pub spreadpatterns: SPREADPATTERNLIST,
 }
 impl Data
 {
@@ -209,7 +210,7 @@ impl Data
 			foodopinions: FOODOPINIONSLIST::new(), incompatibleattachments: INCOMPATIBLEATTACHMENTLIST::new(), launchables: LAUNCHABLELIST::new(),
 			lbe: LOADBEARINGEQUIPMENTLIST::new(), magazines: MAGAZINELIST::new(), merges: MERGELIST::new(), pockets: POCKETLIST::new(),
 			randomitems: RANDOMITEMLIST::new(), transformations: TRANSFORMATIONS_LIST::new(), structconstructs: STRUCTURECONSTRUCTLIST::new(),
-			structdeconstructs: STRUCTUREDECONSTRUCTLIST::new(), structmoves: STRUCTUREMOVELIST::new() 
+			structdeconstructs: STRUCTUREDECONSTRUCTLIST::new(), structmoves: STRUCTUREMOVELIST::new(), spreadpatterns: SPREADPATTERNLIST::new() 
 		}
 	}
 	
@@ -219,7 +220,7 @@ impl Data
 		tableDataPath.push("TableData");
 		
 		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..27
+		for _ in 0..28
 		{
 			paths.push(tableDataPath.clone());
 		}
@@ -250,6 +251,7 @@ impl Data
 		paths[24].push("Items/StructureConstruct.xml");
 		paths[25].push("Items/StructureDeconstruct.xml");
 		paths[26].push("Items/StructureMove.xml");
+		paths[27].push("SpreadPatterns.xml");
 
 		return paths;
 	}
@@ -285,6 +287,7 @@ impl Data
 		let structconstructs = STRUCTURECONSTRUCTLIST::loadItems(&paths[24]);
 		let structdeconstructs = STRUCTUREDECONSTRUCTLIST::loadItems(&paths[25]);
 		let structmoves = STRUCTUREMOVELIST::loadItems(&paths[26]);
+		let spreadpatterns = SPREADPATTERNLIST::loadItems(&paths[27]);
 
 		self.items = items;
 		self.weapons = weapons;
@@ -313,6 +316,7 @@ impl Data
 		self.structconstructs = structconstructs;
 		self.structdeconstructs = structdeconstructs;
 		self.structmoves = structmoves;
+		self.spreadpatterns = spreadpatterns;
 	}
 	
 	pub fn saveData(&self, dataFolder: &PathBuf)
@@ -403,6 +407,59 @@ impl AMMOLIST
 		
 		return None;
 	}	
+}
+
+
+
+pub struct SPREADPATTERN
+{
+	pub name: String,
+}
+impl SPREADPATTERN
+{
+	pub fn new() -> SPREADPATTERN
+    {
+        SPREADPATTERN { name: "".to_string() }
+    }
+
+
+	pub fn readItem(&mut self, reader: &mut Reader<BufReader<std::fs::File>>, buf: &mut Vec<u8>)
+	{
+		loop {
+			match reader.read_event_into(buf) 
+			{
+				Ok(Event::Start(e)) => 
+				{
+					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
+					match e.name().as_ref()
+					{
+                        b"NAME" => {self.name = parseString(reader, buf);}
+                        _ => {}
+					}
+				}
+
+				Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
+				Ok(Event::End(ref element)) => 
+				{
+					match element.name().as_ref()
+					{
+						b"SPREADPATTERN" => break,
+						_ => ()
+					}
+				}
+				_ => (),
+			}
+			buf.clear();
+		}	
+	}
+
+
+	pub fn save(&self, file: &mut Vec<u8>, forcewrite: bool)
+	{
+		// EMPTY BY DESIGN! 
+		// Macro for generating list structs requires the function definition. 
+		// Not a problem as long as we never save spreadpatterns.xml until the complete struct is implemented.
+	}
 }
 
 

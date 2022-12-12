@@ -874,6 +874,50 @@ fn createMenuBar(s: &app::Sender<Message>) -> menu::SysMenuBar
 }
 
 
+fn set_bit_at(x: u32, index: u8, bit: u8) -> Option<u32> {
+    // an index of 0 means insert as the new MSB (if it fits).
+    if index >= 32 {
+        println!("The new bit is out of u32 range.");
+        println!("0b_11111111");
+        println!("  ^ trying to set here");
+        return None;
+    }
+
+    if bit == 0
+    {
+        let bitmask = 1 << index;
+        let bitmask_flipped = !bitmask; // flip all bits
+        let result = x & bitmask_flipped;
+        // println!("x        = {},    binary = {:#010b} ", x, x);
+        // println!("bitmask  = {},    binary = {:#010b} ", bitmask, bitmask);
+        // println!("!bitmask = {},    binary = {:#010b} ", bitmask_flipped, bitmask_flipped);
+        // println!("result   = {},    binary = {:#010b} ", result, result);
+        Some(result)
+    }
+    else
+    {
+        let bitmask = 1 << index;
+        let result = x | bitmask;
+        // println!("x        = {},    binary = {:#010b} ", x, x);
+        // println!("bitmask  = {},    binary = {:#010b} ", bitmask, bitmask);
+        // println!("result   = {},    binary = {:#010b} ", result, result);
+        Some(result)
+
+    }
+}
+
+
+fn get_bit_at(x: u32, index: u8) -> Option<u32> {
+    if index >= 32
+    {
+        println!("Index is out of u32 range.");
+        println!("0b_11111111");
+        println!("  ^ trying to read from here");
+        return None;
+    }
+    if x & (1 << index) != 0 {return Some(1);}
+    else {return Some(0);}
+}
 //---------------------------------------------------------------------------------------------------------------------
 // Structs
 //---------------------------------------------------------------------------------------------------------------------
@@ -2789,6 +2833,21 @@ impl MagazineArea
 		}
 		self.magtype.add_choice("Magazine|Bullet(s)|Box|Crate");
 		self.ammotypes.explosionsize.add_choice("None|Small|Medium|Large|Flame Retardant");
+
+		self.ammotypes.explosionid.add_choice("-");
+		for item in &xmldata.items.items
+		{
+			if item.usItemClass == JAxml::ItemClass::Bomb as u32 || item.usItemClass == JAxml::ItemClass::Grenade as u32
+			{
+				self.ammotypes.explosionid.add_choice(&format!("{}", item.szItemName));
+			}
+		}
+
+		self.ammotypes.spreadpattern.add_choice("-");
+		for item in &xmldata.spreadpatterns.items
+		{
+			self.ammotypes.spreadpattern.add_choice(&item.name);
+		}
 	}
 
 	fn changeColor(&mut self)
@@ -2827,6 +2886,7 @@ impl MagazineArea
 		self.ammotypes.rgb = (item.red, item.green, item.blue);
 		self.ammotypes.nbullets.set_value(&format!("{}", item.numberOfBullets));
 		self.ammotypes.shotAnimation.set_value(&format!("{}", item.shotAnimation));
+		self.ammotypes.explosionsize.set_value(item.explosionSize as i32);
 
 		self.ammotypes.structImpactMultiplier.set_value(&format!("{}", item.structureImpactReductionMultiplier));
 		self.ammotypes.structImpactDivisor.set_value(&format!("{}", item.structureImpactReductionDivisor));
@@ -2858,6 +2918,30 @@ impl MagazineArea
 		self.ammotypes.pierceModifier.set_value(&format!("{}", item.usPiercePersonChanceModifier));
 		self.ammotypes.temperatureModifier.set_value(&format!("{}", item.temperatureModificator));
 		self.ammotypes.dirtModifier.set_value(&format!("{}", item.dirtModificator));
+
+		let flags = item.ammoflag;
+		self.ammotypes.freezingFlag.set_value(get_bit_at(flags, 0).unwrap() != 0);
+		self.ammotypes.blindingFlag.set_value(get_bit_at(flags, 1).unwrap() != 0);
+		self.ammotypes.antimaterialFlag.set_value(get_bit_at(flags, 2).unwrap() != 0);
+		self.ammotypes.smoketrailFlag.set_value(get_bit_at(flags, 3).unwrap() != 0);
+		self.ammotypes.firetrailFlag.set_value(get_bit_at(flags, 4).unwrap() != 0);
+
+		if item.highExplosive != 0
+		{
+			let name = &xmldata.items.items[item.highExplosive as usize].szItemName;
+
+			let widgetindex = self.ammotypes.explosionid.find_index(name);
+			self.ammotypes.explosionid.set_value(widgetindex);
+		} else { self.ammotypes.explosionid.set_value(-1); }
+
+
+		if !item.spreadPattern.is_empty()
+		{
+			let name = &item.spreadPattern;
+
+			let widgetindex = self.ammotypes.spreadpattern.find_index(name);
+			self.ammotypes.spreadpattern.set_value(widgetindex);
+		} else { self.ammotypes.spreadpattern.set_value(-1); }
 	}
 
 	fn updateCaliber(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
