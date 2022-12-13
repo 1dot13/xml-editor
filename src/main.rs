@@ -40,9 +40,8 @@ mod STI;
 // Error checking
 // Only allow saving of valid data
 // Update Caliber & Ammo Type sections if Caliber or ammotype is changed for the selected Magazine
-// Explosion item id, explosion size & spread pattern choices for Ammo Type
-// Color chooser for ammo color
-// Ammotype bitflag
+// Compatible launchers list for explosives
+// Launchables list for launchers
 
 
 fn main() 
@@ -120,7 +119,8 @@ fn main()
 	tabGroups.push( g );
 
 	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
-	let mut magArea = MagazineArea::initialize(x, y);
+	let mut magArea = MagazineArea::initialize(x, y, &s);
+	let mut expArea = ExplosivesArea::initialize(980-490, y, &s);
 	g.end();
 	g.hide();
 	tabGroups.push( g );
@@ -247,6 +247,10 @@ fn main()
 					}
 
 					itemWindow.redraw();
+				}
+				AmmoTypeFontColor =>
+				{
+					uidata.magArea.changeColor();
 				}
 				_ => {}
 	        }
@@ -2647,7 +2651,7 @@ struct MagazineArea
 }
 impl MagazineArea
 {
-	fn initialize(x: i32, y: i32) -> MagazineArea
+	fn initialize(x: i32, y: i32, sender: &app::Sender<Message>) -> MagazineArea
 	{
 		let mainWidth = 240; let mainHeight = 115;
 
@@ -2791,7 +2795,8 @@ impl MagazineArea
 		let shotAnimation = Input::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-30).with_label("Shot Animation").into();
 		let spreadpattern = Choice::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-60).with_label("Spread Pattern").into();
 		let mut color: Listener<_> = Button::new(frame.x()+10, frame.y() + frame.h() - 40, 80, 30, "Ammo color").into();
-		
+		color.emit(*sender, Message::AmmoTypeFontColor);
+
 		let ammotypes = AmmoTypesArea{ 
 			index, name, nbullets, rgb: (255, 255, 255), standardissue, zeromindamage, acidic, afterArmorDivisor, afterArmorMultiplier,
 			antimaterialFlag, armorImpactDivisor, armorImpactMultiplier, armoredVehicleModifier, beforeArmorDivisor, beforeArmorMultpilier,
@@ -2957,6 +2962,126 @@ impl MagazineArea
 }
 
 
+struct ExplosivesArea
+{
+	explosionType: Listener<Choice>,
+	animID: Listener<Choice>,
+	damage: Listener<IntInput>,
+	startRadius: Listener<IntInput>,
+	endRadius: Listener<IntInput>,
+	duration: Listener<IntInput>,
+	volatility: Listener<IntInput>,
+	stundamage: Listener<IntInput>,
+	volume: Listener<IntInput>,
+	magsize: Listener<IntInput>,
+	fragmentType: Listener<Choice>,
+	fragments: Listener<IntInput>,
+	fragrange: Listener<IntInput>,
+	fragdamage: Listener<IntInput>,
+	indoormodifier: Listener<IntInput>,
+	horizontaldegrees: Listener<IntInput>,
+	verticaldegrees: Listener<IntInput>,
+	launcherType: Listener<Choice>,
+	discardeditem: Listener<Choice>,
+}
+impl ExplosivesArea
+{
+	fn initialize(x: i32, y: i32, sender: &app::Sender<Message>) -> ExplosivesArea
+	{
+		let mainWidth = 480; let mainHeight = 360;
+
+		// Main framed box. Everything else is located relative to this
+		let (frame, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			120, 80, "Explosives"
+		);
+
+		let width = 100; let height = 20;
+		let explosionType = Choice::default().with_size(width, height).with_pos(x+100, y+10).with_label("Type").into();
+		let animID = Choice::default().with_size(width, height).with_pos(x+100, y+40).with_label("Animation ID").into();
+
+
+		let mut flex = Pack::new(frame.x()+100, frame.y()+70, 35, 100, None);
+		flex.set_spacing(5);
+		let damage = IntInput::default().with_size(width, height).with_label("Damage").into();
+		let startRadius = IntInput::default().with_size(width, height).with_label("Start Radius").into();
+		let duration = IntInput::default().with_size(width, height).with_label("Duration").into();
+		let volatility = IntInput::default().with_size(width, height).with_label("Volatility").into();
+		flex.end();
+
+		let mut flex = Pack::new(flex.x()+150, flex.y(), 35, 100, None);
+		flex.set_spacing(5);
+		let stundamage = IntInput::default().with_size(width, height).with_label("Stun Damage").into();
+		let endRadius = IntInput::default().with_size(width, height).with_label("End Radius").into();
+		let volume = IntInput::default().with_size(width, height).with_label("Volume").into();
+		let magsize = IntInput::default().with_size(width, height).with_label("Mag Size").into();
+		flex.end();
+
+
+		let fragmentType: Listener<_> = Choice::default().with_size(width, height).with_pos(x+100, flex.y()+flex.h()).with_label("Frag Type").into();
+
+		let mut flex = Pack::new(fragmentType.x(), fragmentType.y()+fragmentType.h()+10, 35, 80, None);
+		flex.set_spacing(5);
+		let fragments = IntInput::default().with_size(width, height).with_label("# of Fragments").into();
+		let fragrange = IntInput::default().with_size(width, height).with_label("Frag Range").into();
+		let horizontaldegrees = IntInput::default().with_size(width, height).with_label("Horiz. Degrees").into();
+		flex.end();
+
+		let mut flex = Pack::new(flex.x()+150, flex.y(), 35, 80, None);
+		flex.set_spacing(5);
+		let fragdamage = IntInput::default().with_size(width, height).with_label("Frag Damage").into();
+		let indoormodifier = IntInput::default().with_size(width, height).with_label("Indoor Mod.").into();
+		let verticaldegrees = IntInput::default().with_size(width, height).with_label("Vert. Degrees").into();
+		flex.end();
+
+
+		let (frame, _) = createBox(
+			x+10, flex.y()+flex.h(),
+			240, 70,
+			80, 80, "Launchers"
+		);
+
+		let width = 130; let height = 20;
+		let launcherType = Choice::default().with_size(width, height).with_pos(frame.x()+100, frame.y()+10).with_label("Type").into();
+		let discardeditem = Choice::default().with_size(width, height).with_pos(frame.x()+100, frame.y()+40).with_label("Discarded Item").into();
+
+
+		return ExplosivesArea{ 
+			animID, damage, duration, endRadius, explosionType, fragdamage, fragmentType, fragments, fragrange, horizontaldegrees, indoormodifier,
+			magsize, startRadius, stundamage, verticaldegrees, volatility, volume, discardeditem, launcherType 
+		};
+	}
+
+	fn addChoices(&mut self, xmldata: &JAxml::Data)
+	{
+		self.explosionType.clear();
+		self.animID.clear();
+		self.fragmentType.clear();
+		self.launcherType.clear();
+		self.discardeditem.clear();
+
+		self.explosionType.add_choice("Normal|Stun|Tear gas|Mustard gas|Flare|Noise|Smoke|Creature gas|Burnable gas|Flashbang|Signal Smoke|Smoke Debris|Smoke FireRetardant|Any Type");
+		self.animID.add_choice("No Blast|Small|Medium|Large|Stun|Underwater|Tear gas|Smoke|Mustard|Fire|Thermobaric|Flashbang|Roof Collapse|Roof Collapse Smoke");
+
+		for item in &xmldata.ammotypes.items
+		{
+			if item.name.contains("/")
+			{
+				let name = item.name.replace("/", "\\/");
+				self.fragmentType.add_choice(&format!("{}", name));
+			} 
+			else
+			{
+				self.fragmentType.add_choice(&format!("{}", item.name));
+			}
+		}
+
+		self.launcherType.add_choice("N/A|Grenade Launcher|Rocket Launcher|Single Shot Rocket|Mortar|Cannon");
+	}
+}
+
+
 fn createBox(x: i32, y: i32, w: i32, h: i32, xtitle: i32, widthtitle: i32, label: &str) -> (Frame, Frame)
 {
 	let mut main = Frame::default().with_size(w, h).with_pos(x, y);
@@ -3027,6 +3152,7 @@ pub enum Message {
 	GraphicType,
 	ItemClass,
 	Tabs,
+	AmmoTypeFontColor,
 }
 
     

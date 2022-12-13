@@ -4939,3 +4939,39 @@ impl fmt::Display for MagazineType
         }
     }
 }
+
+#[derive(Copy, Clone)]
+pub enum ExplosionType {
+	Normal = 0,
+	Stun,
+	Teargas,
+	Mustardgas,
+	Flare,
+	Noise,
+	Smoke,
+	Creaturegas,
+	Burnablegas,
+	Flashbang,
+	SignalSmoke,
+	SmokeDebris,
+	SmokeFireRetardant,
+	AnyType,
+}
+
+pub enum ExplosionAnimationID {
+	NO_BLAST,
+	BLAST_1,
+	BLAST_2,
+	BLAST_3,
+	STUN_BLAST,	
+	WATER_BLAST,
+	TARGAS_EXP,
+	SMOKE_EXP,
+	MUSTARD_EXP,
+	BURN_EXP,
+	THERMOBARIC_EXP,
+	FLASHBANG_EXP,
+	ROOF_COLLAPSE,
+	ROOF_COLLAPSE_SMOKE,
+	NUM_EXP_TYPES=50
+}
