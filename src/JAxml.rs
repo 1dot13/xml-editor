@@ -1861,14 +1861,14 @@ impl EXPLOSIVE {
 
 pub struct EXPDATA
 {
-    uiIndex: u32,
-    name: String,
-    TransKeyFrame: u32,
-    DamageKeyFrame: u32,
-    ExplosionSoundID: u32,
-    AltExplosionSoundID: i32,
-    BlastFilename: String,
-    BlastSpeed: u32,
+    pub uiIndex: u32,
+    pub name: String,
+    pub TransKeyFrame: u32,
+    pub DamageKeyFrame: u32,
+    pub ExplosionSoundID: u32,
+    pub AltExplosionSoundID: i32,
+    pub BlastFilename: String,
+    pub BlastSpeed: u32,
 }
 impl EXPDATA {
     pub fn new() -> EXPDATA
@@ -2553,10 +2553,10 @@ impl ATTACHMENTSLOT {
 
 pub struct ATTACHMENT
 {
-    attachmentIndex: u32,
-    itemIndex: u32,
-    APCost: u32,
-    NASOnly: bool
+    pub attachmentIndex: u32,
+    pub itemIndex: u32,
+    pub APCost: u32,
+    pub NASOnly: bool
 }
 impl ATTACHMENT {
     pub fn new() -> ATTACHMENT

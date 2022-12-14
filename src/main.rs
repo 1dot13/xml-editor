@@ -72,6 +72,9 @@ fn main()
 	// Tree browser that is used to list editable items
 	let mut tree: Listener<_> = tree::Tree::default().with_size(300, 700).with_pos(0, 20).into();
 	tree.set_show_root(false);
+	tree.set_connector_style(tree::TreeConnectorStyle::None);
+	tree.set_connector_width(0);
+	tree.set_margin_left(0);
 	fillTree(&mut tree, &xmldata, Message::ShowAll);
 	
 	// Item info
@@ -306,18 +309,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 		{
 			for item in &xmldata.items.items
 			{
-				if item.szLongItemName.contains("/")
-				{
-					let name = item.szLongItemName.replace("/", "\\/");
-					tree.add(&name);
-				}
-				else
-				{
-					tree.add(&item.szLongItemName);
-				}
-				    
-				let mut treeitem = tree.last().unwrap();
-				treeitem.set_user_data(item.uiIndex);
+				addItemToTree(tree, item);
 		    }
 		}
 		ShowGuns =>
@@ -354,18 +346,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 			{
 				if item.usItemClass == JAxml::ItemClass::Thrown as u32 || item.usItemClass == JAxml::ItemClass::Punch as u32
 				{
-					if item.szLongItemName.contains("/")
-					{
-						let name = item.szLongItemName.replace("/", "\\/");
-						tree.add(&name);
-					}
-					else
-					{
-						tree.add(&item.szLongItemName);
-					}
-				      		
-		      		let mut treeitem = tree.last().unwrap();
-					treeitem.set_user_data(item.uiIndex);
+					addItemToTree(tree, item);
 				}
 			}
     	}
@@ -407,18 +388,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 		    {
 			    if item.scifi
 			    {
-					if item.szLongItemName.contains("/")
-					{
-						let name = item.szLongItemName.replace("/", "\\/");
-						tree.add(&name);
-					}
-					else
-					{
-						tree.add(&item.szLongItemName);
-					}
-						
-					let mut treeitem = tree.last().unwrap();
-					treeitem.set_user_data(item.uiIndex);
+					addItemToTree(tree, item);
 				}
 			}
     	}
@@ -428,18 +398,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 		    {
 			    if item.scifi == false
 			    {
-					if item.szLongItemName.contains("/")
-					{
-						let name = item.szLongItemName.replace("/", "\\/");
-						tree.add(&name);
-					}
-					else
-					{
-						tree.add(&item.szLongItemName);
-					}
-				              	
-					let mut treeitem = tree.last().unwrap();
-					treeitem.set_user_data(item.uiIndex);
+					addItemToTree(tree, item);
 				}
 			}
     	}
@@ -449,18 +408,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 		    {
 			    if item.biggunlist
 			    {
-					if item.szLongItemName.contains("/")
-					{
-						let name = item.szLongItemName.replace("/", "\\/");
-						tree.add(&name);
-					}
-					else
-					{
-						tree.add(&item.szLongItemName);
-					}
-							
-					let mut treeitem = tree.last().unwrap();
-					treeitem.set_user_data(item.uiIndex);
+					addItemToTree(tree, item);
 				}
 			}
     	}
@@ -470,28 +418,29 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 		    {
 			    if item.biggunlist == false
 			    {
-					if item.szLongItemName.contains("/")
-					{
-						let name = item.szLongItemName.replace("/", "\\/");
-						tree.add(&name);
-					}
-					else
-					{
-						tree.add(&item.szLongItemName);
-					}
-						
-					let mut treeitem = tree.last().unwrap();
-					treeitem.set_user_data(item.uiIndex);
+					addItemToTree(tree, item);
 				}
 			}
     	}
     	ShowAttachments =>
     	{
-    		
+		    for item in &xmldata.items.items
+		    {
+			    if item.attachment
+			    {
+					addItemToTree(tree, item);
+				}
+			}
     	}
     	ShowDrugs =>
     	{
-    		
+			for item in &xmldata.items.items
+		    {
+			    if item.medical
+			    {
+					addItemToTree(tree, item);
+				}
+			}
     	}
 		ShowAmmoTypeData => 
 		{
@@ -605,9 +554,50 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				i += 1;
 			}
 		}
+		ShowExplosionData =>
+		{
+			for item in &xmldata.explosiondata.items
+			{
+				let i = item.uiIndex;
+				let name = item.name.clone();
+
+				if i < 10
+				{
+					tree.add(&format!("[{}]      {}", i, name) );
+				}
+				else
+				{
+					tree.add(&format!("[{}]    {}", i, name) );
+				}
+				
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(i);
+			}
+		}
+		ShowClothesData =>
+		{
+			for item in &xmldata.clothes.items
+			{
+				let i = item.uiIndex;
+				let name = item.szName.clone();
+
+				if i < 10
+				{
+					tree.add(&format!("[{}]      {}", i, name) );
+				}
+				else
+				{
+					tree.add(&format!("[{}]    {}", i, name) );
+				}
+				
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(i);
+			}
+		}
 		_ => {}
 	}
 
+	tree.set_vposition(0);
 	tree.redraw();
 }
 
@@ -617,20 +607,35 @@ fn matchItemClass(xmldata: &JAxml::Data, tree: &mut Listener<tree::Tree>, itemCl
 	{
 		if item.usItemClass == itemClass as u32
 		{
-			if item.szLongItemName.contains("/")
-			{
-				let name = item.szLongItemName.replace("/", "\\/");
-				tree.add(&name);
-			}
-			else
-			{
-				tree.add(&item.szLongItemName);
-			}
-				      
-			let mut treeitem = tree.last().unwrap();
-			treeitem.set_user_data(item.uiIndex);
+			addItemToTree(tree, item);
 		}
 	}
+}
+
+fn addItemToTree(tree: &mut Listener<tree::Tree>, item: &JAxml::ITEM)
+{
+	let name: String;
+	if item.szLongItemName.contains("/")
+	{
+		name = item.szLongItemName.replace("/", "\\/");
+	}
+	else
+	{
+		name = item.szLongItemName.clone();
+	}
+
+	if item.uiIndex < 10
+	{
+		tree.add(&format!("[{}]      {}", item.uiIndex, name) );
+	}
+	else
+	{
+		tree.add(&format!("[{}]    {}", item.uiIndex, name) );
+	}
+
+
+	let mut treeitem = tree.last().unwrap();
+	treeitem.set_user_data(item.uiIndex);
 }
 
 fn createMenuBar(s: &app::Sender<Message>) -> menu::SysMenuBar
