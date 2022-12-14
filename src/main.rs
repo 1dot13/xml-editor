@@ -42,8 +42,6 @@ mod STI;
 // Update Caliber & Ammo Type sections if Caliber or ammotype is changed for the selected Magazine
 // Compatible launchers list for explosives
 // Launchables list for launchers
-// Correct scroll speed of item graphics selection
-// Implement selecting of item graphics from scrolled area
 // Context aware (de)activation of widgets
 
 
@@ -250,6 +248,8 @@ fn main()
 				_ => {}
 	        }
         }
+
+		uidata.itemGraphics.poll(&uidata.images, &s);
     }
 }
 
@@ -1060,7 +1060,7 @@ struct ItemGraphicsArea
 	big: Frame,
 	med: Frame,
 	small: Frame,
-	images: Vec<Frame>,
+	images: Vec<Listener<Button>>,
 	scrollbar: Scrollbar,
 	itemType: Choice,
 	itemIndex: IntInput,
@@ -1167,11 +1167,11 @@ impl ItemGraphicsArea
 		let padding = 5;
 		for i in 0..7
 		{
-			let mut image = Frame::default().with_size(w, h).with_pos(scrollArea.x() + 5, scrollArea.y() + 5 + (h+5)*i);
+			let mut image = Button::default().with_size(w, h).with_pos(scrollArea.x() + 5, scrollArea.y() + 5 + (h+5)*i);
 			image.set_frame(FrameType::BorderBox);
 			image.set_color(Color::White);
 
-			images.push(image);
+			images.push(image.into());
 		}
 		
 		let w = 20;
@@ -1194,17 +1194,19 @@ impl ItemGraphicsArea
 		}
 		let max = sti.big[i].len() - self.images.len();
 
-		self.scrollbar.set_maximum(max as f64);
+		// HACK
+		// Scrollbar step is 16 by default and I can't find a function in fltk-rs documentation that could actually change it
+		// so to get mousewheel scrolling to function properly we multiply the max value by 16 and then divide by same value when checking
+		// scrollbar slider position
+		self.scrollbar.set_maximum( (16*max) as f64 );
 		self.scrollbar.set_minimum(0.0);
-		self.scrollbar.set_step(1.0, 1); // increment by 1.0 at each 1 step
     	self.scrollbar.set_value(0.0);
+
+		println!("{}", self.scrollbar.step());
 	}
 
 	fn redrawScrollAreaImages(&mut self, sti: &STI::Images)
 	{
-		let w = self.images[0].w(); let h = self.images[0].h();
-		let start = self.scrollbar.value() as usize;
-		
 		let mut graphType = self.itemType.value() as usize;
 		if graphType >= sti.big.len()
 		{
@@ -1214,6 +1216,9 @@ impl ItemGraphicsArea
 			graphType = 0;
 		}
 
+
+		let w = self.images[0].w(); let h = self.images[0].h();
+		let start = (self.scrollbar.value() as usize / 16);
 		for j in 0..7
 		{
 			let index = start + j;
@@ -1335,6 +1340,33 @@ impl ItemGraphicsArea
 		self.big.set_image(None::<RgbImage>);
 		self.med.set_image(None::<RgbImage>);
 		self.small.set_image(None::<RgbImage>);
+	}
+
+	fn poll(&mut self, sti: &STI::Images, s: &app::Sender<Message>)
+	{
+		let j = self.itemType.value() as usize;
+		let start = (self.scrollbar.value() as usize / 16);
+
+		
+		for i in 0..self.images.len()
+		{
+			let image = &self.images[i];
+
+			if image.triggered()
+			{
+				let index = start + i;
+
+				if index < sti.big[j].len()
+				{
+					self.updateItemGraphics(sti, j, index);
+					s.send(Message::Redraw);
+				}
+				else 
+				{
+					println!("!!! Tried to access image [{}][{}] !!!", j, index);
+				}
+			}
+		}
 	}
 }
 
@@ -3356,18 +3388,23 @@ impl SoundsArea
 		{
 			x if x == Gun as u32 || x == Launcher as u32 || x == Punch as u32 =>
 			{
-				let weapon = &xmldata.weapons.items[uiIndex];
-				
-				self.attackVolume.set_value(&format!("{}", weapon.ubAttackVolume));
-				self.hitVolume.set_value(&format!("{}", weapon.ubHitVolume));
-
-				self.attack.set_value( weapon.sSound as i32 );
-				self.silenced.set_value( weapon.silencedSound as i32 );
-				self.reload.set_value( weapon.sReloadSound as i32 );
-				self.locknload.set_value( weapon.sLocknLoadSound as i32 );
-				self.manualreload.set_value( weapon.ManualReloadSound as i32 );
-				self.burst.set_value( weapon.sBurstSound as i32 );
-				self.silencedBurst.set_value( weapon.sSilencedBurstSound as i32 );
+				if let Some(weapon) = &xmldata.getWeapon(uiIndex as u32)
+				{
+					
+					self.attackVolume.set_value(&format!("{}", weapon.ubAttackVolume));
+					self.hitVolume.set_value(&format!("{}", weapon.ubHitVolume));
+					
+					self.attack.set_value( weapon.sSound as i32 );
+					self.silenced.set_value( weapon.silencedSound as i32 );
+					self.reload.set_value( weapon.sReloadSound as i32 );
+					self.locknload.set_value( weapon.sLocknLoadSound as i32 );
+					self.manualreload.set_value( weapon.ManualReloadSound as i32 );
+					self.burst.set_value( weapon.sBurstSound as i32 );
+					self.silencedBurst.set_value( weapon.sSilencedBurstSound as i32 );
+				} else
+				{
+					println!("!!! COULDN'T FIND WEAPON DATA TO UPDATE FOR uiIndex {}", uiIndex);
+				}
 			}
 			_ => {}
 		}
