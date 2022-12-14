@@ -140,6 +140,7 @@ fn main()
 	itemVision.addChoicesToClothesTypes(&xmldata);
 	weaponArea.addChoices(&xmldata);
 	magArea.addChoices(&xmldata);
+	expArea.addChoices(&xmldata);
 
 	let mut uidata = UIdata{ images, itemDescription, itemGraphics, itemKit, itemProperties, itemStats, itemVision, magArea, weaponArea, state: State::Item };
 	//-----------------------------------------------------------------------------
@@ -169,6 +170,7 @@ fn main()
 						uidata.updateItem(&xmldata, uiIndex);
 						uidata.updateWeapon(&xmldata, uiIndex);
 						uidata.updateMagazine(&xmldata, uiIndex);
+						expArea.update(&xmldata, uiIndex);
 					}
 					AmmoCalibers => 
 					{
@@ -2964,6 +2966,7 @@ impl MagazineArea
 
 struct ExplosivesArea
 {
+	// Bomb/Grenade
 	explosionType: Listener<Choice>,
 	animID: Listener<Choice>,
 	damage: Listener<IntInput>,
@@ -2978,9 +2981,11 @@ struct ExplosivesArea
 	fragments: Listener<IntInput>,
 	fragrange: Listener<IntInput>,
 	fragdamage: Listener<IntInput>,
-	indoormodifier: Listener<IntInput>,
+	indoormodifier: Listener<FloatInput>,
 	horizontaldegrees: Listener<IntInput>,
 	verticaldegrees: Listener<IntInput>,
+	explodeOnImpact: Listener<CheckButton>,
+	// Launcher
 	launcherType: Listener<Choice>,
 	discardeditem: Listener<Choice>,
 }
@@ -2998,8 +3003,9 @@ impl ExplosivesArea
 		);
 
 		let width = 100; let height = 20;
-		let explosionType = Choice::default().with_size(width, height).with_pos(x+100, y+10).with_label("Type").into();
+		let explosionType: Listener<_> = Choice::default().with_size(width, height).with_pos(x+100, y+10).with_label("Type").into();
 		let animID = Choice::default().with_size(width, height).with_pos(x+100, y+40).with_label("Animation ID").into();
+		let explodeOnImpact = CheckButton::default().with_size(width, height).with_pos(explosionType.x()+explosionType.w(), y+10).with_label("Explode on impact").into();
 
 
 		let mut flex = Pack::new(frame.x()+100, frame.y()+70, 35, 100, None);
@@ -3031,7 +3037,7 @@ impl ExplosivesArea
 		let mut flex = Pack::new(flex.x()+150, flex.y(), 35, 80, None);
 		flex.set_spacing(5);
 		let fragdamage = IntInput::default().with_size(width, height).with_label("Frag Damage").into();
-		let indoormodifier = IntInput::default().with_size(width, height).with_label("Indoor Mod.").into();
+		let indoormodifier = FloatInput::default().with_size(width, height).with_label("Indoor Mod.").into();
 		let verticaldegrees = IntInput::default().with_size(width, height).with_label("Vert. Degrees").into();
 		flex.end();
 
@@ -3049,7 +3055,7 @@ impl ExplosivesArea
 
 		return ExplosivesArea{ 
 			animID, damage, duration, endRadius, explosionType, fragdamage, fragmentType, fragments, fragrange, horizontaldegrees, indoormodifier,
-			magsize, startRadius, stundamage, verticaldegrees, volatility, volume, discardeditem, launcherType 
+			magsize, startRadius, stundamage, verticaldegrees, volatility, volume, discardeditem, launcherType, explodeOnImpact 
 		};
 	}
 
@@ -3077,7 +3083,88 @@ impl ExplosivesArea
 			}
 		}
 
-		self.launcherType.add_choice("N/A|Grenade Launcher|Rocket Launcher|Single Shot Rocket|Mortar|Cannon");
+		self.launcherType.add_choice("N\\/A|Grenade Launcher|Rocket Launcher|Single Shot Rocket|Mortar|Cannon");
+
+		self.discardeditem.add_choice("-");
+		for item in &xmldata.items.items
+		{
+			if item.usItemClass == JAxml::ItemClass::Misc as u32
+			{
+				if item.szItemName.contains("/")
+				{
+					let name = item.szItemName.replace("/", "\\/");
+					self.discardeditem.add_choice(&format!("{}", name));
+				} 
+				else
+				{
+					self.discardeditem.add_choice(&format!("{}", item.szItemName));
+				}
+			}
+		}
+	}
+
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+		let itemclass = item.usItemClass;
+		let classIndex = item.ubClassIndex;
+
+		use JAxml::ItemClass::*;
+		match itemclass
+		{
+			x if x == Grenade as u32 || x == Bomb as u32 =>
+			{
+				let explosive = &xmldata.explosives.items[classIndex as usize];
+
+				self.explosionType.set_value(explosive.ubType as i32);
+				self.animID.set_value(explosive.ubAnimationID as i32);
+				self.fragmentType.set_value(explosive.ubFragType as i32);
+				self.damage.set_value( &format!("{}", explosive.ubDamage) );
+				self.startRadius.set_value( &format!("{}", explosive.ubStartRadius) );
+				self.endRadius.set_value( &format!("{}", explosive.ubRadius) );
+				self.duration.set_value( &format!("{}", explosive.ubDuration) );
+				self.volatility.set_value( &format!("{}", explosive.ubVolatility) );
+				self.stundamage.set_value( &format!("{}", explosive.ubStunDamage) );
+				self.volume.set_value( &format!("{}", explosive.ubVolume) );
+				self.magsize.set_value( &format!("{}", explosive.ubMagSize) );
+				self.fragments.set_value( &format!("{}", explosive.usNumFragments) );
+				self.fragrange.set_value( &format!("{}", explosive.ubFragRange) );
+				self.fragdamage.set_value( &format!("{}", explosive.ubFragDamage) );
+				self.indoormodifier.set_value( &format!("{}", explosive.bIndoorModifier) );
+				self.horizontaldegrees.set_value( &format!("{}", explosive.ubHorizontalDegree) );
+				self.verticaldegrees.set_value( &format!("{}", explosive.ubVerticalDegree) );
+				self.explodeOnImpact.set_value(explosive.fExplodeOnImpact);
+			}
+			x if x == Launcher as u32 =>
+			{
+				let gl = item.grenadelauncher;
+				let rl = item.rocketlauncher;
+				let singleshot = item.singleshotrocketlauncher;
+				let mortar = item.mortar;
+				let cannon = item.cannon;
+
+				if gl { self.launcherType.set_value(1); }
+				else if rl { self.launcherType.set_value(2); }
+				else if singleshot { self.launcherType.set_value(3); }
+				else if mortar { self.launcherType.set_value(4); }
+				else if cannon { self.launcherType.set_value(5); }
+				else { self.launcherType.set_value(0); }
+
+				if singleshot 
+				{
+					self.discardeditem.activate();
+					let name = &xmldata.items.items[item.discardedlauncheritem as usize].szItemName;
+		
+					let widgetindex = self.discardeditem.find_index(name);
+					self.discardeditem.set_value(widgetindex);
+				} else 
+				{ 
+					self.discardeditem.set_value(-1);
+					self.discardeditem.deactivate();
+				}
+			}
+			_ => {}
+		}
 	}
 }
 

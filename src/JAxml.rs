@@ -1676,29 +1676,30 @@ impl FOOD {
 
 pub struct EXPLOSIVE
 {
-    uiIndex: u32,
-    ubType: u32,
-    ubDamage: u32,
-    ubStunDamage: u32,
-    ubRadius: u32,
-    ubVolume: u32,
-    ubVolatility: u32,
-    ubAnimationID: u32,
-    ubDuration: u32,
-    ubStartRadius: u32,
-    ubMagSize: u32,
-    fExplodeOnImpact: bool,
-    usNumFragments: u32,
-    ubFragType: u32,
-    ubFragDamage: u32,
-    ubFragRange: u32,
-    ubHorizontalDegree: u32,
-    ubVerticalDegree: u32
+    pub uiIndex: u32,
+    pub ubType: u32,
+    pub ubDamage: u32,
+    pub ubStunDamage: u32,
+    pub ubRadius: u32,
+    pub ubVolume: u32,
+    pub ubVolatility: u32,
+    pub ubAnimationID: u32,
+    pub ubDuration: u32,
+    pub ubStartRadius: u32,
+    pub ubMagSize: u32,
+    pub fExplodeOnImpact: bool,
+    pub usNumFragments: u32,
+    pub ubFragType: u32,
+    pub ubFragDamage: u32,
+    pub ubFragRange: u32,
+    pub ubHorizontalDegree: u32,
+    pub ubVerticalDegree: u32,
+	pub bIndoorModifier: f32,
 }
 impl EXPLOSIVE {
     pub fn new() -> EXPLOSIVE
     {
-        EXPLOSIVE { uiIndex: 0, ubType: 0, ubDamage: 0, ubStunDamage: 0, ubRadius: 0, ubVolume: 0, ubVolatility: 0, ubAnimationID: 0, ubDuration: 0, ubStartRadius: 0, ubMagSize: 0, fExplodeOnImpact: false, usNumFragments: 0, ubFragType: 0, ubFragDamage: 0, ubFragRange: 0, ubHorizontalDegree: 0, ubVerticalDegree: 0 }
+        EXPLOSIVE { uiIndex: 0, ubType: 0, ubDamage: 0, ubStunDamage: 0, ubRadius: 0, ubVolume: 0, ubVolatility: 0, ubAnimationID: 0, ubDuration: 0, ubStartRadius: 0, ubMagSize: 0, fExplodeOnImpact: false, usNumFragments: 0, ubFragType: 0, ubFragDamage: 0, ubFragRange: 0, ubHorizontalDegree: 0, ubVerticalDegree: 0, bIndoorModifier: 0.0 }
     }
 
     pub fn readItem(&mut self, reader: &mut Reader<BufReader<std::fs::File>>, buf: &mut Vec<u8>)
@@ -1729,6 +1730,7 @@ impl EXPLOSIVE {
                         b"ubFragRange" => {self.ubFragRange = parseu32(reader, buf, &name);}
                         b"ubHorizontalDegree" => {self.ubHorizontalDegree = parseu32(reader, buf, &name);}
                         b"ubVerticalDegree" => {self.ubVerticalDegree = parseu32(reader, buf, &name);}
+                        b"bIndoorModifier" => {self.bIndoorModifier = parsef32(reader, buf, &name);}
                         _ => {}
 					}
 				}
@@ -1788,6 +1790,8 @@ impl EXPLOSIVE {
         write_tag_i!(file, value, "ubHorizontalDegree", forcewrite);
         let value = self.ubVerticalDegree;
         write_tag_i!(file, value, "ubVerticalDegree", forcewrite);
+        let value = self.bIndoorModifier;
+        write_tag_f!(file, value, "bIndoorModifier", forcewrite);
 
 		write!(file, "\t</EXPLOSIVE>\n").unwrap();
 	}
