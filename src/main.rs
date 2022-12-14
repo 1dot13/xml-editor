@@ -42,6 +42,10 @@ mod STI;
 // Update Caliber & Ammo Type sections if Caliber or ammotype is changed for the selected Magazine
 // Compatible launchers list for explosives
 // Launchables list for launchers
+// Correct scroll speed of item graphics selection
+// Implement selecting of item graphics from scrolled area
+// Context aware (de)activation of widgets
+
 
 
 fn main() 
@@ -144,7 +148,10 @@ fn main()
 	expArea.addChoices(&xmldata);
 	soundArea.addChoices(&xmldata);
 
-	let mut uidata = UIdata{ images, itemDescription, itemGraphics, itemKit, itemProperties, itemStats, itemVision, magArea, weaponArea, state: State::Item };
+	let mut uidata = UIdata{ 
+		images, itemDescription, itemGraphics, itemKit, itemProperties, itemStats, itemVision, magArea, weaponArea, expArea, soundArea,
+		state: State::Item 
+	};
 	//-----------------------------------------------------------------------------
 	// Main loop
 	//-----------------------------------------------------------------------------    
@@ -164,28 +171,7 @@ fn main()
                 let uiIndex = unsafe{item.user_data::<u32>()}.unwrap() as usize;
                 println!("uiIndex {}", uiIndex);
                 
-				use State::*;
-				match uidata.state
-				{
-					Item => 
-					{
-						uidata.updateItem(&xmldata, uiIndex);
-						uidata.updateWeapon(&xmldata, uiIndex);
-						uidata.updateMagazine(&xmldata, uiIndex);
-						expArea.update(&xmldata, uiIndex);
-						soundArea.update(&xmldata, uiIndex);
-					}
-					AmmoCalibers => 
-					{
-						uidata.magArea.updateCaliber(&xmldata, uiIndex);
-					}
-					AmmoTypes => 
-					{
-						uidata.magArea.updateAmmoType(&xmldata, uiIndex);
-					}
-					Sounds => {}
-				}
-
+				uidata.update(&xmldata, uiIndex);
 				itemWindow.redraw()
 			}
 			else 
@@ -944,7 +930,6 @@ fn createMenuBar(s: &app::Sender<Message>) -> menu::SysMenuBar
 
 
 fn set_bit_at(x: u32, index: u8, bit: u8) -> Option<u32> {
-    // an index of 0 means insert as the new MSB (if it fits).
     if index >= 32 {
         println!("The new bit is out of u32 range.");
         println!("0b_11111111");
@@ -1001,10 +986,37 @@ struct UIdata
 	itemVision: ItemVisionArea,
 	weaponArea: WeaponArea,
 	magArea: MagazineArea,
+	expArea: ExplosivesArea,
+	soundArea: SoundsArea,
 	state: State,
 }
 impl UIdata
 {
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		use State::*;
+		match self.state
+		{
+			Item => 
+			{
+				self.updateItem(&xmldata, uiIndex);
+				self.updateWeapon(&xmldata, uiIndex);
+				self.updateMagazine(&xmldata, uiIndex);
+				self.expArea.update(&xmldata, uiIndex);
+				self.soundArea.update(&xmldata, uiIndex);
+			}
+			AmmoCalibers => 
+			{
+				self.magArea.updateCaliber(&xmldata, uiIndex);
+			}
+			AmmoTypes => 
+			{
+				self.magArea.updateAmmoType(&xmldata, uiIndex);
+			}
+			Sounds => {}
+		}
+	}
+
 	fn updateItem(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
 		self.itemGraphics.update(&xmldata, &self.images, uiIndex);
@@ -2215,7 +2227,7 @@ impl WeaponArea
 
 		let (frame, _) = createBox(
 			frame.x() + 5,
-			frame.y() + 25,
+			frame.y() + 20,
 			165, 185,
 			30, 120, "Ranged Weapons"
 		);
