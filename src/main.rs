@@ -81,7 +81,7 @@ fn main()
 	//-----------------------------------------------------------------------------
 	// Okay, so this is stupid, but I can't get the widgets to work without defining them outside of tabs when using app.wait()
 	// With app.run() it works as expected, but I need app.wait() for better event handling via messages and fltk_evented crate
-	let tabLabels = vec!["Item\t\t", "Item / Weapon\t", "Ammo / Explosives\t", "Tab4\t\t"];
+	let tabLabels = vec!["Item\t\t", "Item / Weapon\t", "Ammo / Explosives / Sounds", "Tab4\t\t"];
 	let mut tabs = Tabs::new(0, 0, itemWindow.w(), 20, "tabs");
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
@@ -121,6 +121,7 @@ fn main()
 	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
 	let mut magArea = MagazineArea::initialize(x, y, &s);
 	let mut expArea = ExplosivesArea::initialize(980-490, y, &s);
+	let mut soundArea = SoundsArea::initialize(980-490, y+360);
 	g.end();
 	g.hide();
 	tabGroups.push( g );
@@ -141,6 +142,7 @@ fn main()
 	weaponArea.addChoices(&xmldata);
 	magArea.addChoices(&xmldata);
 	expArea.addChoices(&xmldata);
+	soundArea.addChoices(&xmldata);
 
 	let mut uidata = UIdata{ images, itemDescription, itemGraphics, itemKit, itemProperties, itemStats, itemVision, magArea, weaponArea, state: State::Item };
 	//-----------------------------------------------------------------------------
@@ -171,6 +173,7 @@ fn main()
 						uidata.updateWeapon(&xmldata, uiIndex);
 						uidata.updateMagazine(&xmldata, uiIndex);
 						expArea.update(&xmldata, uiIndex);
+						soundArea.update(&xmldata, uiIndex);
 					}
 					AmmoCalibers => 
 					{
@@ -180,6 +183,7 @@ fn main()
 					{
 						uidata.magArea.updateAmmoType(&xmldata, uiIndex);
 					}
+					Sounds => {}
 				}
 
 				itemWindow.redraw()
@@ -213,7 +217,7 @@ fn main()
 				ShowRandom | ShowMerges | ShowAttachmentMerges | ShowLaunchables | ShowCompatibleFaceGear | 
 				ShowTransforms | ShowRandomItems | ShowAttachmentList | ShowAttachmentInfo | ShowIncompatibleAttachments | 
 				ShowMedical | ShowScifi | ShowNonScifi | ShowTonsOfGuns | ShowReducedGuns | ShowAttachments |
-				ShowDrugs | ShowAmmoTypeData | ShowCaliberData => 
+				ShowDrugs | ShowAmmoTypeData | ShowCaliberData | ShowSoundData | ShowBurstSoundData => 
 				{
 					fillTree(&mut tree, &xmldata, msg);
 					uidata.changeState(msg);
@@ -309,9 +313,10 @@ fn saveData(dataPath: &PathBuf, xmldata: &JAxml::Data)
 fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message)
 {
   	tree.clear();
+	use Message::*;
   	match msg
   	{
-		Message::ShowAll =>
+		ShowAll =>
 		{
 			for item in &xmldata.items.items
 			{
@@ -329,35 +334,35 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				treeitem.set_user_data(item.uiIndex);
 		    }
 		}
-		Message::ShowGuns =>
+		ShowGuns =>
 		{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Gun)
 		}
-		Message::ShowAmmo =>
+		ShowAmmo =>
 		{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Ammo)
 		}
-		Message::ShowArmor =>
+		ShowArmor =>
 		{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Armor)
 		}
-    	Message::ShowLaunchers =>
+    	ShowLaunchers =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Launcher)
     	}
-    	Message::ShowGrenades =>
+    	ShowGrenades =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Grenade)
     	}
-    	Message::ShowExplosives =>
+    	ShowExplosives =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Bomb)
     	}
-    	Message::ShowKnives =>
+    	ShowKnives =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Blade)
     	}
-    	Message::ShowOther =>
+    	ShowOther =>
     	{
 			for item in &xmldata.items.items
 			{
@@ -378,39 +383,39 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				}
 			}
     	}
-    	Message::ShowFaceGear =>
+    	ShowFaceGear =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Face)
     	}
-    	Message::ShowKits =>
+    	ShowKits =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Kit)
     	}
-    	Message::ShowMedical =>
+    	ShowMedical =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Medkit)
     	}
-    	Message::ShowKeys =>
+    	ShowKeys =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Key)
     	}
-    	Message::ShowLBE =>
+    	ShowLBE =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::LBE)
     	}
-    	Message::ShowMisc =>
+    	ShowMisc =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Misc)
     	}
-    	Message::ShowNone =>
+    	ShowNone =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::None)
     	}
-    	Message::ShowRandom =>
+    	ShowRandom =>
     	{
 			matchItemClass(xmldata, tree, JAxml::ItemClass::Random)
     	}
-    	Message::ShowScifi =>
+    	ShowScifi =>
     	{
 		    for item in &xmldata.items.items
 		    {
@@ -431,7 +436,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				}
 			}
     	}
-    	Message::ShowNonScifi =>
+    	ShowNonScifi =>
     	{
 		    for item in &xmldata.items.items
 		    {
@@ -452,7 +457,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				}
 			}
     	}
-    	Message::ShowTonsOfGuns =>
+    	ShowTonsOfGuns =>
     	{
 		    for item in &xmldata.items.items
 		    {
@@ -473,7 +478,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				}
 			}
     	}
-    	Message::ShowReducedGuns =>
+    	ShowReducedGuns =>
     	{
 		    for item in &xmldata.items.items
 		    {
@@ -494,15 +499,15 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				}
 			}
     	}
-    	Message::ShowAttachments =>
+    	ShowAttachments =>
     	{
     		
     	}
-    	Message::ShowDrugs =>
+    	ShowDrugs =>
     	{
     		
     	}
-		Message::ShowAmmoTypeData => 
+		ShowAmmoTypeData => 
 		{
 			for item in &xmldata.ammotypes.items
 			{
@@ -529,7 +534,7 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				treeitem.set_user_data(item.uiIndex);
 			}
 		}
-		Message::ShowCaliberData => 
+		ShowCaliberData => 
 		{
 			for item in &xmldata.calibers.items
 			{
@@ -554,6 +559,64 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 					
 				let mut treeitem = tree.last().unwrap();
 				treeitem.set_user_data(item.uiIndex);
+			}
+		}
+		ShowSoundData => 
+		{
+			let mut i = 0;
+			for item in &xmldata.sounds.sounds
+			{
+				let name: String;
+				if item.contains("\\")
+				{
+					name = item.replace("\\", "\\\\");
+				}
+				else
+				{
+					name = item.clone();
+				}
+
+				if i < 10
+				{
+					tree.add(&format!("[{}]      {}", i, name) );
+				}
+				else
+				{
+					tree.add(&format!("[{}]    {}", i, name) );
+				}
+				
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(i);
+				i += 1;
+			}
+		}
+		ShowBurstSoundData => 
+		{
+			let mut i = 0;
+			for item in &xmldata.burstsounds.sounds
+			{
+				let name: String;
+				if item.contains("\\")
+				{
+					name = item.replace("\\", "\\\\");
+				}
+				else
+				{
+					name = item.clone();
+				}
+
+				if i < 10
+				{
+					tree.add(&format!("[{}]      {}", i, name) );
+				}
+				else
+				{
+					tree.add(&format!("[{}]    {}", i, name) );
+				}
+				
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(i);
+				i += 1;
 			}
 		}
 		_ => {}
@@ -969,6 +1032,7 @@ impl UIdata
 		{
 			ShowAmmoTypeData => { self.state = State::AmmoTypes; }
 			ShowCaliberData => { self.state = State::AmmoCalibers; }
+			ShowSoundData | ShowBurstSoundData => { self.state = State::Sounds; }
 			_ => { self.state = State::Item }
 		}
 	}
@@ -3169,6 +3233,131 @@ impl ExplosivesArea
 }
 
 
+struct SoundsArea
+{
+	attackVolume: Listener<IntInput>,
+	hitVolume: Listener<IntInput>,
+	attack: Listener<Choice>,
+	burst: Listener<Choice>,
+	silenced: Listener<Choice>,
+	silencedBurst: Listener<Choice>,
+	reload: Listener<Choice>,
+	locknload: Listener<Choice>,
+	manualreload: Listener<Choice>,
+}
+impl SoundsArea
+{
+	fn initialize(x: i32, y: i32) -> SoundsArea
+	{
+		let mainWidth = 480; let mainHeight = 325;
+
+		// Main framed box. Everything else is located relative to this
+		let (frame, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			120, 80, "Sounds"
+		);
+
+		let width = 80; let height = 20;
+		let mut flex = Pack::new(frame.x()+150, frame.y()+20, width, 50, None);
+		flex.set_spacing(5);
+		let attackVolume = IntInput::default().with_size(width, height).with_label("Attack Volume").into();
+		let hitVolume = IntInput::default().with_size(width, height).with_label("Hit Volume").into();
+		flex.end();
+
+
+		let width = 250;
+		let mut flex = Pack::new(flex.x(), flex.y()+flex.h(), width, 100, None);
+		flex.set_spacing(5);
+		let attack = Choice::default().with_size(width, height).with_label("Attack Sound").into();
+		let burst = Choice::default().with_size(width, height).with_label("Burst Sound").into();
+		let silenced = Choice::default().with_size(width, height).with_label("Silenced Sound").into();
+		let silencedBurst = Choice::default().with_size(width, height).with_label("Silenced Burst Sound").into();
+		let reload = Choice::default().with_size(width, height).with_label("Reload Sound").into();
+		let locknload = Choice::default().with_size(width, height).with_label("Lock'n'Load Sound").into();
+		let manualreload = Choice::default().with_size(width, height).with_label("Manual Reload Sound").into();
+		flex.end();
+
+
+		return SoundsArea{ attackVolume, hitVolume, attack, burst, locknload, manualreload, reload, silenced, silencedBurst };
+	}
+
+	fn addChoices(&mut self, xmldata: &JAxml::Data)
+	{
+		self.attack.clear();
+		self.burst.clear();
+		self.silenced.clear();
+		self.silencedBurst.clear();
+		self.reload.clear();
+		self.locknload.clear();
+		self.manualreload.clear();
+
+		let mut i = 0;
+		for sound in &xmldata.sounds.sounds
+		{
+			let path: String;
+			if sound.contains("\\")
+			{
+				path = sound.replace("\\", "\\\\");
+			}
+			else { path = sound.clone(); }
+			let path = format!("[{}] {}", i, path);
+			i += 1;
+
+			self.attack.add_choice(&path);
+			self.silenced.add_choice(&path);
+			self.reload.add_choice(&path);
+			self.locknload.add_choice(&path);
+			self.manualreload.add_choice(&path);
+		}
+
+		let mut i = 0;
+		for sound in &xmldata.burstsounds.sounds
+		{
+			let path: String;
+			if sound.contains("\\")
+			{
+				path = sound.replace("\\", "\\\\");
+			}
+			else { path = sound.clone(); }
+			let path = format!("[{}] {}", i, path);
+			i += 1;
+
+			self.burst.add_choice(&path);
+			self.silencedBurst.add_choice(&path);
+		}
+	}
+
+
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+		let itemclass = item.usItemClass;
+
+		use JAxml::ItemClass::*;
+		match itemclass
+		{
+			x if x == Gun as u32 || x == Launcher as u32 || x == Punch as u32 =>
+			{
+				let weapon = &xmldata.weapons.items[uiIndex];
+				
+				self.attackVolume.set_value(&format!("{}", weapon.ubAttackVolume));
+				self.hitVolume.set_value(&format!("{}", weapon.ubHitVolume));
+
+				self.attack.set_value( weapon.sSound as i32 );
+				self.silenced.set_value( weapon.silencedSound as i32 );
+				self.reload.set_value( weapon.sReloadSound as i32 );
+				self.locknload.set_value( weapon.sLocknLoadSound as i32 );
+				self.manualreload.set_value( weapon.ManualReloadSound as i32 );
+				self.burst.set_value( weapon.sBurstSound as i32 );
+				self.silencedBurst.set_value( weapon.sSilencedBurstSound as i32 );
+			}
+			_ => {}
+		}
+	}
+}
+
+
 fn createBox(x: i32, y: i32, w: i32, h: i32, xtitle: i32, widthtitle: i32, label: &str) -> (Frame, Frame)
 {
 	let mut main = Frame::default().with_size(w, h).with_pos(x, y);
@@ -3248,4 +3437,5 @@ pub enum State {
 	Item,
 	AmmoTypes,
 	AmmoCalibers,
+	Sounds,
 }

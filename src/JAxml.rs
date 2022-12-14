@@ -23,7 +23,7 @@ macro_rules! write_tag_i {
 		{
 			match write!($file, "\t\t<{}>{}</{}>\n", $tag, $value, $tag)
 			{
-				Ok(_) => {},
+				Ok(_) => {}
 				Err(e) => {panic!("Error writing value {} for xml tag {}\n {:?}", $value, $tag, e)}
 			}
 		}
@@ -39,7 +39,7 @@ macro_rules! write_tag_s {
 		{
 			match write!($file, "\t\t<{}>{}</{}>\n", $tag, $value, $tag)
 			{
-				Ok(_) => {},
+				Ok(_) => {}
 				Err(e) => {panic!("Error writing value {} for xml tag {}\n {:?}", $value, $tag, e)}
 			}
 		}
@@ -55,7 +55,7 @@ macro_rules! write_tag_f {
 		{
 			match write!($file, "\t\t<{}>{}</{}>\n", $tag, $value, $tag)
 			{
-				Ok(_) => {},
+				Ok(_) => {}
 				Err(e) => {panic!("Error writing value {} for xml tag {}\n {:?}", $value, $tag, e)}
 			}
 		}
@@ -98,10 +98,10 @@ macro_rules! generateListStructs {
                                 {
                                     items.push($itemname::new());
                                     items.last_mut().unwrap().readItem(&mut reader, &mut buf);
-                                },
+                                }
                                 _ => {}
                             }
-                        },
+                        }
                         _ => ()
                     }
                     buf.clear();
@@ -197,6 +197,8 @@ pub struct Data
 	pub structdeconstructs: STRUCTUREDECONSTRUCTLIST,
 	pub structmoves: STRUCTUREMOVELIST,
 	pub spreadpatterns: SPREADPATTERNLIST,
+	pub sounds: SOUNDLIST,
+	pub burstsounds: SOUNDLIST,
 }
 impl Data
 {
@@ -210,7 +212,8 @@ impl Data
 			foodopinions: FOODOPINIONSLIST::new(), incompatibleattachments: INCOMPATIBLEATTACHMENTLIST::new(), launchables: LAUNCHABLELIST::new(),
 			lbe: LOADBEARINGEQUIPMENTLIST::new(), magazines: MAGAZINELIST::new(), merges: MERGELIST::new(), pockets: POCKETLIST::new(),
 			randomitems: RANDOMITEMLIST::new(), transformations: TRANSFORMATIONS_LIST::new(), structconstructs: STRUCTURECONSTRUCTLIST::new(),
-			structdeconstructs: STRUCTUREDECONSTRUCTLIST::new(), structmoves: STRUCTUREMOVELIST::new(), spreadpatterns: SPREADPATTERNLIST::new() 
+			structdeconstructs: STRUCTUREDECONSTRUCTLIST::new(), structmoves: STRUCTUREMOVELIST::new(), spreadpatterns: SPREADPATTERNLIST::new(),
+			sounds: SOUNDLIST::new(), burstsounds: SOUNDLIST::new() 
 		}
 	}
 	
@@ -220,7 +223,7 @@ impl Data
 		tableDataPath.push("TableData");
 		
 		let mut paths: Vec<PathBuf> = Vec::new();
-		for _ in 0..28
+		for _ in 0..30
 		{
 			paths.push(tableDataPath.clone());
 		}
@@ -252,6 +255,8 @@ impl Data
 		paths[25].push("Items/StructureDeconstruct.xml");
 		paths[26].push("Items/StructureMove.xml");
 		paths[27].push("SpreadPatterns.xml");
+		paths[28].push("Sounds/Sounds.xml");
+		paths[29].push("Sounds/BurstSounds.xml");
 
 		return paths;
 	}
@@ -288,6 +293,8 @@ impl Data
 		let structdeconstructs = STRUCTUREDECONSTRUCTLIST::loadItems(&paths[25]);
 		let structmoves = STRUCTUREMOVELIST::loadItems(&paths[26]);
 		let spreadpatterns = SPREADPATTERNLIST::loadItems(&paths[27]);
+		let sounds = SOUNDLIST::loadItems(&paths[28]);
+		let burstsounds = SOUNDLIST::loadItems(&paths[29]);
 
 		self.items = items;
 		self.weapons = weapons;
@@ -317,6 +324,8 @@ impl Data
 		self.structdeconstructs = structdeconstructs;
 		self.structmoves = structmoves;
 		self.spreadpatterns = spreadpatterns;
+		self.sounds = sounds;
+		self.burstsounds = burstsounds;
 	}
 	
 	pub fn saveData(&self, dataFolder: &PathBuf)
@@ -409,6 +418,58 @@ impl AMMOLIST
 	}	
 }
 
+
+
+pub struct SOUNDLIST
+{
+	pub sounds: Vec<String>,
+}
+impl SOUNDLIST
+{
+	pub fn new() -> SOUNDLIST
+    {
+        SOUNDLIST { sounds: Vec::new() }
+    }
+
+
+	pub fn loadItems(filepath: &PathBuf) -> SOUNDLIST
+	{
+		let mut il = SOUNDLIST::new();
+
+		let mut reader = Reader::from_file(filepath).unwrap();
+		reader.trim_text(true);
+		let mut buf = Vec::new();
+		loop 
+		{
+			match reader.read_event_into(&mut buf) 
+			{
+				Err(element) => panic!("Error at position {}: {:?}", reader.buffer_position(), element),
+				Ok(Event::Eof) => break,
+
+				Ok(Event::Start(e)) => 
+				{
+					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
+					match e.name().as_ref()
+					{
+						b"SOUND" => {il.sounds.push( parseString(&mut reader, &mut buf) );}
+						_ => {}
+					}
+				}
+				_ => ()
+			}
+			buf.clear();
+		}
+		return il;
+	}
+
+
+	pub fn save(&self, file: &mut Vec<u8>, forcewrite: bool)
+	{
+		// EMPTY BY DESIGN! 
+		// Macro for generating list structs requires the function definition. 
+		// Not a problem as long as we never save sounds.xml until the complete struct is implemented.
+	}
+}
 
 
 pub struct SPREADPATTERN
@@ -1499,11 +1560,11 @@ impl FOODOPINION {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uProfile" => { self.uProfile = parseu32(reader, buf, &name); },
+						b"uProfile" => { self.uProfile = parseu32(reader, buf, &name); }
                         b"PROFILE_OPINION" => {
                             self.opinions.push(PROFILE_OPINION::new());
                             self.opinions.last_mut().unwrap().readItem(reader, buf);
-                        },
+                        }
 						_ => {}
 					}
 				}
@@ -1562,11 +1623,11 @@ impl PROFILE_OPINION
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"FoodNumber" => { self.FoodNumber = parseu32(reader, buf, &name); },
-                        b"MoraleMod" => { self.MoraleMod = parsei32(reader, buf, &name); },
+						b"FoodNumber" => { self.FoodNumber = parseu32(reader, buf, &name); }
+                        b"MoraleMod" => { self.MoraleMod = parsei32(reader, buf, &name); }
 						_ => {}
 					}
-				},
+				}
 
 				Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 				Ok(Event::End(ref element)) => 
@@ -1825,14 +1886,14 @@ impl EXPDATA {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-                        b"name" => { self.name = parseString(reader, buf); },
-                        b"TransKeyFrame" => { self.TransKeyFrame = parseu32(reader, buf, &name); },
-                        b"DamageKeyFrame" => { self.DamageKeyFrame = parseu32(reader, buf, &name); },
-                        b"ExplosionSoundID" => { self.ExplosionSoundID = parseu32(reader, buf, &name); },
-                        b"AltExplosionSoundID" => { self.AltExplosionSoundID = parsei32(reader, buf, &name); },
-                        b"BlastFilename" => { self.BlastFilename = parseString(reader, buf); },
-                        b"BlastSpeed" => { self.BlastSpeed = parseu32(reader, buf, &name); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+                        b"name" => { self.name = parseString(reader, buf); }
+                        b"TransKeyFrame" => { self.TransKeyFrame = parseu32(reader, buf, &name); }
+                        b"DamageKeyFrame" => { self.DamageKeyFrame = parseu32(reader, buf, &name); }
+                        b"ExplosionSoundID" => { self.ExplosionSoundID = parseu32(reader, buf, &name); }
+                        b"AltExplosionSoundID" => { self.AltExplosionSoundID = parsei32(reader, buf, &name); }
+                        b"BlastFilename" => { self.BlastFilename = parseString(reader, buf); }
+                        b"BlastSpeed" => { self.BlastSpeed = parseu32(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -1905,25 +1966,25 @@ impl DRUG {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-                        b"szName" => { self.szName = parseString(reader, buf); },
-						b"opinionevent" => { self.opinionevent = parsebool(reader, buf, &name); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+                        b"szName" => { self.szName = parseString(reader, buf); }
+						b"opinionevent" => { self.opinionevent = parsebool(reader, buf, &name); }
                         b"DRUG_EFFECT" => {
                             self.drugEffects.push(DRUGEFFECT::new());
                             self.drugEffects.last_mut().unwrap().readItem(reader, buf);
-                        },
+                        }
                         b"DISEASE_EFFECT" => {
                             self.diseaseEffects.push(DISEASEEFFECT::new());
                             self.diseaseEffects.last_mut().unwrap().readItem(reader, buf);
-                        },
+                        }
                         b"DISABILITY_EFFECT" => {
                             self.disabilityEffects.push(DISABILITYEFFECT::new());
                             self.disabilityEffects.last_mut().unwrap().readItem(reader, buf);
-                        },
+                        }
                         b"PERSONALITY_EFFECT" => {
                             self.personalityEffects.push(PERSONALITYEFFECT::new());
                             self.personalityEffects.last_mut().unwrap().readItem(reader, buf);
-                        },
+                        }
 						_ => {}
 					}
 				}
@@ -2000,13 +2061,13 @@ impl DRUGEFFECT
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"effect" => { self.effect = parseu8(reader, buf, &name); },
-                        b"duration" => { self.duration = parseu32(reader, buf, &name); },
-                        b"size" => { self.size = parsei32(reader, buf, &name); },
-                        b"chance" => { self.chance = parseu8(reader, buf, &name); },
+						b"effect" => { self.effect = parseu8(reader, buf, &name); }
+                        b"duration" => { self.duration = parseu32(reader, buf, &name); }
+                        b"size" => { self.size = parsei32(reader, buf, &name); }
+                        b"chance" => { self.chance = parseu8(reader, buf, &name); }
 						_ => {}
 					}
-				},
+				}
 
 				Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 				Ok(Event::End(ref element)) => 
@@ -2083,12 +2144,12 @@ impl DISEASEEFFECT
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"disease" => { self.disease = parseu8(reader, buf, &name); },
-                        b"size" => { self.size = parsei32(reader, buf, &name); },
-                        b"chance" => { self.chance = parseu8(reader, buf, &name); },
+						b"disease" => { self.disease = parseu8(reader, buf, &name); }
+                        b"size" => { self.size = parsei32(reader, buf, &name); }
+                        b"chance" => { self.chance = parseu8(reader, buf, &name); }
 						_ => {}
 					}
-				},
+				}
 
 				Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 				Ok(Event::End(ref element)) => 
@@ -2158,12 +2219,12 @@ impl DISABILITYEFFECT
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"disability" => { self.disability = parseu8(reader, buf, &name); },
-                        b"duration" => { self.duration = parseu32(reader, buf, &name); },
-                        b"chance" => { self.chance = parseu8(reader, buf, &name); },
+						b"disability" => { self.disability = parseu8(reader, buf, &name); }
+                        b"duration" => { self.duration = parseu32(reader, buf, &name); }
+                        b"chance" => { self.chance = parseu8(reader, buf, &name); }
 						_ => {}
 					}
-				},
+				}
 
 				Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 				Ok(Event::End(ref element)) => 
@@ -2233,12 +2294,12 @@ impl PERSONALITYEFFECT
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"personality" => { self.personality = parseu8(reader, buf, &name); },
-                        b"duration" => { self.duration = parseu32(reader, buf, &name); },
-                        b"chance" => { self.chance = parseu8(reader, buf, &name); },
+						b"personality" => { self.personality = parseu8(reader, buf, &name); }
+                        b"duration" => { self.duration = parseu32(reader, buf, &name); }
+                        b"chance" => { self.chance = parseu8(reader, buf, &name); }
 						_ => {}
 					}
-				},
+				}
 
 				Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 				Ok(Event::End(ref element)) => 
@@ -2306,8 +2367,8 @@ impl COMPATIBLEFACEITEM {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"compatiblefaceitemIndex" => { self.compatiblefaceitemIndex = parseu32(reader, buf, &name); },
-                        b"itemIndex" => { self.itemIndex = parseu32(reader, buf, &name); },
+						b"compatiblefaceitemIndex" => { self.compatiblefaceitemIndex = parseu32(reader, buf, &name); }
+                        b"itemIndex" => { self.itemIndex = parseu32(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -2364,10 +2425,10 @@ impl CLOTHES {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-                        b"szName" => { self.szName = parseString(reader, buf); },
-                        b"Vest" => { self.Vest = parseString(reader, buf); },
-                        b"Pants" => { self.Pants = parseString(reader, buf); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+                        b"szName" => { self.szName = parseString(reader, buf); }
+                        b"Vest" => { self.Vest = parseString(reader, buf); }
+                        b"Pants" => { self.Pants = parseString(reader, buf); }
 						_ => {}
 					}
 				}
@@ -2434,15 +2495,15 @@ impl ATTACHMENTSLOT {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiSlotIndex" => { self.uiSlotIndex = parseu32(reader, buf, &name); },
-                        b"szSlotName" => { self.szSlotName = parseString(reader, buf); },
-                        b"nasAttachmentClass" => { self.nasAttachmentClass = parseu32(reader, buf, &name); },
-                        b"nasLayoutClass" => { self.nasLayoutClass = parseu32(reader, buf, &name); },
-                        b"usDescPanelPosX" => { self.usDescPanelPosX = parseu32(reader, buf, &name); },
-                        b"usDescPanelPosY" => { self.usDescPanelPosY = parseu32(reader, buf, &name); },
-                        b"fMultiShot" => { self.fMultiShot = parsebool(reader, buf, &name); },
-                        b"fBigSlot" => { self.fBigSlot = parsebool(reader, buf, &name); },
-                        b"ubPocketMapping" => { self.ubPocketMapping = parseu32(reader, buf, &name); },
+						b"uiSlotIndex" => { self.uiSlotIndex = parseu32(reader, buf, &name); }
+                        b"szSlotName" => { self.szSlotName = parseString(reader, buf); }
+                        b"nasAttachmentClass" => { self.nasAttachmentClass = parseu32(reader, buf, &name); }
+                        b"nasLayoutClass" => { self.nasLayoutClass = parseu32(reader, buf, &name); }
+                        b"usDescPanelPosX" => { self.usDescPanelPosX = parseu32(reader, buf, &name); }
+                        b"usDescPanelPosY" => { self.usDescPanelPosY = parseu32(reader, buf, &name); }
+                        b"fMultiShot" => { self.fMultiShot = parsebool(reader, buf, &name); }
+                        b"fBigSlot" => { self.fBigSlot = parsebool(reader, buf, &name); }
+                        b"ubPocketMapping" => { self.ubPocketMapping = parseu32(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -2513,10 +2574,10 @@ impl ATTACHMENT {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"attachmentIndex" => { self.attachmentIndex = parseu32(reader, buf, &name); },
-                        b"itemIndex" => { self.itemIndex = parseu32(reader, buf, &name); },
-                        b"APCost" => { self.APCost = parseu32(reader, buf, &name); },
-                        b"NASOnly" => { self.NASOnly = parsebool(reader, buf, &name); },
+						b"attachmentIndex" => { self.attachmentIndex = parseu32(reader, buf, &name); }
+                        b"itemIndex" => { self.itemIndex = parseu32(reader, buf, &name); }
+                        b"APCost" => { self.APCost = parseu32(reader, buf, &name); }
+                        b"NASOnly" => { self.NASOnly = parsebool(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -2578,11 +2639,11 @@ impl ATTACHMENTINFO {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-                        b"usItem" => { self.usItem = parseu32(reader, buf, &name); },
-                        b"uiItemClass" => { self.uiItemClass = parseu32(reader, buf, &name); },
-                        b"bAttachmentSkillCheck" => { self.bAttachmentSkillCheck = parseu32(reader, buf, &name); },
-                        b"bAttachmentSkillCheckMod" => { self.bAttachmentSkillCheckMod = parsei32(reader, buf, &name); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+                        b"usItem" => { self.usItem = parseu32(reader, buf, &name); }
+                        b"uiItemClass" => { self.uiItemClass = parseu32(reader, buf, &name); }
+                        b"bAttachmentSkillCheck" => { self.bAttachmentSkillCheck = parseu32(reader, buf, &name); }
+                        b"bAttachmentSkillCheckMod" => { self.bAttachmentSkillCheckMod = parsei32(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -2666,29 +2727,29 @@ impl ATTACHMENTCOMBOMERGE {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-                        b"usItem" => { self.usItem = parseu32(reader, buf, &name); },
-                        b"usAttachment1" => { self.usAttachment1 = parseu32(reader, buf, &name); },
-                        b"usAttachment2" => { self.usAttachment2 = parseu32(reader, buf, &name); },
-                        b"usAttachment3" => { self.usAttachment3 = parseu32(reader, buf, &name); },
-                        b"usAttachment4" => { self.usAttachment4 = parseu32(reader, buf, &name); },
-                        b"usAttachment5" => { self.usAttachment5 = parseu32(reader, buf, &name); },
-                        b"usAttachment6" => { self.usAttachment6 = parseu32(reader, buf, &name); },
-                        b"usAttachment7" => { self.usAttachment7 = parseu32(reader, buf, &name); },
-                        b"usAttachment8" => { self.usAttachment8 = parseu32(reader, buf, &name); },
-                        b"usAttachment9" => { self.usAttachment9 = parseu32(reader, buf, &name); },
-                        b"usAttachment10" => { self.usAttachment10 = parseu32(reader, buf, &name); },
-                        b"usAttachment11" => { self.usAttachment11 = parseu32(reader, buf, &name); },
-                        b"usAttachment12" => { self.usAttachment12 = parseu32(reader, buf, &name); },
-                        b"usAttachment13" => { self.usAttachment13 = parseu32(reader, buf, &name); },
-                        b"usAttachment14" => { self.usAttachment14 = parseu32(reader, buf, &name); },
-                        b"usAttachment15" => { self.usAttachment15 = parseu32(reader, buf, &name); },
-                        b"usAttachment16" => { self.usAttachment16 = parseu32(reader, buf, &name); },
-                        b"usAttachment17" => { self.usAttachment17 = parseu32(reader, buf, &name); },
-                        b"usAttachment18" => { self.usAttachment18 = parseu32(reader, buf, &name); },
-                        b"usAttachment19" => { self.usAttachment19 = parseu32(reader, buf, &name); },
-                        b"usAttachment20" => { self.usAttachment20 = parseu32(reader, buf, &name); },
-                        b"usResult" => { self.usResult = parseu32(reader, buf, &name); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+                        b"usItem" => { self.usItem = parseu32(reader, buf, &name); }
+                        b"usAttachment1" => { self.usAttachment1 = parseu32(reader, buf, &name); }
+                        b"usAttachment2" => { self.usAttachment2 = parseu32(reader, buf, &name); }
+                        b"usAttachment3" => { self.usAttachment3 = parseu32(reader, buf, &name); }
+                        b"usAttachment4" => { self.usAttachment4 = parseu32(reader, buf, &name); }
+                        b"usAttachment5" => { self.usAttachment5 = parseu32(reader, buf, &name); }
+                        b"usAttachment6" => { self.usAttachment6 = parseu32(reader, buf, &name); }
+                        b"usAttachment7" => { self.usAttachment7 = parseu32(reader, buf, &name); }
+                        b"usAttachment8" => { self.usAttachment8 = parseu32(reader, buf, &name); }
+                        b"usAttachment9" => { self.usAttachment9 = parseu32(reader, buf, &name); }
+                        b"usAttachment10" => { self.usAttachment10 = parseu32(reader, buf, &name); }
+                        b"usAttachment11" => { self.usAttachment11 = parseu32(reader, buf, &name); }
+                        b"usAttachment12" => { self.usAttachment12 = parseu32(reader, buf, &name); }
+                        b"usAttachment13" => { self.usAttachment13 = parseu32(reader, buf, &name); }
+                        b"usAttachment14" => { self.usAttachment14 = parseu32(reader, buf, &name); }
+                        b"usAttachment15" => { self.usAttachment15 = parseu32(reader, buf, &name); }
+                        b"usAttachment16" => { self.usAttachment16 = parseu32(reader, buf, &name); }
+                        b"usAttachment17" => { self.usAttachment17 = parseu32(reader, buf, &name); }
+                        b"usAttachment18" => { self.usAttachment18 = parseu32(reader, buf, &name); }
+                        b"usAttachment19" => { self.usAttachment19 = parseu32(reader, buf, &name); }
+                        b"usAttachment20" => { self.usAttachment20 = parseu32(reader, buf, &name); }
+                        b"usResult" => { self.usResult = parseu32(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -2790,11 +2851,11 @@ impl ARMOUR {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-						b"ubArmourClass" => { self.ubArmourClass = parseu8(reader, buf, &name); },
-						b"ubProtection" => { self.ubProtection = parseu8(reader, buf, &name); },
-						b"ubCoverage" => { self.ubCoverage = parseu8(reader, buf, &name); },
-						b"ubDegradePercent" => { self.ubDegradePercent = parseu8(reader, buf, &name); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+						b"ubArmourClass" => { self.ubArmourClass = parseu8(reader, buf, &name); }
+						b"ubProtection" => { self.ubProtection = parseu8(reader, buf, &name); }
+						b"ubCoverage" => { self.ubCoverage = parseu8(reader, buf, &name); }
+						b"ubDegradePercent" => { self.ubDegradePercent = parseu8(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -2925,60 +2986,61 @@ impl WEAPON
 					        let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					        match e.name().as_ref()
 					        {
-			            b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-						            b"szWeaponName" => { self.szWeaponName = parseString(reader, buf); },
-			            b"ubWeaponClass" => { self.ubWeaponClass = parseu8(reader, buf, &name); },
-						            b"ubWeaponType" => { self.ubWeaponType = parseu8(reader, buf, &name); },
-						            b"ubCalibre" => { self.ubCalibre = parseu8(reader, buf, &name); },
-						            b"ubReadyTime" => { self.ubReadyTime = parseu8(reader, buf, &name); },
-						            b"ubShotsPer4Turns" => { self.ubShotsPer4Turns = parsef32(reader, buf, &name); },
-						            b"ubShotsPerBurst" => { self.ubShotsPerBurst = parseu8(reader, buf, &name); },
-						            b"ubBurstPenalty" => { self.ubBurstPenalty = parseu8(reader, buf, &name); },
-						            b"ubBulletSpeed" => { self.ubBulletSpeed = parseu8(reader, buf, &name); },
-						            b"ubImpact" => { self.ubImpact = parseu8(reader, buf, &name); },
-						            b"ubDeadliness" => { self.ubDeadliness = parseu8(reader, buf, &name); },
-						            b"bAccuracy" => { self.bAccuracy = parsei8(reader, buf, &name); },
-						            b"ubMagSize" => { self.ubMagSize = parseu16(reader, buf, &name); },
-						            b"usRange" => { self.usRange = parseu16(reader, buf, &name); },
-						            b"usReloadDelay" => { self.usReloadDelay = parseu16(reader, buf, &name); },
-						            b"BurstAniDelay" => { self.sAniDelay = parsei16(reader, buf, &name); },
-						            b"ubAttackVolume" => { self.ubAttackVolume = parseu8(reader, buf, &name); },
-						            b"ubHitVolume" => { self.ubHitVolume = parseu8(reader, buf, &name); },
-						            b"sSound" => { self.sSound = parseu16(reader, buf, &name); },
-						            b"sBurstSound" => { self.sBurstSound = parseu16(reader, buf, &name); },
-						            b"sSilencedBurstSound" => { self.sSilencedBurstSound = parseu16(reader, buf, &name); },
-						            b"sReloadSound" => { self.sReloadSound = parseu16(reader, buf, &name); },
-						            b"sLocknLoadSound" => { self.sLocknLoadSound = parseu16(reader, buf, &name); },
-						            b"SilencedSound" => { self.silencedSound = parseu16(reader, buf, &name); },
-						            b"bBurstAP" => { self.bBurstAP = parseu8(reader, buf, &name); },
-						            b"bAutofireShotsPerFiveAP" => { self.bAutofireShotsPerFiveAP = parseu8(reader, buf, &name); },
-						            b"APsToReload" => {self.APsToReload = parseu8(reader, buf, &name); },
-						            b"SwapClips" => {self.swapClips = parsebool(reader, buf, &name); },
-						            b"MaxDistForMessyDeath" => {self.maxdistformessydeath = parseu8(reader, buf, &name); },
-						            b"AutoPenalty" => {self.AutoPenalty = parseu8(reader, buf, &name); },
-						            b"NoSemiAuto" => {self.NoSemiAuto = parsebool(reader, buf, &name); },
-						            b"EasyUnjam" => {self.EasyUnjam = parsebool(reader, buf, &name); },
-						            b"APsToReloadManually" => {self.APsToReloadManually = parseu8(reader, buf, &name); },
-						            b"ManualReloadSound" => {self.ManualReloadSound = parseu16(reader, buf, &name); },
-						            b"nAccuracy" => {self.nAccuracy = parsei8(reader, buf, &name); },
-						            b"bRecoilX" => {self.bRecoilX = parsef32(reader, buf, &name); },
-						            b"bRecoilY" => {self.bRecoilY = parsef32(reader, buf, &name); },
-						            b"ubAimLevels" => {self.ubAimLevels = parseu8(reader, buf, &name); },
-						            b"ubRecoilDelay" => {self.ubRecoilDelay = parseu8(reader, buf, &name); },
-						            b"Handling" => { self.ubHandling = parseu8(reader, buf, &name); },
-						            b"usOverheatingJamThreshold" => {self.usOverheatingJamThreshold = parsef32(reader, buf, &name);},
-						            b"usOverheatingDamageThreshold" => {self.usOverheatingDamageThreshold = parsef32(reader, buf, &name);},
-						            b"usOverheatingSingleShotTemperature" => {self.usOverheatingSingleShotTemperature = parsef32(reader, buf, &name);},
-						            b"HeavyGun" => {self.HeavyGun = parsebool(reader, buf, &name);},
-						            b"fBurstOnlyByFanTheHammer" => {self.fBurstOnlyByFanTheHammer = parsebool(reader, buf, &name);},
-                        b"BarrelConfiguration" => {
-			                let value = parseu8(reader, buf, &name);
-							                self.barrelconfigurations.push(value);
-			    			},
-						            b"ubNWSSCase" => { self.ubNWSSCase = parseu8(reader, buf, &name); },
-						            b"ubNWSSLast" => { self.ubNWSSLast = parseu8(reader, buf, &name); },
-						            b"szNWSSSound" => { self.szNWSSSound = parseString(reader, buf); },
-						            _ => {}
+			            		b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+						        b"szWeaponName" => { self.szWeaponName = parseString(reader, buf); }
+			            		b"ubWeaponClass" => { self.ubWeaponClass = parseu8(reader, buf, &name); }
+								b"ubWeaponType" => { self.ubWeaponType = parseu8(reader, buf, &name); }
+								b"ubCalibre" => { self.ubCalibre = parseu8(reader, buf, &name); }
+								b"ubReadyTime" => { self.ubReadyTime = parseu8(reader, buf, &name); }
+								b"ubShotsPer4Turns" => { self.ubShotsPer4Turns = parsef32(reader, buf, &name); }
+								b"ubShotsPerBurst" => { self.ubShotsPerBurst = parseu8(reader, buf, &name); }
+								b"ubBurstPenalty" => { self.ubBurstPenalty = parseu8(reader, buf, &name); }
+								b"ubBulletSpeed" => { self.ubBulletSpeed = parseu8(reader, buf, &name); }
+								b"ubImpact" => { self.ubImpact = parseu8(reader, buf, &name); }
+								b"ubDeadliness" => { self.ubDeadliness = parseu8(reader, buf, &name); }
+								b"bAccuracy" => { self.bAccuracy = parsei8(reader, buf, &name); }
+								b"ubMagSize" => { self.ubMagSize = parseu16(reader, buf, &name); }
+								b"usRange" => { self.usRange = parseu16(reader, buf, &name); }
+								b"usReloadDelay" => { self.usReloadDelay = parseu16(reader, buf, &name); }
+								b"BurstAniDelay" => { self.sAniDelay = parsei16(reader, buf, &name); }
+								b"ubAttackVolume" => { self.ubAttackVolume = parseu8(reader, buf, &name); }
+								b"ubHitVolume" => { self.ubHitVolume = parseu8(reader, buf, &name); }
+								b"sSound" => { self.sSound = parseu16(reader, buf, &name); }
+								b"sBurstSound" => { self.sBurstSound = parseu16(reader, buf, &name); }
+								b"sSilencedBurstSound" => { self.sSilencedBurstSound = parseu16(reader, buf, &name); }
+								b"sReloadSound" => { self.sReloadSound = parseu16(reader, buf, &name); }
+								b"sLocknLoadSound" => { self.sLocknLoadSound = parseu16(reader, buf, &name); }
+								b"SilencedSound" => { self.silencedSound = parseu16(reader, buf, &name); }
+								b"bBurstAP" => { self.bBurstAP = parseu8(reader, buf, &name); }
+								b"bAutofireShotsPerFiveAP" => { self.bAutofireShotsPerFiveAP = parseu8(reader, buf, &name); }
+								b"APsToReload" => {self.APsToReload = parseu8(reader, buf, &name); }
+								b"SwapClips" => {self.swapClips = parsebool(reader, buf, &name); }
+								b"MaxDistForMessyDeath" => {self.maxdistformessydeath = parseu8(reader, buf, &name); }
+								b"AutoPenalty" => {self.AutoPenalty = parseu8(reader, buf, &name); }
+								b"NoSemiAuto" => {self.NoSemiAuto = parsebool(reader, buf, &name); }
+								b"EasyUnjam" => {self.EasyUnjam = parsebool(reader, buf, &name); }
+								b"APsToReloadManually" => {self.APsToReloadManually = parseu8(reader, buf, &name); }
+								b"ManualReloadSound" => {self.ManualReloadSound = parseu16(reader, buf, &name); }
+								b"nAccuracy" => {self.nAccuracy = parsei8(reader, buf, &name); }
+								b"bRecoilX" => {self.bRecoilX = parsef32(reader, buf, &name); }
+								b"bRecoilY" => {self.bRecoilY = parsef32(reader, buf, &name); }
+								b"ubAimLevels" => {self.ubAimLevels = parseu8(reader, buf, &name); }
+								b"ubRecoilDelay" => {self.ubRecoilDelay = parseu8(reader, buf, &name); }
+								b"Handling" => { self.ubHandling = parseu8(reader, buf, &name); }
+								b"usOverheatingJamThreshold" => {self.usOverheatingJamThreshold = parsef32(reader, buf, &name);}
+								b"usOverheatingDamageThreshold" => {self.usOverheatingDamageThreshold = parsef32(reader, buf, &name);}
+								b"usOverheatingSingleShotTemperature" => {self.usOverheatingSingleShotTemperature = parsef32(reader, buf, &name);}
+								b"HeavyGun" => {self.HeavyGun = parsebool(reader, buf, &name);}
+								b"fBurstOnlyByFanTheHammer" => {self.fBurstOnlyByFanTheHammer = parsebool(reader, buf, &name);}
+                        		b"BarrelConfiguration" => 
+								{
+			                		let value = parseu8(reader, buf, &name);
+									self.barrelconfigurations.push(value);
+			    				}
+								b"ubNWSSCase" => { self.ubNWSSCase = parseu8(reader, buf, &name); }
+								b"ubNWSSLast" => { self.ubNWSSLast = parseu8(reader, buf, &name); }
+								b"szNWSSSound" => { self.szNWSSSound = parseString(reader, buf); }
+								_ => {}
 						        }
 				    }
 
@@ -3138,11 +3200,11 @@ impl MAGAZINE {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-						b"ubCalibre" => { self.ubCalibre = parseu8(reader, buf, &name); },
-						b"ubMagSize" => { self.ubMagSize = parseu16(reader, buf, &name); },
-						b"ubAmmoType" => { self.ubAmmoType = parseu8(reader, buf, &name); },
-						b"ubMagType" => { self.ubMagType = parseu8(reader, buf, &name); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+						b"ubCalibre" => { self.ubCalibre = parseu8(reader, buf, &name); }
+						b"ubMagSize" => { self.ubMagSize = parseu16(reader, buf, &name); }
+						b"ubAmmoType" => { self.ubAmmoType = parseu8(reader, buf, &name); }
+						b"ubMagType" => { self.ubMagType = parseu8(reader, buf, &name); }
 						_ => {}
 					}
 				}
@@ -3206,10 +3268,10 @@ impl AMMOSTRING {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-						b"AmmoCaliber" => { self.AmmoCaliber = parseString(reader, buf); },
-						b"BRCaliber" => { self.BRCaliber = parseString(reader, buf); },
-						b"NWSSCaliber" => { self.NWSSCaliber = parseString(reader, buf); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+						b"AmmoCaliber" => { self.AmmoCaliber = parseString(reader, buf); }
+						b"BRCaliber" => { self.BRCaliber = parseString(reader, buf); }
+						b"NWSSCaliber" => { self.NWSSCaliber = parseString(reader, buf); }
 						_ => {}
 					}
 				}
@@ -3310,45 +3372,45 @@ impl AMMOTYPE {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-						b"name" => { self.name = parseString(reader, buf); },
-						b"red" => { self.red = parseu8(reader, buf, &name); },
-						b"green" => { self.green = parseu8(reader, buf, &name); },
-						b"blue" => { self.blue = parseu8(reader, buf, &name); },
-						b"structureImpactReductionMultiplier" => { self.structureImpactReductionMultiplier = parseu8(reader, buf, &name); },
-						b"structureImpactReductionDivisor" => { self.structureImpactReductionDivisor = parseu8(reader, buf, &name); },
-						b"armourImpactReductionMultiplier" => { self.armourImpactReductionMultiplier = parseu8(reader, buf, &name); },
-						b"armourImpactReductionDivisor" => { self.armourImpactReductionDivisor = parseu8(reader, buf, &name); },
-						b"beforeArmourDamageMultiplier" => { self.beforeArmourDamageMultiplier = parseu8(reader, buf, &name); },
-						b"beforeArmourDamageDivisor" => { self.beforeArmourDamageDivisor = parseu8(reader, buf, &name); },
-						b"afterArmourDamageMultiplier" => { self.afterArmourDamageMultiplier = parseu8(reader, buf, &name); },
-						b"afterArmourDamageDivisor" => { self.afterArmourDamageDivisor = parseu8(reader, buf, &name); },
-						b"zeroMinimumDamage" => { self.zeroMinimumDamage = parsebool(reader, buf, &name); },
-						b"usPiercePersonChanceModifier" => { self.usPiercePersonChanceModifier = parseu16(reader, buf, &name); },
-						b"standardIssue" => { self.standardIssue = parsebool(reader, buf, &name); },
-						b"numberOfBullets" => { self.numberOfBullets = parseu16(reader, buf, &name); },
-						b"multipleBulletDamageMultiplier" => { self.multipleBulletDamageMultiplier = parseu8(reader, buf, &name); },
-						b"multipleBulletDamageDivisor" => { self.multipleBulletDamageDivisor = parseu8(reader, buf, &name); },
-						b"highExplosive" => { self.highExplosive = parseu32(reader, buf, &name); },
-						b"explosionSize" => { self.explosionSize = parseu8(reader, buf, &name); },
-						b"dart" => { self.dart = parsebool(reader, buf, &name); },
-						b"knife" => { self.knife = parsebool(reader, buf, &name); },
-						b"monsterSpit" => { self.monsterSpit = parsebool(reader, buf, &name); },
-						b"acidic" => { self.acidic = parsebool(reader, buf, &name); },
-						b"ignoreArmour" => { self.ignoreArmour = parsebool(reader, buf, &name); },
-						b"lockBustingPower" => { self.lockBustingPower = parseu16(reader, buf, &name); },
-						b"tracerEffect" => {self.tracerEffect = parsebool(reader, buf, &name); },
-						b"spreadPattern" => {self.spreadPattern = parseString(reader, buf); },
-						b"temperatureModificator" => {self.temperatureModificator = parsef32(reader, buf, &name); },
-						b"dirtModificator" => {self.dirtModificator = parsef32(reader, buf, &name); },
-						b"ammoflag" => {self.ammoflag = parseu32(reader, buf, &name); },
-						b"dDamageModifierLife" => {self.dDamageModifierLife = parsef32(reader, buf, &name); },
-						b"dDamageModifierBreath" => {self.dDamageModifierBreath = parsef32(reader, buf, &name); },
-						b"dDamageModifierTank" => {self.dDamageModifierTank = parsef32(reader, buf, &name); },
-						b"dDamageModifierArmouredVehicle" => {self.dDamageModifierArmouredVehicle = parsef32(reader, buf, &name); },
-						b"dDamageModifierCivilianVehicle" => {self.dDamageModifierCivilianVehicle = parsef32(reader, buf, &name); },
-						b"dDamageModifierZombie" => {self.dDamageModifierZombie = parsef32(reader, buf, &name); },
-						b"shotAnimation" => {self.shotAnimation = parseString(reader, buf); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+						b"name" => { self.name = parseString(reader, buf); }
+						b"red" => { self.red = parseu8(reader, buf, &name); }
+						b"green" => { self.green = parseu8(reader, buf, &name); }
+						b"blue" => { self.blue = parseu8(reader, buf, &name); }
+						b"structureImpactReductionMultiplier" => { self.structureImpactReductionMultiplier = parseu8(reader, buf, &name); }
+						b"structureImpactReductionDivisor" => { self.structureImpactReductionDivisor = parseu8(reader, buf, &name); }
+						b"armourImpactReductionMultiplier" => { self.armourImpactReductionMultiplier = parseu8(reader, buf, &name); }
+						b"armourImpactReductionDivisor" => { self.armourImpactReductionDivisor = parseu8(reader, buf, &name); }
+						b"beforeArmourDamageMultiplier" => { self.beforeArmourDamageMultiplier = parseu8(reader, buf, &name); }
+						b"beforeArmourDamageDivisor" => { self.beforeArmourDamageDivisor = parseu8(reader, buf, &name); }
+						b"afterArmourDamageMultiplier" => { self.afterArmourDamageMultiplier = parseu8(reader, buf, &name); }
+						b"afterArmourDamageDivisor" => { self.afterArmourDamageDivisor = parseu8(reader, buf, &name); }
+						b"zeroMinimumDamage" => { self.zeroMinimumDamage = parsebool(reader, buf, &name); }
+						b"usPiercePersonChanceModifier" => { self.usPiercePersonChanceModifier = parseu16(reader, buf, &name); }
+						b"standardIssue" => { self.standardIssue = parsebool(reader, buf, &name); }
+						b"numberOfBullets" => { self.numberOfBullets = parseu16(reader, buf, &name); }
+						b"multipleBulletDamageMultiplier" => { self.multipleBulletDamageMultiplier = parseu8(reader, buf, &name); }
+						b"multipleBulletDamageDivisor" => { self.multipleBulletDamageDivisor = parseu8(reader, buf, &name); }
+						b"highExplosive" => { self.highExplosive = parseu32(reader, buf, &name); }
+						b"explosionSize" => { self.explosionSize = parseu8(reader, buf, &name); }
+						b"dart" => { self.dart = parsebool(reader, buf, &name); }
+						b"knife" => { self.knife = parsebool(reader, buf, &name); }
+						b"monsterSpit" => { self.monsterSpit = parsebool(reader, buf, &name); }
+						b"acidic" => { self.acidic = parsebool(reader, buf, &name); }
+						b"ignoreArmour" => { self.ignoreArmour = parsebool(reader, buf, &name); }
+						b"lockBustingPower" => { self.lockBustingPower = parseu16(reader, buf, &name); }
+						b"tracerEffect" => {self.tracerEffect = parsebool(reader, buf, &name); }
+						b"spreadPattern" => {self.spreadPattern = parseString(reader, buf); }
+						b"temperatureModificator" => {self.temperatureModificator = parsef32(reader, buf, &name); }
+						b"dirtModificator" => {self.dirtModificator = parsef32(reader, buf, &name); }
+						b"ammoflag" => {self.ammoflag = parseu32(reader, buf, &name); }
+						b"dDamageModifierLife" => {self.dDamageModifierLife = parsef32(reader, buf, &name); }
+						b"dDamageModifierBreath" => {self.dDamageModifierBreath = parsef32(reader, buf, &name); }
+						b"dDamageModifierTank" => {self.dDamageModifierTank = parsef32(reader, buf, &name); }
+						b"dDamageModifierArmouredVehicle" => {self.dDamageModifierArmouredVehicle = parsef32(reader, buf, &name); }
+						b"dDamageModifierCivilianVehicle" => {self.dDamageModifierCivilianVehicle = parsef32(reader, buf, &name); }
+						b"dDamageModifierZombie" => {self.dDamageModifierZombie = parsef32(reader, buf, &name); }
+						b"shotAnimation" => {self.shotAnimation = parseString(reader, buf); }
 						_ => {}
 					}
 				}
@@ -3875,206 +3937,206 @@ impl ITEM
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); },
-						b"szItemName" => { self.szItemName = parseString(reader, buf); },
-						b"szLongItemName" => { self.szLongItemName = parseString(reader, buf); },
-						b"szItemDesc" => { self.szItemDesc = parseString(reader, buf); },
-						b"szBRName" => { self.szBRName = parseString(reader, buf); },
-						b"szBRDesc" => { self.szBRDesc = parseString(reader, buf); },
-						b"usItemClass" => { self.usItemClass = parseu32(reader, buf, &name); },
-						b"AttachmentClass" => { self.AttachmentClass = parseu32(reader, buf, &name); },
-						b"nasAttachmentClass" => { self.nasAttachmentClass = parseu64(reader, buf, &name); },
-						b"nasLayoutClass" => { self.nasLayoutClass = parseu64(reader, buf, &name); },
-						b"ulAttachmentPoint" => { self.ulAttachmentPoint = parseu64(reader, buf, &name); },
+						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
+						b"szItemName" => { self.szItemName = parseString(reader, buf); }
+						b"szLongItemName" => { self.szLongItemName = parseString(reader, buf); }
+						b"szItemDesc" => { self.szItemDesc = parseString(reader, buf); }
+						b"szBRName" => { self.szBRName = parseString(reader, buf); }
+						b"szBRDesc" => { self.szBRDesc = parseString(reader, buf); }
+						b"usItemClass" => { self.usItemClass = parseu32(reader, buf, &name); }
+						b"AttachmentClass" => { self.AttachmentClass = parseu32(reader, buf, &name); }
+						b"nasAttachmentClass" => { self.nasAttachmentClass = parseu64(reader, buf, &name); }
+						b"nasLayoutClass" => { self.nasLayoutClass = parseu64(reader, buf, &name); }
+						b"ulAttachmentPoint" => { self.ulAttachmentPoint = parseu64(reader, buf, &name); }
 
 						b"AvailableAttachmentPoint" => {
 							let value = parseu64(reader, buf, &name);
 							self.AvailableAttachmentPoint.points.push(value);
 						}
 
-						b"ubAttachToPointAPCost" => { self.ubAttachToPointAPCost = parseu8(reader, buf, &name); },
-						b"ubClassIndex" => { self.ubClassIndex = parseu16(reader, buf, &name); },
-						b"usItemFlag" => { self.usItemFlag = parseu64(reader, buf, &name); },
-						b"ubCursor" => { self.ubCursor = parseu8(reader, buf, &name); },
-						b"bSoundType" => { self.bSoundType = parsei8(reader, buf, &name); },
-						b"ubGraphicType" => { self.ubGraphicType = parseu8(reader, buf, &name); },
-						b"ubGraphicNum" => { self.ubGraphicNum = parseu16(reader, buf, &name); },
-						b"ubWeight" => { self.ubWeight = parseu16(reader, buf, &name); },
-						b"ubPerPocket" => { self.ubPerPocket = parseu8(reader, buf, &name); },
-						b"ItemSize" => { self.ItemSize = parseu16(reader, buf, &name); },
-						b"ItemSizeBonus" => { self.ItemSizeBonus = parsei16(reader, buf, &name); },
-						b"usPrice" => { self.usPrice = parseu16(reader, buf, &name); },
-						b"ubCoolness" => { self.ubCoolness = parseu8(reader, buf, &name); },
-						b"bReliability" => { self.bReliability = parsei8(reader, buf, &name); },
-						b"bRepairEase" => { self.bRepairEase = parsei8(reader, buf, &name); },
+						b"ubAttachToPointAPCost" => { self.ubAttachToPointAPCost = parseu8(reader, buf, &name); }
+						b"ubClassIndex" => { self.ubClassIndex = parseu16(reader, buf, &name); }
+						b"usItemFlag" => { self.usItemFlag = parseu64(reader, buf, &name); }
+						b"ubCursor" => { self.ubCursor = parseu8(reader, buf, &name); }
+						b"bSoundType" => { self.bSoundType = parsei8(reader, buf, &name); }
+						b"ubGraphicType" => { self.ubGraphicType = parseu8(reader, buf, &name); }
+						b"ubGraphicNum" => { self.ubGraphicNum = parseu16(reader, buf, &name); }
+						b"ubWeight" => { self.ubWeight = parseu16(reader, buf, &name); }
+						b"ubPerPocket" => { self.ubPerPocket = parseu8(reader, buf, &name); }
+						b"ItemSize" => { self.ItemSize = parseu16(reader, buf, &name); }
+						b"ItemSizeBonus" => { self.ItemSizeBonus = parsei16(reader, buf, &name); }
+						b"usPrice" => { self.usPrice = parseu16(reader, buf, &name); }
+						b"ubCoolness" => { self.ubCoolness = parseu8(reader, buf, &name); }
+						b"bReliability" => { self.bReliability = parsei8(reader, buf, &name); }
+						b"bRepairEase" => { self.bRepairEase = parsei8(reader, buf, &name); }
 
-						b"Damageable" => { self.Damageable = parsebool(reader, buf, &name); },
-						b"Repairable" => { self.Repairable = parsebool(reader, buf, &name); },
-						b"WaterDamages" => { self.WaterDamages = parsebool(reader, buf, &name); },
-						b"Metal" => { self.Metal = parsebool(reader, buf, &name); },
-						b"Sinks" => { self.Sinks = parsebool(reader, buf, &name); },
-						b"ShowStatus" => {self.showstatus = parsebool(reader, buf, &name); },
-						b"HiddenAddon" => {self.hiddenaddon = parsebool(reader, buf, &name); },
-						b"TwoHanded" => {self.twohanded = parsebool(reader, buf, &name); },
-						b"NotBuyable" => {self.notbuyable = parsebool(reader, buf, &name); },
-						b"Attachment" => {self.attachment = parsebool(reader, buf, &name); },
-						b"HiddenAttachment" => {self.hiddenattachment = parsebool(reader, buf, &name); },
-						b"BlockIronSight" => {self.blockironsight = parsebool(reader, buf, &name); },
-						b"BigGunList" => {self.biggunlist = parsebool(reader, buf, &name); },
-						b"SciFi" => {self.scifi = parsebool(reader, buf, &name); },
-						b"NotInEditor" => {self.notineditor = parsebool(reader, buf, &name); },
-						b"DefaultUndroppable" => {self.defaultundroppable = parsebool(reader, buf, &name); },
-						b"Unaerodynamic" => {self.unaerodynamic = parsebool(reader, buf, &name); },
-						b"Electronic" => {self.electronic = parsebool(reader, buf, &name); },
+						b"Damageable" => { self.Damageable = parsebool(reader, buf, &name); }
+						b"Repairable" => { self.Repairable = parsebool(reader, buf, &name); }
+						b"WaterDamages" => { self.WaterDamages = parsebool(reader, buf, &name); }
+						b"Metal" => { self.Metal = parsebool(reader, buf, &name); }
+						b"Sinks" => { self.Sinks = parsebool(reader, buf, &name); }
+						b"ShowStatus" => {self.showstatus = parsebool(reader, buf, &name); }
+						b"HiddenAddon" => {self.hiddenaddon = parsebool(reader, buf, &name); }
+						b"TwoHanded" => {self.twohanded = parsebool(reader, buf, &name); }
+						b"NotBuyable" => {self.notbuyable = parsebool(reader, buf, &name); }
+						b"Attachment" => {self.attachment = parsebool(reader, buf, &name); }
+						b"HiddenAttachment" => {self.hiddenattachment = parsebool(reader, buf, &name); }
+						b"BlockIronSight" => {self.blockironsight = parsebool(reader, buf, &name); }
+						b"BigGunList" => {self.biggunlist = parsebool(reader, buf, &name); }
+						b"SciFi" => {self.scifi = parsebool(reader, buf, &name); }
+						b"NotInEditor" => {self.notineditor = parsebool(reader, buf, &name); }
+						b"DefaultUndroppable" => {self.defaultundroppable = parsebool(reader, buf, &name); }
+						b"Unaerodynamic" => {self.unaerodynamic = parsebool(reader, buf, &name); }
+						b"Electronic" => {self.electronic = parsebool(reader, buf, &name); }
 					
-						b"Inseparable" => { self.inseparable = parseu8(reader, buf, &name); },
-						b"BR_NewInventory" => {self.BR_NewInventory = parseu8(reader, buf, &name);},
-						b"BR_UsedInventory" => {self.BR_UsedInventory = parseu8(reader, buf, &name);},
-						b"BR_ROF" => {self.BR_ROF = parsei16(reader, buf, &name);},
-						b"PercentNoiseReduction" => {self.percentnoisereduction = parsei16(reader, buf, &name);},
-						b"HideMuzzleFlash" => {self.hidemuzzleflash = parsebool(reader, buf, &name);},
-						b"Bipod" => {self.bipod = parsei16(reader, buf, &name);},
-						b"RangeBonus" => {self.rangebonus = parsei16(reader, buf, &name);},
-						b"PercentRangeBonus" => {self.percentrangebonus = parsei16(reader, buf, &name);},
-						b"ToHitBonus" => {self.tohitbonus = parsei16(reader, buf, &name);},
-						b"BestLaserRange" => {self.bestlaserrange = parsei16(reader, buf, &name);},
-						b"AimBonus" => {self.aimbonus = parsei16(reader, buf, &name);},
-						b"MinRangeForAimBonus" => {self.minrangeforaimbonus = parsei16(reader, buf, &name);},
-						b"MagSizeBonus" => {self.magsizebonus = parsei16(reader, buf, &name);},
-						b"RateOfFireBonus" => {self.rateoffirebonus = parsei16(reader, buf, &name);},
-						b"BulletSpeedBonus" => {self.bulletspeedbonus = parsei16(reader, buf, &name);},
-						b"BurstSizeBonus" => {self.burstsizebonus = parsei16(reader, buf, &name);},
-						b"BurstToHitBonus" => {self.bursttohitbonus = parsei16(reader, buf, &name);},
-						b"AutoFireToHitBonus" => {self.autofiretohitbonus = parsei16(reader, buf, &name);},
-						b"APBonus" => {self.APBonus = parsei16(reader, buf, &name);},
-						b"PercentBurstFireAPReduction" => {self.percentburstfireapreduction = parsei16(reader, buf, &name);},
-						b"PercentAutofireAPReduction" => {self.percentautofireapreduction = parsei16(reader, buf, &name);},
-						b"PercentReadyTimeAPReduction" => {self.percentreadytimeapreduction = parsei16(reader, buf, &name);},
-						b"PercentReloadTimeAPReduction" => {self.percentreloadtimeapreduction = parsei16(reader, buf, &name);},
-						b"PercentAPReduction" => {self.percentapreduction = parsei16(reader, buf, &name);},
-						b"PercentStatusDrainReduction" => {self.percentstatusdrainreduction = parsei16(reader, buf, &name);},
-						b"DamageBonus" => {self.damagebonus = parsei16(reader, buf, &name);},
-						b"MeleeDamageBonus" => {self.meleedamagebonus = parsei16(reader, buf, &name);},
-						b"GrenadeLauncher" => {self.grenadelauncher = parsebool(reader, buf, &name);},
-						b"Duckbill" => {self.duckbill = parsebool(reader, buf, &name);},
-						b"GLGrenade" => {self.glgrenade = parsebool(reader, buf, &name);},
-						b"Mine" => {self.mine = parsebool(reader, buf, &name);},
-						b"Mortar" => {self.mortar = parsebool(reader, buf, &name);},
-						b"RocketLauncher" => {self.rocketlauncher = parsebool(reader, buf, &name);},
-						b"SingleShotRocketLauncher" => {self.singleshotrocketlauncher = parsebool(reader, buf, &name);},
-						b"DiscardedLauncherItem" => {self.discardedlauncheritem = parseu16(reader, buf, &name);},
-						b"RocketRifle" => {self.rocketrifle = parsebool(reader, buf, &name);},
-						b"Cannon" => {self.cannon = parsebool(reader, buf, &name);},
+						b"Inseparable" => { self.inseparable = parseu8(reader, buf, &name); }
+						b"BR_NewInventory" => {self.BR_NewInventory = parseu8(reader, buf, &name);}
+						b"BR_UsedInventory" => {self.BR_UsedInventory = parseu8(reader, buf, &name);}
+						b"BR_ROF" => {self.BR_ROF = parsei16(reader, buf, &name);}
+						b"PercentNoiseReduction" => {self.percentnoisereduction = parsei16(reader, buf, &name);}
+						b"HideMuzzleFlash" => {self.hidemuzzleflash = parsebool(reader, buf, &name);}
+						b"Bipod" => {self.bipod = parsei16(reader, buf, &name);}
+						b"RangeBonus" => {self.rangebonus = parsei16(reader, buf, &name);}
+						b"PercentRangeBonus" => {self.percentrangebonus = parsei16(reader, buf, &name);}
+						b"ToHitBonus" => {self.tohitbonus = parsei16(reader, buf, &name);}
+						b"BestLaserRange" => {self.bestlaserrange = parsei16(reader, buf, &name);}
+						b"AimBonus" => {self.aimbonus = parsei16(reader, buf, &name);}
+						b"MinRangeForAimBonus" => {self.minrangeforaimbonus = parsei16(reader, buf, &name);}
+						b"MagSizeBonus" => {self.magsizebonus = parsei16(reader, buf, &name);}
+						b"RateOfFireBonus" => {self.rateoffirebonus = parsei16(reader, buf, &name);}
+						b"BulletSpeedBonus" => {self.bulletspeedbonus = parsei16(reader, buf, &name);}
+						b"BurstSizeBonus" => {self.burstsizebonus = parsei16(reader, buf, &name);}
+						b"BurstToHitBonus" => {self.bursttohitbonus = parsei16(reader, buf, &name);}
+						b"AutoFireToHitBonus" => {self.autofiretohitbonus = parsei16(reader, buf, &name);}
+						b"APBonus" => {self.APBonus = parsei16(reader, buf, &name);}
+						b"PercentBurstFireAPReduction" => {self.percentburstfireapreduction = parsei16(reader, buf, &name);}
+						b"PercentAutofireAPReduction" => {self.percentautofireapreduction = parsei16(reader, buf, &name);}
+						b"PercentReadyTimeAPReduction" => {self.percentreadytimeapreduction = parsei16(reader, buf, &name);}
+						b"PercentReloadTimeAPReduction" => {self.percentreloadtimeapreduction = parsei16(reader, buf, &name);}
+						b"PercentAPReduction" => {self.percentapreduction = parsei16(reader, buf, &name);}
+						b"PercentStatusDrainReduction" => {self.percentstatusdrainreduction = parsei16(reader, buf, &name);}
+						b"DamageBonus" => {self.damagebonus = parsei16(reader, buf, &name);}
+						b"MeleeDamageBonus" => {self.meleedamagebonus = parsei16(reader, buf, &name);}
+						b"GrenadeLauncher" => {self.grenadelauncher = parsebool(reader, buf, &name);}
+						b"Duckbill" => {self.duckbill = parsebool(reader, buf, &name);}
+						b"GLGrenade" => {self.glgrenade = parsebool(reader, buf, &name);}
+						b"Mine" => {self.mine = parsebool(reader, buf, &name);}
+						b"Mortar" => {self.mortar = parsebool(reader, buf, &name);}
+						b"RocketLauncher" => {self.rocketlauncher = parsebool(reader, buf, &name);}
+						b"SingleShotRocketLauncher" => {self.singleshotrocketlauncher = parsebool(reader, buf, &name);}
+						b"DiscardedLauncherItem" => {self.discardedlauncheritem = parseu16(reader, buf, &name);}
+						b"RocketRifle" => {self.rocketrifle = parsebool(reader, buf, &name);}
+						b"Cannon" => {self.cannon = parsebool(reader, buf, &name);}
 
 						b"DefaultAttachment" => {
 							let value = parseu16(reader, buf, &name);
 							self.defaultattachments.push(value);
 						}
 
-						b"BrassKnuckles" => {self.brassknuckles = parsebool(reader, buf, &name);},
-						b"Crowbar" => {self.crowbar = parsebool(reader, buf, &name);},
-						b"BloodiedItem" => {self.bloodieditem = parsei16(reader, buf, &name);},
-						b"Rock" => {self.rock = parsebool(reader, buf, &name);},
-						b"CamoBonus" => {self.camobonus = parsei16(reader, buf, &name);},
-						b"UrbanCamoBonus" => {self.urbanCamobonus = parsei16(reader, buf, &name);},
-						b"DesertCamoBonus" => {self.desertCamobonus = parsei16(reader, buf, &name);},
-						b"SnowCamoBonus" => {self.snowCamobonus = parsei16(reader, buf, &name);},
-						b"StealthBonus" => {self.stealthbonus = parsei16(reader, buf, &name);},
-						b"FlakJacket" => {self.flakjacket = parsebool(reader, buf, &name);},
-						b"LeatherJacket" => {self.leatherjacket = parsebool(reader, buf, &name);},
-						b"Directional" => {self.directional = parsebool(reader, buf, &name);},
-						b"RemoteTrigger" => {self.remotetrigger = parsebool(reader, buf, &name);},
-						b"LockBomb" => {self.lockbomb = parsebool(reader, buf, &name);},
-						b"Flare" => {self.flare = parsebool(reader, buf, &name);},
-						b"RobotRemoteControl" => {self.robotremotecontrol = parsebool(reader, buf, &name);},
-						b"Walkman" => {self.walkman = parsebool(reader, buf, &name);},
-						b"HearingRangeBonus" => {self.hearingrangebonus = parsei16(reader, buf, &name);},
-						b"VisionRangeBonus" => {self.visionrangebonus = parsei16(reader, buf, &name);},
-						b"NightVisionRangeBonus" => {self.nightvisionrangebonus = parsei16(reader, buf, &name);},
-						b"DayVisionRangeBonus" => {self.dayvisionrangebonus = parsei16(reader, buf, &name);},
-						b"CaveVisionRangeBonus" => {self.cavevisionrangebonus = parsei16(reader, buf, &name);},
-						b"BrightLightVisionRangeBonus" => {self.brightlightvisionrangebonus = parsei16(reader, buf, &name);},
-						b"PercentTunnelVision" => {self.percenttunnelvision = parseu8(reader, buf, &name);},
-						b"FlashLightRange" => {self.usFlashLightRange = parseu8(reader, buf, &name);},
-						b"ThermalOptics" => {self.thermaloptics = parsebool(reader, buf, &name);},
-						b"GasMask" => {self.gasmask = parsebool(reader, buf, &name);},
-						b"Alcohol" => {self.alcohol = parsef32(reader, buf, &name);},
-						b"Hardware" => {self.hardware = parsebool(reader, buf, &name);},
-						b"Medical" => {self.medical = parsebool(reader, buf, &name);},
-						b"DrugType" => {self.drugtype = parseu32(reader, buf, &name);},
-						b"CamouflageKit" => {self.camouflagekit = parsebool(reader, buf, &name);},
-						b"LocksmithKit" => {self.locksmithkit = parsebool(reader, buf, &name);},
-						b"Toolkit" => {self.toolkit = parsebool(reader, buf, &name);},
-						b"FirstAidKit" => {self.firstaidkit = parsebool(reader, buf, &name);},
-						b"MedicalKit" => {self.medicalkit = parsebool(reader, buf, &name);},
-						b"WireCutters" => {self.wirecutters = parsebool(reader, buf, &name);},
-						b"Canteen" => {self.canteen = parsebool(reader, buf, &name);},
-						b"GasCan" => {self.gascan = parsebool(reader, buf, &name);},
-						b"Marbles" => {self.marbles = parsebool(reader, buf, &name);},
-						b"CanAndString" => {self.canandstring = parsebool(reader, buf, &name);},
-						b"Jar" => {self.jar = parsebool(reader, buf, &name);},
-						b"XRay" => {self.xray = parsebool(reader, buf, &name);},
+						b"BrassKnuckles" => {self.brassknuckles = parsebool(reader, buf, &name);}
+						b"Crowbar" => {self.crowbar = parsebool(reader, buf, &name);}
+						b"BloodiedItem" => {self.bloodieditem = parsei16(reader, buf, &name);}
+						b"Rock" => {self.rock = parsebool(reader, buf, &name);}
+						b"CamoBonus" => {self.camobonus = parsei16(reader, buf, &name);}
+						b"UrbanCamoBonus" => {self.urbanCamobonus = parsei16(reader, buf, &name);}
+						b"DesertCamoBonus" => {self.desertCamobonus = parsei16(reader, buf, &name);}
+						b"SnowCamoBonus" => {self.snowCamobonus = parsei16(reader, buf, &name);}
+						b"StealthBonus" => {self.stealthbonus = parsei16(reader, buf, &name);}
+						b"FlakJacket" => {self.flakjacket = parsebool(reader, buf, &name);}
+						b"LeatherJacket" => {self.leatherjacket = parsebool(reader, buf, &name);}
+						b"Directional" => {self.directional = parsebool(reader, buf, &name);}
+						b"RemoteTrigger" => {self.remotetrigger = parsebool(reader, buf, &name);}
+						b"LockBomb" => {self.lockbomb = parsebool(reader, buf, &name);}
+						b"Flare" => {self.flare = parsebool(reader, buf, &name);}
+						b"RobotRemoteControl" => {self.robotremotecontrol = parsebool(reader, buf, &name);}
+						b"Walkman" => {self.walkman = parsebool(reader, buf, &name);}
+						b"HearingRangeBonus" => {self.hearingrangebonus = parsei16(reader, buf, &name);}
+						b"VisionRangeBonus" => {self.visionrangebonus = parsei16(reader, buf, &name);}
+						b"NightVisionRangeBonus" => {self.nightvisionrangebonus = parsei16(reader, buf, &name);}
+						b"DayVisionRangeBonus" => {self.dayvisionrangebonus = parsei16(reader, buf, &name);}
+						b"CaveVisionRangeBonus" => {self.cavevisionrangebonus = parsei16(reader, buf, &name);}
+						b"BrightLightVisionRangeBonus" => {self.brightlightvisionrangebonus = parsei16(reader, buf, &name);}
+						b"PercentTunnelVision" => {self.percenttunnelvision = parseu8(reader, buf, &name);}
+						b"FlashLightRange" => {self.usFlashLightRange = parseu8(reader, buf, &name);}
+						b"ThermalOptics" => {self.thermaloptics = parsebool(reader, buf, &name);}
+						b"GasMask" => {self.gasmask = parsebool(reader, buf, &name);}
+						b"Alcohol" => {self.alcohol = parsef32(reader, buf, &name);}
+						b"Hardware" => {self.hardware = parsebool(reader, buf, &name);}
+						b"Medical" => {self.medical = parsebool(reader, buf, &name);}
+						b"DrugType" => {self.drugtype = parseu32(reader, buf, &name);}
+						b"CamouflageKit" => {self.camouflagekit = parsebool(reader, buf, &name);}
+						b"LocksmithKit" => {self.locksmithkit = parsebool(reader, buf, &name);}
+						b"Toolkit" => {self.toolkit = parsebool(reader, buf, &name);}
+						b"FirstAidKit" => {self.firstaidkit = parsebool(reader, buf, &name);}
+						b"MedicalKit" => {self.medicalkit = parsebool(reader, buf, &name);}
+						b"WireCutters" => {self.wirecutters = parsebool(reader, buf, &name);}
+						b"Canteen" => {self.canteen = parsebool(reader, buf, &name);}
+						b"GasCan" => {self.gascan = parsebool(reader, buf, &name);}
+						b"Marbles" => {self.marbles = parsebool(reader, buf, &name);}
+						b"CanAndString" => {self.canandstring = parsebool(reader, buf, &name);}
+						b"Jar" => {self.jar = parsebool(reader, buf, &name);}
+						b"XRay" => {self.xray = parsebool(reader, buf, &name);}
 			
-						b"Batteries" => {self.batteries = parsebool(reader, buf, &name);},
-						b"NeedsBatteries" => {self.needsbatteries = parsebool(reader, buf, &name);},
-						b"ContainsLiquid" => {self.containsliquid = parsebool(reader, buf, &name);},
-						b"MetalDetector" => {self.metaldetector = parsebool(reader, buf, &name);},
-						b"usSpotting" => {self.usSpotting = parsei16(reader, buf, &name);},
-						b"FingerPrintID" => {self.fingerprintid = parsebool(reader, buf, &name);},
-						b"TripWireActivation" => {self.tripwireactivation = parsebool(reader, buf, &name);},
-						b"TripWire" => {self.tripwire = parsebool(reader, buf, &name);},
-						b"NewInv" => {self.newinv = parsebool(reader, buf, &name);},
-						b"AttachmentSystem" => {self.ubAttachmentSystem = parseu8(reader, buf, &name);},
-						b"ScopeMagFactor" => {self.scopemagfactor = parsef32(reader, buf, &name);},
-						b"ProjectionFactor" => {self.projectionfactor = parsef32(reader, buf, &name);},
-						b"RecoilModifierX" => {self.RecoilModifierX = parsef32(reader, buf, &name);},
-						b"RecoilModifierY" => {self.RecoilModifierY = parsef32(reader, buf, &name);},
-						b"PercentRecoilModifier" => {self.PercentRecoilModifier = parsei16(reader, buf, &name);},
-						b"PercentAccuracyModifier" => {self.percentaccuracymodifier = parsei16(reader, buf, &name);},
-						b"barrel" => {self.barrel = parsebool(reader, buf, &name);},
-						b"usOverheatingCooldownFactor" => {self.usOverheatingCooldownFactor = parsef32(reader, buf, &name);},
-						b"overheatTemperatureModificator" => {self.overheatTemperatureModificator = parsef32(reader, buf, &name);},
-						b"overheatCooldownModificator" => {self.overheatCooldownModificator = parsef32(reader, buf, &name);},
-						b"overheatJamThresholdModificator" => {self.overheatJamThresholdModificator = parsef32(reader, buf, &name);},
-						b"overheatDamageThresholdModificator" => {self.overheatDamageThresholdModificator = parsef32(reader, buf, &name);},
-						b"FoodType" => {self.foodtype = parseu32(reader, buf, &name);},
-						b"LockPickModifier" => {self.LockPickModifier = parsei8(reader, buf, &name);},
-						b"CrowbarModifier" => {self.CrowbarModifier = parseu8(reader, buf, &name);},
-						b"DisarmModifier" => {self.DisarmModifier = parseu8(reader, buf, &name);},
-						b"RepairModifier" => {self.RepairModifier = parsei8(reader, buf, &name);},
-						b"usHackingModifier" => {self.usHackingModifier = parseu8(reader, buf, &name);},
-						b"usBurialModifier" => {self.usBurialModifier = parseu8(reader, buf, &name);},
-						b"DamageChance" => {self.usDamageChance = parseu8(reader, buf, &name);},
-						b"DirtIncreaseFactor" => {self.dirtIncreaseFactor = parsef32(reader, buf, &name);},
-						b"clothestype" => {self.clothestype = parseu32(reader, buf, &name);},
-						b"usActionItemFlag" => {self.usActionItemFlag = parseu32(reader, buf, &name);},
-						b"randomitem" => {self.randomitem = parseu16(reader, buf, &name);},
-						b"randomitemcoolnessmodificator" => {self.randomitemcoolnessmodificator = parsei8(reader, buf, &name);},
-						b"ItemChoiceTimeSetting" => {self.usItemChoiceTimeSetting = parseu8(reader, buf, &name);},
-						b"buddyitem" => {self.usBuddyItem = parseu16(reader, buf, &name);},
-						b"SleepModifier" => {self.ubSleepModifier = parseu8(reader, buf, &name);},
-						b"sBackpackWeightModifier" => {self.sBackpackWeightModifier = parsei16(reader, buf, &name);},
-						b"fAllowClimbing" => {self.fAllowClimbing = parsebool(reader, buf, &name);},
-						b"antitankmine" => {self.antitankmine = parsebool(reader, buf, &name);},
-						b"cigarette" => {self.cigarette = parsebool(reader, buf, &name);},
-						b"usPortionSize" => {self.usPortionSize = parseu8(reader, buf, &name);},
-						b"usRiotShieldStrength" => {self.usRiotShieldStrength = parseu16(reader, buf, &name);},
-						b"usRiotShieldGraphic" => {self.usRiotShieldGraphic = parseu16(reader, buf, &name);},
-						b"sFireResistance" => {self.sFireResistance = parsei16(reader, buf, &name);},
-						b"RobotDamageReduction" => {self.fRobotDamageReductionModifier = parsef32(reader, buf, &name);},
-						b"RobotStrBonus" => {self.bRobotStrBonus = parsei8(reader, buf, &name);},
-						b"RobotAgiBonus" => {self.bRobotAgiBonus = parsei8(reader, buf, &name);},
-						b"RobotDexBonus" => {self.bRobotDexBonus = parsei8(reader, buf, &name);},
-						b"ProvidesRobotCamo" => {self.fProvidesRobotCamo = parsebool(reader, buf, &name);},
-						b"ProvidesRobotNightVision" => {self.fProvidesRobotNightVision = parsebool(reader, buf, &name);},
-						b"ProvidesRobotLaserBonus" => {self.fProvidesRobotLaserBonus = parsebool(reader, buf, &name);},
-						b"RobotChassisSkillGrant" => {self.bRobotChassisSkillGrant = parsei8(reader, buf, &name);},
-						b"RobotTargetingSkillGrant" => {self.bRobotTargetingSkillGrant = parsei8(reader, buf, &name);},
-						b"RobotUtilitySkillGrant" => {self.bRobotUtilitySkillGrant = parsei8(reader, buf, &name);},
+						b"Batteries" => {self.batteries = parsebool(reader, buf, &name);}
+						b"NeedsBatteries" => {self.needsbatteries = parsebool(reader, buf, &name);}
+						b"ContainsLiquid" => {self.containsliquid = parsebool(reader, buf, &name);}
+						b"MetalDetector" => {self.metaldetector = parsebool(reader, buf, &name);}
+						b"usSpotting" => {self.usSpotting = parsei16(reader, buf, &name);}
+						b"FingerPrintID" => {self.fingerprintid = parsebool(reader, buf, &name);}
+						b"TripWireActivation" => {self.tripwireactivation = parsebool(reader, buf, &name);}
+						b"TripWire" => {self.tripwire = parsebool(reader, buf, &name);}
+						b"NewInv" => {self.newinv = parsebool(reader, buf, &name);}
+						b"AttachmentSystem" => {self.ubAttachmentSystem = parseu8(reader, buf, &name);}
+						b"ScopeMagFactor" => {self.scopemagfactor = parsef32(reader, buf, &name);}
+						b"ProjectionFactor" => {self.projectionfactor = parsef32(reader, buf, &name);}
+						b"RecoilModifierX" => {self.RecoilModifierX = parsef32(reader, buf, &name);}
+						b"RecoilModifierY" => {self.RecoilModifierY = parsef32(reader, buf, &name);}
+						b"PercentRecoilModifier" => {self.PercentRecoilModifier = parsei16(reader, buf, &name);}
+						b"PercentAccuracyModifier" => {self.percentaccuracymodifier = parsei16(reader, buf, &name);}
+						b"barrel" => {self.barrel = parsebool(reader, buf, &name);}
+						b"usOverheatingCooldownFactor" => {self.usOverheatingCooldownFactor = parsef32(reader, buf, &name);}
+						b"overheatTemperatureModificator" => {self.overheatTemperatureModificator = parsef32(reader, buf, &name);}
+						b"overheatCooldownModificator" => {self.overheatCooldownModificator = parsef32(reader, buf, &name);}
+						b"overheatJamThresholdModificator" => {self.overheatJamThresholdModificator = parsef32(reader, buf, &name);}
+						b"overheatDamageThresholdModificator" => {self.overheatDamageThresholdModificator = parsef32(reader, buf, &name);}
+						b"FoodType" => {self.foodtype = parseu32(reader, buf, &name);}
+						b"LockPickModifier" => {self.LockPickModifier = parsei8(reader, buf, &name);}
+						b"CrowbarModifier" => {self.CrowbarModifier = parseu8(reader, buf, &name);}
+						b"DisarmModifier" => {self.DisarmModifier = parseu8(reader, buf, &name);}
+						b"RepairModifier" => {self.RepairModifier = parsei8(reader, buf, &name);}
+						b"usHackingModifier" => {self.usHackingModifier = parseu8(reader, buf, &name);}
+						b"usBurialModifier" => {self.usBurialModifier = parseu8(reader, buf, &name);}
+						b"DamageChance" => {self.usDamageChance = parseu8(reader, buf, &name);}
+						b"DirtIncreaseFactor" => {self.dirtIncreaseFactor = parsef32(reader, buf, &name);}
+						b"clothestype" => {self.clothestype = parseu32(reader, buf, &name);}
+						b"usActionItemFlag" => {self.usActionItemFlag = parseu32(reader, buf, &name);}
+						b"randomitem" => {self.randomitem = parseu16(reader, buf, &name);}
+						b"randomitemcoolnessmodificator" => {self.randomitemcoolnessmodificator = parsei8(reader, buf, &name);}
+						b"ItemChoiceTimeSetting" => {self.usItemChoiceTimeSetting = parseu8(reader, buf, &name);}
+						b"buddyitem" => {self.usBuddyItem = parseu16(reader, buf, &name);}
+						b"SleepModifier" => {self.ubSleepModifier = parseu8(reader, buf, &name);}
+						b"sBackpackWeightModifier" => {self.sBackpackWeightModifier = parsei16(reader, buf, &name);}
+						b"fAllowClimbing" => {self.fAllowClimbing = parsebool(reader, buf, &name);}
+						b"antitankmine" => {self.antitankmine = parsebool(reader, buf, &name);}
+						b"cigarette" => {self.cigarette = parsebool(reader, buf, &name);}
+						b"usPortionSize" => {self.usPortionSize = parseu8(reader, buf, &name);}
+						b"usRiotShieldStrength" => {self.usRiotShieldStrength = parseu16(reader, buf, &name);}
+						b"usRiotShieldGraphic" => {self.usRiotShieldGraphic = parseu16(reader, buf, &name);}
+						b"sFireResistance" => {self.sFireResistance = parsei16(reader, buf, &name);}
+						b"RobotDamageReduction" => {self.fRobotDamageReductionModifier = parsef32(reader, buf, &name);}
+						b"RobotStrBonus" => {self.bRobotStrBonus = parsei8(reader, buf, &name);}
+						b"RobotAgiBonus" => {self.bRobotAgiBonus = parsei8(reader, buf, &name);}
+						b"RobotDexBonus" => {self.bRobotDexBonus = parsei8(reader, buf, &name);}
+						b"ProvidesRobotCamo" => {self.fProvidesRobotCamo = parsebool(reader, buf, &name);}
+						b"ProvidesRobotNightVision" => {self.fProvidesRobotNightVision = parsebool(reader, buf, &name);}
+						b"ProvidesRobotLaserBonus" => {self.fProvidesRobotLaserBonus = parsebool(reader, buf, &name);}
+						b"RobotChassisSkillGrant" => {self.bRobotChassisSkillGrant = parsei8(reader, buf, &name);}
+						b"RobotTargetingSkillGrant" => {self.bRobotTargetingSkillGrant = parsei8(reader, buf, &name);}
+						b"RobotUtilitySkillGrant" => {self.bRobotUtilitySkillGrant = parsei8(reader, buf, &name);}
 						// STAND/CROUCH/PRONE_MODIFIERS
-						b"STAND_MODIFIERS" => { self.readStanceModifiers(reader, 0); },
-						b"CROUCH_MODIFIERS" => { self.readStanceModifiers(reader, 1); },
-						b"PRONE_MODIFIERS" => { self.readStanceModifiers(reader, 2); },
+						b"STAND_MODIFIERS" => { self.readStanceModifiers(reader, 0); }
+						b"CROUCH_MODIFIERS" => { self.readStanceModifiers(reader, 1); }
+						b"PRONE_MODIFIERS" => { self.readStanceModifiers(reader, 2); }
 						_ => {}
 					}
 				}
@@ -4108,50 +4170,50 @@ impl ITEM
 						b"FlatBase" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.flatbasemodifier[i] = value;
-						},
+						}
 						b"PercentBase" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.percentbasemodifier[i] = value;
-						},
+						}
 						b"FlatAim" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.flataimmodifier[i] = value;
-						},
+						}
 						b"PercentCap" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.percentcapmodifier[i] = value;
-						},
+						}
 						b"PercentHandling" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.percenthandlingmodifier[i] = value;
-						},
+						}
 						b"PercentTargetTrackingSpeed" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.targettrackingmodifier[i] = value;
-						},
+						}
 						b"PercentDropCompensation" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.percentdropcompensationmodifier[i] = value;
-						},
+						}
 						b"PercentMaxCounterForce" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.maxcounterforcemodifier[i] = value;
-						},
+						}
 						b"PercentCounterForceAccuracy" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.counterforceaccuracymodifier[i] = value;
-						},
+						}
 						b"PercentCounterForceFrequency" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.counterforcefrequency[i] = value;
-						},
+						}
 						b"AimLevels" => {
 							let value = parsei16(reader, &mut buf, &name);
 							self.aimlevelsmodifier[i] = value;
-						},
+						}
 						_ => ()
 					}
-				},
+				}
 				Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 				Ok(Event::End(ref element)) => 
 				{
@@ -4162,7 +4224,7 @@ impl ITEM
 						b"PRONE_MODIFIERS" => break,
 						_ => ()
 					}
-				},
+				}
 				_ => ()
 			}
 			buf.clear();
@@ -4780,7 +4842,7 @@ fn parseString(reader: &mut Reader<BufReader<File>>, buf: &mut Vec<u8>) -> Strin
 			Ok(Event::Text(e)) => {
 				let value = e.unescape().unwrap().into_owned();
 				return value;
-			},
+			}
 			Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 			_ => {}
 		}
@@ -4796,10 +4858,10 @@ fn parsebool(reader: &mut Reader<BufReader<File>>, buf: &mut Vec<u8>, name: &str
 				let value = e.unescape().unwrap().into_owned().parse::<u32>();
 				match value
 				{
-					Ok(value) => {return value != 0;},
+					Ok(value) => {return value != 0;}
 					_ => {println!("Error parsing value for tag {}", name); return false;}
 				}
-			},
+			}
 			Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 			_ => {}
 		}
@@ -4818,10 +4880,10 @@ macro_rules! parsers {
 						let value = e.unescape().unwrap().into_owned().parse::<$type>();
 						match value
 						{
-							Ok(value) => {return value;},
+							Ok(value) => {return value;}
 							_ => {println!("Error parsing value for tag {} at position {}", name, reader.buffer_position()); return Default::default();}
 						}
-					},
+					}
 					Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 					_ => {}
 				}
