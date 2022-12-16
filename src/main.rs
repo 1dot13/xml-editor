@@ -1064,6 +1064,7 @@ impl UIdata
 		self.itemDescription.poll(xmldata, uiIndex, s);
 		self.itemProperties.poll(xmldata, uiIndex, s);
 		self.itemKit.poll(xmldata, uiIndex, s);
+		self.itemVision.poll(xmldata, uiIndex, s);
 	}
 }
 
@@ -2038,7 +2039,7 @@ impl ItemKitArea
 
 struct ItemVisionArea
 {
-	ints: Vec<Listener<IntInput>>,
+	ints: Vec<IntInput>,
 	thermal: Listener<CheckButton>,
 	clothesType: Listener<Choice>
 }
@@ -2062,25 +2063,25 @@ impl ItemVisionArea
 
 		let mut flex = Pack::new(x + xOffset, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(w, h1).with_label("General").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Nighttime").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Daytime").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Cave").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Bright Light").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Tunnelvision").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Flashlight Range").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Spotting Modifier").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("General") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Nighttime") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Daytime") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Cave") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Bright Light") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Tunnelvision") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Flashlight Range") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Spotting Modifier") );
 		let thermal = CheckButton::default().with_size(w, h1).with_label("Thermal Optics").with_align(Align::Left).into();
 		flex.end();
 
 
 		let mut flex = Pack::new(flex.x() + flex.w() + 100, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
-		ints.push( IntInput::default().with_size(w, h1).with_label("Woodland").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Urban").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Desert").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Snow").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Stealth").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Woodland") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Urban") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Desert") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Snow") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Stealth") );
 		let clothesType = Choice::default().with_size(w, h1).with_label("Clothes Type").into();
 		flex.end();
 
@@ -2117,6 +2118,83 @@ impl ItemVisionArea
 		
 		self.thermal.set_value(item.thermaloptics);
 		self.clothesType.set_value(item.clothestype as i32);
+	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		let item = &mut xmldata.items.items[uiIndex];
+
+		let widget = &mut self.thermal;
+		if widget.triggered() { item.thermaloptics = widget.value(); }
+
+		let widget = &mut self.clothesType;
+		if widget.triggered() { item.clothestype = widget.value() as u32; }
+
+
+		for i in 0..self.ints.len()
+		{
+			let widget = &mut self.ints[i];
+
+			if widget.changed()
+			{
+				match i
+				{
+					0 => { if let Some(value) = i16IntInput(widget, s) {
+							item.visionrangebonus = value; 
+						}
+					}
+					1 => { if let Some(value) = i16IntInput(widget, s) {
+							item.nightvisionrangebonus = value; 
+						}
+					}
+					2 => { if let Some(value) = i16IntInput(widget, s) {
+							item.dayvisionrangebonus = value; 
+						}
+					}
+					3 => { if let Some(value) = i16IntInput(widget, s) {
+							item.cavevisionrangebonus = value; 
+						}
+					}
+					4 => { if let Some(value) = i16IntInput(widget, s) {
+							item.brightlightvisionrangebonus = value; 
+						}
+					}
+					5 => { if let Some(value) = u8IntInput(widget, s) {
+							item.percenttunnelvision = value; 
+						}
+					}
+					6 => { if let Some(value) = u8IntInput(widget, s) {
+							item.usFlashLightRange = value; 
+						}
+					}
+					7 => { if let Some(value) = i16IntInput(widget, s) {
+							item.usSpotting = value; 
+						}
+					}
+					8 => { if let Some(value) = i16IntInput(widget, s) {
+							item.camobonus = value; 
+						}
+					}
+					9 => { if let Some(value) = i16IntInput(widget, s) {
+							item.urbanCamobonus = value; 
+						}
+					}
+					10 => { if let Some(value) = i16IntInput(widget, s) {
+							item.desertCamobonus = value; 
+						}
+					}
+					11 => { if let Some(value) = i16IntInput(widget, s) {
+							item.snowCamobonus = value; 
+						}
+					}
+					12 => { if let Some(value) = i16IntInput(widget, s) {
+							item.stealthbonus = value; 
+						}
+					}
+					_ => {}
+				}
+			}
+		}
 	}
 }
 
@@ -3848,4 +3926,4 @@ macro_rules! IntInputs {
 	};
 }
 
-IntInputs!(u16IntInput, u16, u8IntInput, u8, i8IntInput, i8);
+IntInputs!(u16IntInput, u16, u8IntInput, u8, i8IntInput, i8, i16IntInput, i16);
