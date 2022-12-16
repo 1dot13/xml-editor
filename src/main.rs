@@ -33,7 +33,7 @@ mod STI;
 // Display existing items' data
 // Allow editing item data
 // Add/Delete/Duplicate items
-// Change item uiIndex
+// Change item class & uiIndex
 // Prompt to save work upon quitting if needed
 // Inventories
 // Merchants?
@@ -43,7 +43,7 @@ mod STI;
 // Compatible launchers list for explosives
 // Launchables list for launchers
 // Context aware (de)activation of widgets
-
+// Bloody item selection
 
 
 fn main() 
@@ -156,7 +156,7 @@ fn main()
 	//-----------------------------------------------------------------------------
 	// Main loop
 	//-----------------------------------------------------------------------------    
-    let mut index = 0;
+    let mut uiIndex = usize::MAX;
     while a.wait() 
     {
 		// if let Some(w) = app::belowmouse::<widget::Widget>()
@@ -169,11 +169,10 @@ fn main()
  			if let Some(item) = tree.first_selected_item() 
  			{
                 println!("{} selected", item.label().unwrap());
-                let uiIndex = unsafe{item.user_data::<u32>()}.unwrap() as usize;
+                uiIndex = unsafe{item.user_data::<u32>()}.unwrap() as usize;
                 println!("uiIndex {}", uiIndex);
                 
-				uidata.update(&xmldata, uiIndex);
-				itemWindow.redraw()
+				uidata.update(&xmldata, uiIndex, &s);
 			}
 			else 
 			{
@@ -214,16 +213,18 @@ fn main()
 				{
 					itemWindow.redraw();
 				}
+				Update =>
+				{
+					uidata.update(&xmldata, uiIndex, &s);
+				}
 				GraphicScroll =>
 				{
-					uidata.itemGraphics.redrawScrollAreaImages(&uidata.images);
-					itemWindow.redraw();
+					uidata.itemGraphics.redrawScrollAreaImages(&uidata.images, &s);
 				}
 				GraphicType =>
 				{
 					uidata.itemGraphics.updateScrollBarBounds(&uidata.images);
-					uidata.itemGraphics.redrawScrollAreaImages(&uidata.images);
-
+					uidata.itemGraphics.redrawScrollAreaImages(&uidata.images, &s);
 				}
 				Tabs => 
 				{
@@ -249,7 +250,7 @@ fn main()
 	        }
         }
 
-		uidata.itemGraphics.poll(&uidata.images, &s);
+		if uiIndex != usize::MAX { uidata.poll( &mut xmldata, uiIndex, &s); }
     }
 }
 
@@ -997,14 +998,14 @@ struct UIdata
 }
 impl UIdata
 {
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
 	{
 		use State::*;
 		match self.state
 		{
 			Item => 
 			{
-				self.updateItem(&xmldata, uiIndex);
+				self.updateItem(&xmldata, uiIndex, s);
 				self.updateWeapon(&xmldata, uiIndex);
 				self.updateMagazine(&xmldata, uiIndex);
 				self.expArea.update(&xmldata, uiIndex);
@@ -1020,11 +1021,13 @@ impl UIdata
 			}
 			Sounds => {}
 		}
+
+		s.send(Message::Redraw);
 	}
 
-	fn updateItem(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn updateItem(&mut self, xmldata: &JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
 	{
-		self.itemGraphics.update(&xmldata, &self.images, uiIndex);
+		self.itemGraphics.update(&xmldata, &self.images, uiIndex, s);
 		self.itemDescription.update(&xmldata, uiIndex);
 		self.itemProperties.update(&xmldata, uiIndex);
 		self.itemStats.update(&xmldata, uiIndex);
@@ -1053,6 +1056,15 @@ impl UIdata
 			_ => { self.state = State::Item }
 		}
 	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		self.itemGraphics.poll(xmldata, uiIndex, &self.images, s);
+		self.itemStats.poll(xmldata, uiIndex, s);
+		self.itemDescription.poll(xmldata, uiIndex, s);
+		self.itemProperties.poll(xmldata, uiIndex, s);
+		self.itemKit.poll(xmldata, uiIndex, s);
+	}
 }
 
 struct ItemGraphicsArea
@@ -1062,7 +1074,7 @@ struct ItemGraphicsArea
 	small: Frame,
 	images: Vec<Listener<Button>>,
 	scrollbar: Scrollbar,
-	itemType: Choice,
+	itemType: Listener<Choice>,
 	itemIndex: IntInput,
 	itemClass: Listener<Choice>,
 	uiIndex: IntInput
@@ -1178,7 +1190,10 @@ impl ItemGraphicsArea
 		let mut scrollbar = Scrollbar::default().with_pos(scrollArea.x() + scrollArea.w() - w, scrollArea.y()).with_size(w, scrollArea.h());
 		scrollbar.emit(*s, Message::GraphicScroll);
 
-		return ItemGraphicsArea{big, med, small, images, scrollbar, itemType, itemIndex, uiIndex, itemClass: itemClass.into()};
+
+		let itemType = itemType.into();
+		let itemClass = itemClass.into();
+		return ItemGraphicsArea{big, med, small, images, scrollbar, itemType, itemIndex, uiIndex, itemClass};
 	}
 
 	
@@ -1201,11 +1216,9 @@ impl ItemGraphicsArea
 		self.scrollbar.set_maximum( (16*max) as f64 );
 		self.scrollbar.set_minimum(0.0);
     	self.scrollbar.set_value(0.0);
-
-		println!("{}", self.scrollbar.step());
 	}
 
-	fn redrawScrollAreaImages(&mut self, sti: &STI::Images)
+	fn redrawScrollAreaImages(&mut self, sti: &STI::Images, s: &app::Sender<Message>)
 	{
 		let mut graphType = self.itemType.value() as usize;
 		if graphType >= sti.big.len()
@@ -1234,6 +1247,8 @@ impl ItemGraphicsArea
 				self.images[j].set_image(None::<RgbImage>);
 			}
 		}
+
+		s.send(Message::Redraw);
 	}
 
 	fn updateItemGraphics(&mut self, images: &STI::Images, stiType: usize, stiIndex: usize)
@@ -1273,7 +1288,7 @@ impl ItemGraphicsArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, images: &STI::Images, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, images: &STI::Images, uiIndex: usize, s: &app::Sender<Message>)
 	{
 		let item = &xmldata.items.items[uiIndex];
 
@@ -1290,7 +1305,7 @@ impl ItemGraphicsArea
 			{
 				self.itemType.set_value(stiType as i32);
 				self.updateScrollBarBounds(&images);
-				self.redrawScrollAreaImages(&images);
+				self.redrawScrollAreaImages(&images, s);
 			}
 			self.itemIndex.set_value(&format!("{}", stiIndex));
 			
@@ -1342,12 +1357,13 @@ impl ItemGraphicsArea
 		self.small.set_image(None::<RgbImage>);
 	}
 
-	fn poll(&mut self, sti: &STI::Images, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, sti: &STI::Images, s: &app::Sender<Message>)
 	{
-		let j = self.itemType.value() as usize;
-		let start = (self.scrollbar.value() as usize / 16);
-
+		let item = &mut xmldata.items.items[uiIndex];
 		
+		
+		let start = (self.scrollbar.value() as usize / 16);
+		let j = self.itemType.value() as usize;
 		for i in 0..self.images.len()
 		{
 			let image = &self.images[i];
@@ -1358,8 +1374,8 @@ impl ItemGraphicsArea
 
 				if index < sti.big[j].len()
 				{
-					self.updateItemGraphics(sti, j, index);
-					s.send(Message::Redraw);
+					item.ubGraphicNum = index as u16;
+					s.send(Message::Update);
 				}
 				else 
 				{
@@ -1367,18 +1383,50 @@ impl ItemGraphicsArea
 				}
 			}
 		}
+
+		if self.itemIndex.changed()
+		{
+			let value = self.itemIndex.value().parse::<u32>();
+			match value
+			{
+				Ok(value) => 
+				{
+					if value < sti.big[j].len() as u32
+					{
+						item.ubGraphicNum = value as u16;
+						self.itemIndex.set_text_color(Color::Black);
+						s.send(Message::Update);
+					}
+					else { 
+						self.itemIndex.set_text_color(Color::Red); 
+						s.send(Message::Redraw);
+					}
+				}
+				_ => { self.itemIndex.set_text_color(Color::Red); }
+			}
+		}
+
+		if self.itemType.triggered() && item.ubGraphicType != j as u8
+		{
+			item.ubGraphicType = self.itemType.value() as u8;
+			item.ubGraphicNum = 0;
+
+			self.updateScrollBarBounds(sti);
+			self.redrawScrollAreaImages(sti, s);
+			s.send(Message::Update);
+		}
 	}
 }
 
 
 struct ItemStatsArea
 {
-	price: Listener<IntInput>,
-	weight: Listener<IntInput>,
-	nperpocket: Listener<IntInput>,
-	size: Listener<IntInput>,
-	reliability: Listener<IntInput>,
-	repairease: Listener<IntInput>,
+	price: IntInput,
+	weight: IntInput,
+	nperpocket: IntInput,
+	size: IntInput,
+	reliability: IntInput,
+	repairease: IntInput,
 	cursor: Listener<Choice>,
 }
 impl ItemStatsArea
@@ -1413,27 +1461,21 @@ impl ItemStatsArea
 
 		let mut price = IntInput::default();
 		flex.set_size(&mut price, 20);
-		let price = price.into();
 
 		let mut weight = IntInput::default();
 		flex.set_size(&mut weight, 20);
-		let weight = weight.into();
 
 		let mut nperpocket = IntInput::default();
 		flex.set_size(&mut nperpocket, 20);
-		let nperpocket = nperpocket.into();
 
 		let mut size = IntInput::default();
 		flex.set_size(&mut size, 20);
-		let size = size.into();
 
 		let mut reliability = IntInput::default();
 		flex.set_size(&mut reliability, 20);
-		let reliability = reliability.into();
 
 		let mut repairease = IntInput::default();
 		flex.set_size(&mut repairease, 20);
-		let repairease = repairease.into();
 
 		let mut cursor = Choice::default();
 		flex.set_size(&mut cursor, 20);
@@ -1487,15 +1529,91 @@ impl ItemStatsArea
 
 		self.cursor.set_value(item.ubCursor as i32);
 	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		let item = &mut xmldata.items.items[uiIndex];
+
+		if let Some(value) = u16IntInput(&mut self.price, s)
+		{
+			item.usPrice = value;
+		}
+
+		if let Some(value) = u16IntInput(&mut self.weight, s)
+		{
+			item.ubWeight = value;
+		}
+
+		if let Some(value) = u8IntInput(&mut self.nperpocket, s)
+		{
+			item.ubPerPocket = value;
+		}
+
+		if let Some(value) = u16IntInput(&mut self.size, s)
+		{
+			item.ItemSize = value;
+		}
+
+		if let Some(value) = i8IntInput(&mut self.reliability, s)
+		{
+			item.bReliability = value;
+		}
+
+		if let Some(value) = i8IntInput(&mut self.repairease, s)
+		{
+			item.bRepairEase = value;
+		}
+		// cursor
+		if self.cursor.triggered()
+		{
+			use JAxml::Cursor::*;
+
+			let value = self.cursor.value();
+			match value
+			{
+				x if x == Invalid as i32 => { item.ubCursor = Invalid as u8; }
+				x if x == Quest as i32 => { item.ubCursor = Quest as u8; }
+				x if x == Punch as i32 => { item.ubCursor = Punch as u8; }
+				x if x == Target as i32 => { item.ubCursor = Target as u8; }
+				x if x == Knife as i32 => { item.ubCursor = Knife as u8; }
+				x if x == Aid as i32 => { item.ubCursor = Aid as u8; }
+				x if x == Throw as i32 => { item.ubCursor = Throw as u8; }
+				x if x == Mine as i32 => { item.ubCursor = Mine as u8; }
+				x if x == Lockpick as i32 => { item.ubCursor = Lockpick as u8; }
+				x if x == MineDetector as i32 => { item.ubCursor = MineDetector as u8; }
+				x if x == Crowbar as i32 => { item.ubCursor = Crowbar as u8; }
+				x if x == CCTV as i32 => { item.ubCursor = CCTV as u8; }
+				x if x == Camera as i32 => { item.ubCursor = Camera as u8; }
+				x if x == Key as i32 => { item.ubCursor = Key as u8; }
+				x if x == Saw as i32 => { item.ubCursor = Saw as u8; }
+				x if x == WireCutters as i32 => { item.ubCursor = WireCutters as u8; }
+				x if x == Remote as i32 => { item.ubCursor = Remote as u8; }
+				x if x == Bomb as i32 => { item.ubCursor = Bomb as u8; }
+				x if x == Repair as i32 => { item.ubCursor = Repair as u8; }
+				x if x == Trajectory as i32 => { item.ubCursor = Trajectory as u8; }
+				x if x == Jar as i32 => { item.ubCursor = Jar as u8; }
+				x if x == Tincan as i32 => { item.ubCursor = Tincan as u8; }
+				x if x == Refuel as i32 => { item.ubCursor = Refuel as u8; }
+				x if x == Fortification as i32 => { item.ubCursor = Fortification as u8; }
+				x if x == Handcuffs as i32 => { item.ubCursor = Handcuffs as u8; }
+				x if x == ApplyItem as i32 => { item.ubCursor = ApplyItem as u8; }
+				x if x == InteractiveAction as i32 => { item.ubCursor = InteractiveAction as u8; }
+				x if x == Bloodbag as i32 => { item.ubCursor = Bloodbag as u8; }
+				x if x == Splint as i32 => { item.ubCursor = Splint as u8; }
+				_ => { println!("!!! Tried to set item cursor to value not in enum::Cursor !!! "); }
+			}
+			s.send(Message::Update);
+		}
+	}
 }
 
 struct ItemDescriptionArea
 {
-	name: Listener<Input>,
-	longname: Listener<Input>,
-	BRname: Listener<Input>,
-	description: Listener<MultilineInput>,
-	BRdescription: Listener<MultilineInput>
+	name: Input,
+	longname: Input,
+	BRname: Input,
+	description: MultilineInput,
+	BRdescription: MultilineInput,
 }
 impl ItemDescriptionArea
 {
@@ -1515,17 +1633,17 @@ impl ItemDescriptionArea
 		
 		let mut flex = Pack::new(x + xOffset, y + 10, w, 180, None);
 		flex.set_spacing(10);
-		let name = Input::default().with_size(0, h1).with_label("Name\n[80]").into();
-		let longname = Input::default().with_size(0, h1).with_label("Long Name\n[80]").into();
-		let mut description: Listener<_> = MultilineInput::default().with_size(0, h2).with_label("Description\n[400]").into();
+		let name = Input::default().with_size(0, h1).with_label("Name\n[80]");
+		let longname = Input::default().with_size(0, h1).with_label("Long Name\n[80]");
+		let mut description = MultilineInput::default().with_size(0, h2).with_label("Description\n[400]");
 		flex.end();
 		
 		
 		let mut flex = Pack::new(flex.x()+flex.w() + 80, y + 10, w, 180, None);
 		flex.set_spacing(10);
 		let _ = Frame::default().with_size(0, h1).with_label("Bobby Ray's");
-		let BRname = Input::default().with_size(0, h1).with_label("Name\n[80]").into();
-		let mut BRdescription: Listener<_> = MultilineInput::default().with_size(0, h2).with_label("Description\n[400]").into();
+		let BRname = Input::default().with_size(0, h1).with_label("Name\n[80]");
+		let mut BRdescription = MultilineInput::default().with_size(0, h2).with_label("Description\n[400]");
 		flex.end();
 		
 		
@@ -1560,6 +1678,42 @@ impl ItemDescriptionArea
 		else 
 		{
 			println!("!!! Out of bounds access!!! ITEMLIST [{}] ", uiIndex);
+		}
+	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		let item = &mut xmldata.items.items[uiIndex];
+
+		let widget = &mut self.name;
+		if let Some(text) = stringFromInput(widget, s, 80)
+		{
+			item.szItemName = text;
+		}
+
+		let widget = &mut self.longname;
+		if let Some(text) = stringFromInput(widget, s, 80)
+		{
+			item.szLongItemName = text;
+		}
+
+		let widget = &mut self.BRname;
+		if let Some(text) = stringFromInput(widget, s, 80)
+		{
+			item.szBRName = text;
+		}
+
+
+		let widget = &mut self.description;
+		if let Some(text) = stringFromMultiLineInput(widget, s, 400)
+		{
+			item.szItemDesc = text;
+		}
+
+		let widget = &mut self.BRdescription;
+		if let Some(text) = stringFromMultiLineInput(widget, s, 400)
+		{
+			item.szBRDesc = text;
 		}
 	}
 }
@@ -1617,7 +1771,7 @@ impl ItemPropertiesArea
 		inputs.push(CheckButton::default().with_size(w, h1).with_label("Contains Liquid").into());
 		inputs.push(CheckButton::default().with_size(w, h1).with_label("Canteen").into());
 		inputs.push(CheckButton::default().with_size(w, h1).with_label("Gas Can").into());
-		inputs.push(CheckButton::default().with_size(w, h1).with_label("Alcohol").into());
+		inputs.push(CheckButton::default().with_size(w, h1).with_label("Cigarette").into());
 		inputs.push(CheckButton::default().with_size(w, h1).with_label("Jar").into());
 		inputs.push(CheckButton::default().with_size(w, h1).with_label("Medicine / Drug").into());
 		inputs.push(CheckButton::default().with_size(w, h1).with_label("Gasmask").into());
@@ -1668,7 +1822,7 @@ impl ItemPropertiesArea
 		self.inputs[18].set_value(item.containsliquid);
 		self.inputs[19].set_value(item.canteen);
 		self.inputs[20].set_value(item.gascan);
-		self.inputs[21].set_value(item.alcohol != 0.0);
+		self.inputs[21].set_value(item.cigarette);
 		self.inputs[22].set_value(item.jar);
 		self.inputs[23].set_value(item.medical);
 		self.inputs[24].set_value(item.gasmask);
@@ -1686,13 +1840,69 @@ impl ItemPropertiesArea
 		self.inputs[35].set_value(item.needsbatteries);
 
 	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		let item = &mut xmldata.items.items[uiIndex];
+
+		for i in 0..self.inputs.len()
+		{
+			let widget = &mut self.inputs[i];
+			if widget.triggered()
+			{
+				match i
+				{
+					0 => { item.showstatus = widget.value(); }	
+					1 => { item.Damageable = widget.value(); }	
+					2 => { item.Repairable = widget.value(); }	
+					3 => { item.WaterDamages = widget.value(); }	
+					4 => { item.Sinks = widget.value(); }	
+					5 => { item.unaerodynamic = widget.value(); }	
+					6 => { item.electronic = widget.value(); }	
+					7 => { item.Metal = widget.value(); }	
+					8 => { item.twohanded = widget.value(); }	
+
+					9 => { item.biggunlist = widget.value(); }	
+					10 => { item.scifi = widget.value(); }	
+					11 => { item.notbuyable = widget.value(); }	
+					12 => { item.defaultundroppable = widget.value(); }	
+					13 => { item.notineditor = widget.value(); }	
+					14 => { item.newinv = widget.value(); }	
+					15 => { item.tripwire = widget.value(); }	
+					16 => { item.tripwireactivation = widget.value(); }	
+					17 => { item.remotetrigger = widget.value(); }	
+
+					18 => { item.containsliquid = widget.value(); }	
+					19 => { item.canteen = widget.value(); }	
+					20 => { item.gascan = widget.value(); }	
+					21 => { item.cigarette = widget.value(); }
+					22 => { item.jar = widget.value(); }	
+					23 => { item.medical = widget.value(); }	
+					24 => { item.gasmask = widget.value(); }	
+					25 => { item.robotremotecontrol = widget.value(); }	
+					26 => { item.walkman = widget.value(); }	
+
+					27 => { item.rock = widget.value(); }	
+					28 => { item.canandstring = widget.value(); }	
+					29 => { item.marbles = widget.value(); }	
+					30 => { item.duckbill = widget.value(); }	
+					31 => { item.wirecutters = widget.value(); }	
+					32 => { item.xray = widget.value(); }	
+					33 => { item.metaldetector = widget.value(); }	
+					34 => { item.batteries = widget.value(); }	
+					35 => { item.needsbatteries = widget.value(); }	
+					_ => {}
+				}
+			}
+		}
+	}
 }
 
 
 struct ItemKitArea
 {
 	inputs: Vec<Listener<CheckButton>>,
-	ints: Vec<Listener<IntInput>>
+	ints: Vec<IntInput>
 }
 impl ItemKitArea
 {
@@ -1730,13 +1940,13 @@ impl ItemKitArea
 		let mut flex = Pack::new(flex.x() + flex.w() + 10, y + 10, w, mainHeight - 20, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(w, h1);
-		ints.push( IntInput::default().with_size(w, h1).into() );
-		ints.push( IntInput::default().with_size(w, h1).into() );
+		ints.push( IntInput::default().with_size(w, h1) );
+		ints.push( IntInput::default().with_size(w, h1) );
 		let _ = Frame::default().with_size(w, h1);
 		let _ = Frame::default().with_size(w, h1);
 		let _ = Frame::default().with_size(w, h1);
-		ints.push( IntInput::default().with_size(w, h1).with_label("Defusal Kit Bonus").into() );
-		ints.push( IntInput::default().with_size(w, h1).with_label("Sleep Modifier").into() );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Defusal Kit Bonus") );
+		ints.push( IntInput::default().with_size(w, h1).with_label("Sleep Modifier") );
 		flex.end();
 
 
@@ -1758,6 +1968,71 @@ impl ItemKitArea
 		self.ints[1].set_value(&format!("{}", item.LockPickModifier));
 		self.ints[2].set_value(&format!("{}", item.DisarmModifier));
 		self.ints[3].set_value(&format!("{}", item.ubSleepModifier));
+	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		let item = &mut xmldata.items.items[uiIndex];
+
+		for i in 0..self.inputs.len()
+		{
+			let widget = &mut self.inputs[i];
+			if widget.triggered()
+			{
+				match i
+				{
+					0 => { item.hardware = widget.value(); }
+					1 => { item.toolkit = widget.value(); }	
+					2 => { item.locksmithkit = widget.value(); }	
+					3 => { item.camouflagekit = widget.value(); }	
+					4 => { item.medicalkit = widget.value(); }	
+					5 => { item.firstaidkit = widget.value(); }	
+					_ => {}
+				}
+			}
+		}
+
+		for i in 0..self.ints.len()
+		{
+			let widget = &mut self.ints[i];
+
+			if widget.changed()
+			{
+				match i
+				{
+					0 => 
+					{ 
+						if let Some(value) = i8IntInput(widget, s) 
+						{
+							item.RepairModifier = value; 
+						}
+					}
+					1 => 
+					{ 
+						if let Some(value) = i8IntInput(widget, s) 
+						{
+							item.LockPickModifier = value; 
+						}
+					}
+					2 => 
+					{ 
+						if let Some(value) = u8IntInput(widget, s) 
+						{
+							item.DisarmModifier = value; 
+						}
+					}
+					3 => 
+					{ 
+						if let Some(value) = u8IntInput(widget, s) 
+						{
+							item.ubSleepModifier = value; 
+						}
+					}
+					_ => {}
+				}
+			}
+		}
+
 	}
 }
 
@@ -3423,6 +3698,51 @@ fn createBox(x: i32, y: i32, w: i32, h: i32, xtitle: i32, widthtitle: i32, label
 
 	return (main, title);
 }
+
+
+fn stringFromInput(widget: &mut Input, s: &app::Sender<Message>, maxLength: usize) -> Option<String>
+{
+	if widget.changed()
+	{
+		let text = &widget.value();
+
+		if text.len() <= maxLength
+		{
+			widget.set_text_color(Color::Black);
+			s.send(Message::Update);
+			return Some(text.clone());
+		}
+		else
+		{
+			widget.set_text_color(Color::Red);
+			s.send(Message::Update);
+		}
+	}
+
+	return None;
+}
+
+fn stringFromMultiLineInput(widget: &mut MultilineInput, s: &app::Sender<Message>, maxLength: usize) -> Option<String>
+{
+	if widget.changed()
+	{
+		let text = &widget.value();
+
+		if text.len() <= maxLength
+		{
+			widget.set_text_color(Color::Black);
+			s.send(Message::Update);
+			return Some(text.clone());
+		}
+		else
+		{
+			widget.set_text_color(Color::Red);
+			s.send(Message::Update);
+		}
+	}
+
+	return None;
+}
 //---------------------------------------------------------------------------------------------------------------------
 // Enums
 //---------------------------------------------------------------------------------------------------------------------
@@ -3439,6 +3759,7 @@ pub enum Message {
     Copy,
     Paste,
     About,
+	Update,
     ShowAll,
     ShowGuns,
     ShowAmmo,
@@ -3493,3 +3814,38 @@ pub enum State {
 	AmmoCalibers,
 	Sounds,
 }
+
+
+//---------------------------------------------------------------------------------------------------------------------
+// Macros
+//---------------------------------------------------------------------------------------------------------------------
+macro_rules! IntInputs {
+	($($name:ident, $type:ty),*) => {
+		
+		$(fn $name(widget: &mut IntInput, s: &app::Sender<Message>) -> Option<$type>
+		{
+			if widget.changed()
+			{
+				let value = widget.value().parse::<$type>();
+				match value
+				{
+					Ok(value) => 
+					{
+						widget.set_text_color(Color::Black);
+						s.send(Message::Update);
+						return Some(value);
+					}
+					_ => 
+					{ 
+						widget.set_text_color(Color::Red); 
+						s.send(Message::Redraw);
+						return None;
+					}
+				}
+			}
+			else { return None; }
+		})*
+	};
+}
+
+IntInputs!(u16IntInput, u16, u8IntInput, u8, i8IntInput, i8);
