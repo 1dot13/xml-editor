@@ -1059,14 +1059,31 @@ impl UIdata
 
 	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
 	{
-		self.itemGraphics.poll(xmldata, uiIndex, &self.images, s);
-		self.itemStats.poll(xmldata, uiIndex, s);
-		self.itemDescription.poll(xmldata, uiIndex, s);
-		self.itemProperties.poll(xmldata, uiIndex, s);
-		self.itemKit.poll(xmldata, uiIndex, s);
-		self.itemVision.poll(xmldata, uiIndex, s);
-		self.weaponArea.poll(xmldata, uiIndex, s);
-		self.magArea.poll(xmldata, uiIndex, s);
+		use State::*;
+		match self.state
+		{
+			Item => 
+			{
+				self.itemGraphics.poll(xmldata, uiIndex, &self.images, s);
+				self.itemStats.poll(xmldata, uiIndex, s);
+				self.itemDescription.poll(xmldata, uiIndex, s);
+				self.itemProperties.poll(xmldata, uiIndex, s);
+				self.itemKit.poll(xmldata, uiIndex, s);
+				self.itemVision.poll(xmldata, uiIndex, s);
+				self.weaponArea.poll(xmldata, uiIndex, s);
+				self.magArea.poll(xmldata, uiIndex, s);
+				self.expArea.poll(xmldata, uiIndex, s);
+			}
+			AmmoCalibers => 
+			{
+				self.magArea.pollcaliber(xmldata, uiIndex, s);
+			}
+			AmmoTypes => 
+			{
+				self.magArea.pollAmmoType(xmldata, uiIndex, s);
+			}
+			Sounds => {}
+		}
 	}
 }
 
@@ -4024,6 +4041,108 @@ impl ExplosivesArea
 				{ 
 					self.discardeditem.set_value(-1);
 					self.discardeditem.deactivate();
+				}
+			}
+			_ => {}
+		}
+	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		let itemclass = xmldata.items.items[uiIndex].usItemClass;
+
+		use JAxml::ItemClass::*;
+		match itemclass
+		{
+			x if x == Grenade as u32 || x == Bomb as u32 =>
+			{
+				let item = &xmldata.items.items[uiIndex];
+				let classIndex = item.ubClassIndex;
+				let explosive = &mut xmldata.explosives.items[classIndex as usize];
+
+				let widget = &mut self.explosionType;
+				if widget.triggered() { explosive.ubType = widget.value() as u32; }
+
+				let widget = &mut self.animID;
+				if widget.triggered() { explosive.ubAnimationID = widget.value() as u32; }
+
+				let widget = &mut self.fragmentType;
+				if widget.triggered() { explosive.ubFragType = widget.value() as u32; }
+
+				let widget = &mut self.explodeOnImpact;
+				if widget.triggered() { explosive.fExplodeOnImpact = widget.value(); }
+
+				if let Some(value) = u32IntInput(&mut self.damage, s) { explosive.ubDamage = value; }
+				if let Some(value) = u32IntInput(&mut self.startRadius, s) { explosive.ubStartRadius = value; }
+				if let Some(value) = u32IntInput(&mut self.endRadius, s) { explosive.ubRadius = value; }
+
+				if let Some(value) = u32IntInput(&mut self.duration, s) { explosive.ubDuration = value; }
+				if let Some(value) = u32IntInput(&mut self.volatility, s) { explosive.ubVolatility = value; }
+				if let Some(value) = u32IntInput(&mut self.stundamage, s) { explosive.ubStunDamage = value; }
+				if let Some(value) = u32IntInput(&mut self.volume, s) { explosive.ubVolume = value; }
+				if let Some(value) = u32IntInput(&mut self.magsize, s) { explosive.ubMagSize = value; }
+				if let Some(value) = u32IntInput(&mut self.fragments, s) { explosive.usNumFragments = value; }
+				if let Some(value) = u32IntInput(&mut self.fragrange, s) { explosive.ubFragRange = value; }
+				if let Some(value) = u32IntInput(&mut self.fragdamage, s) { explosive.ubFragDamage = value; }
+				if let Some(value) = f32FloatInput(&mut self.indoormodifier, s) { explosive.bIndoorModifier = value; }
+				if let Some(value) = u32IntInput(&mut self.horizontaldegrees, s) { explosive.ubHorizontalDegree = value; }
+				if let Some(value) = u32IntInput(&mut self.verticaldegrees, s) { explosive.ubVerticalDegree = value; }
+			}
+			x if x == Launcher as u32 =>
+			{
+				let widget = &mut self.launcherType;
+				if widget.triggered()
+				{
+					let item = &mut xmldata.items.items[uiIndex];
+
+					// This is working on the assumption that only one of these should be active
+					// If so, these really need to be an enum in the 1.13 source code instead of bunch bools
+					item.grenadelauncher = false;
+					item.rocketlauncher = false;
+					item.singleshotrocketlauncher = false;
+					item.mortar = false;
+					item.cannon = false;
+
+					let value = widget.value();
+					match value
+					{
+						0 =>
+						{
+							// N/A option
+							// for now leave all to false.
+							// Not sure if it's the correct approach. Might have to fix this in the future
+						}
+						1 => { item.grenadelauncher = true; }
+						2 => { item.rocketlauncher = true; }
+						3 => { item.singleshotrocketlauncher = true; }
+						4 => { item.mortar = true; }
+						5 => { item.cannon = true; }
+						_ => {}
+					}
+					s.send(Message::Update);
+				}
+
+				let widget = &mut self.discardeditem;
+				if widget.triggered()
+				{
+					let idx = widget.value();
+					if idx <= 0
+					{
+						let item = &mut xmldata.items.items[uiIndex];
+						item.discardedlauncheritem = 0;
+					}
+					else if let Some(menuitem) = widget.at( widget.value() )
+					{
+						let label = menuitem.label().unwrap();
+						if !label.is_empty()
+						{
+							if let Some(itemIndex) = xmldata.findIndexbyName(&label)
+							{
+								let item = &mut xmldata.items.items[uiIndex];
+								item.discardedlauncheritem = itemIndex as u16;
+							}
+						}
+					}
 				}
 			}
 			_ => {}
