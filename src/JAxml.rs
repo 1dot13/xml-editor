@@ -80,33 +80,44 @@ macro_rules! generateListStructs {
                 let mut il = $listname::new();
                 let items = &mut il.items;
 
-                let mut reader = Reader::from_file(filepath).unwrap();
-                reader.trim_text(true);
-                let mut buf = Vec::new();
-                loop 
-                {
-                    match reader.read_event_into(&mut buf) 
-                    {
-                        Err(element) => panic!("Error at position {}: {:?}", reader.buffer_position(), element),
-                        Ok(Event::Eof) => break,
+                let reader = Reader::from_file(filepath);
+				match reader
+				{
+					Ok(mut reader) =>
+					{
+						reader.trim_text(true);
+						let mut buf = Vec::new();
+						loop 
+						{
+							match reader.read_event_into(&mut buf) 
+							{
+								Err(element) => panic!("Error at position {}: {:?}", reader.buffer_position(), element),
+								Ok(Event::Eof) => break,
 
-                        Ok(Event::Start(ref element)) => 
-                        {
-                            match element.name().as_ref() 
-                            {			
-                                $matchvalue =>
-                                {
-                                    items.push($itemname::new());
-                                    items.last_mut().unwrap().readItem(&mut reader, &mut buf);
-                                }
-                                _ => {}
-                            }
-                        }
-                        _ => ()
-                    }
-                    buf.clear();
-                }
-                return il;
+								Ok(Event::Start(ref element)) => 
+								{
+									match element.name().as_ref() 
+									{			
+										$matchvalue =>
+										{
+											items.push($itemname::new());
+											items.last_mut().unwrap().readItem(&mut reader, &mut buf);
+										}
+										_ => {}
+									}
+								}
+								_ => ()
+							}
+							buf.clear();
+						}
+					}
+					Err(e) =>
+					{
+						println!("Error {}", e);
+						println!("Could not open file {}", filepath.display());
+					}
+				}
+				return il;
             }
 
             pub fn save(&self, filepath: &PathBuf)
