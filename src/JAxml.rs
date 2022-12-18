@@ -384,6 +384,15 @@ impl Data
 		return None;
 	}
 
+	pub fn getWeapon_mut(&mut self, uiIndex: u32) -> Option<&mut WEAPON>
+	{
+		for weapon in &mut self.weapons.items
+		{
+			if weapon.uiIndex == uiIndex { return Some(weapon); }
+		}
+		
+		return None;
+	}
 }
 
 

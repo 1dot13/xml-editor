@@ -1065,6 +1065,7 @@ impl UIdata
 		self.itemProperties.poll(xmldata, uiIndex, s);
 		self.itemKit.poll(xmldata, uiIndex, s);
 		self.itemVision.poll(xmldata, uiIndex, s);
+		self.weaponArea.poll(xmldata, uiIndex, s);
 	}
 }
 
@@ -2204,31 +2205,31 @@ struct WeaponAreaGeneral
 	class: Listener<Choice>,
 	guntype: Listener<Choice>,
 	caliber: Listener<Choice>,
-	magsize: Listener<IntInput>
+	magsize: IntInput
 }
 
 struct WeaponAreaStats
 {
-	range: Listener<IntInput>,
-	accuracy: Listener<IntInput>,
-	damage: Listener<IntInput>,
-	deadliness: Listener<IntInput>,
-	messydeath: Listener<IntInput>,
-	meleeDamage: Listener<IntInput>,
-	crowbarBonus: Listener<IntInput>,
-	autofirespeed: Listener<IntInput>,
-	autofirepenalty: Listener<IntInput>,
-	burstshots: Listener<IntInput>,
-	burstpenalty: Listener<IntInput>,
-	burstAPcost: Listener<IntInput>,
-	reloadAP: Listener<IntInput>,
-	manualreloadAP: Listener<IntInput>,
-	readyAP: Listener<IntInput>,
-	shotsper4turns: Listener<IntInput>,
-	brRateOfFire: Listener<IntInput>,
-	reloadAnimDelay: Listener<IntInput>,
-	burstfireAnimDelay: Listener<IntInput>,
-	bulletspeed: Listener<IntInput>,
+	range: IntInput,
+	accuracy: IntInput,
+	damage: IntInput,
+	deadliness: IntInput,
+	messydeath: IntInput,
+	meleeDamage: IntInput,
+	crowbarBonus: IntInput,
+	autofirespeed: IntInput,
+	autofirepenalty: IntInput,
+	burstshots: IntInput,
+	burstpenalty: IntInput,
+	burstAPcost: IntInput,
+	reloadAP: IntInput,
+	manualreloadAP: IntInput,
+	readyAP: IntInput,
+	shotsper4turns: FloatInput,
+	brRateOfFire: IntInput,
+	reloadAnimDelay: IntInput,
+	burstfireAnimDelay: IntInput,
+	bulletspeed: IntInput,
 }
 struct WeaponAreaProperties
 {
@@ -2245,72 +2246,72 @@ struct WeaponAreaProperties
 }
 struct WeaponAreaNCTH
 {
-	flatbase: Vec<Listener<IntInput>>,
-	flataim: Vec<Listener<IntInput>>,
-	base: Vec<Listener<IntInput>>,
-	cap: Vec<Listener<IntInput>>,
-	handling: Vec<Listener<IntInput>>,
-	tracking: Vec<Listener<IntInput>>,
-	dropCompensation: Vec<Listener<IntInput>>,
-	maxCounterforce: Vec<Listener<IntInput>>,
-	CFaccuracy: Vec<Listener<IntInput>>,
-	CFfrequency: Vec<Listener<IntInput>>,
-	aimlevel: Vec<Listener<IntInput>>,
+	flatbase: Vec<IntInput>,
+	flataim: Vec<IntInput>,
+	base: Vec<IntInput>,
+	cap: Vec<IntInput>,
+	handling: Vec<IntInput>,
+	tracking: Vec<IntInput>,
+	dropCompensation: Vec<IntInput>,
+	maxCounterforce: Vec<IntInput>,
+	CFaccuracy: Vec<IntInput>,
+	CFfrequency: Vec<IntInput>,
+	aimlevel: Vec<IntInput>,
 	// Items.xml
-	scopeMagFactor: Listener<FloatInput>,
-	laserProjFactor: Listener<IntInput>,
-	recoilXmodifier: Listener<FloatInput>,
-	recoilYmodifier: Listener<FloatInput>,
-	recoilModifier: Listener<IntInput>,
-	accuracyModifier: Listener<IntInput>,
+	scopeMagFactor: FloatInput,
+	laserProjFactor: IntInput,
+	recoilXmodifier: FloatInput,
+	recoilYmodifier: FloatInput,
+	recoilModifier: IntInput,
+	accuracyModifier: IntInput,
 	// Weapons.xml
-	NCTHaccuracy: Listener<IntInput>,
-	recoilX: Listener<FloatInput>,
-	recoilY: Listener<FloatInput>,
-	recoilDelay: Listener<IntInput>,
-	defaultAimLevels: Listener<IntInput>,
-	weaponHandling: Listener<IntInput>,
+	NCTHaccuracy: IntInput,
+	recoilX: FloatInput,
+	recoilY: FloatInput,
+	recoilDelay: IntInput,
+	defaultAimLevels: IntInput,
+	weaponHandling: IntInput,
 }
 struct WeaponAreaTemperature
 {
-	jamThreshold: Listener<FloatInput>,
-	dmgThreshold: Listener<FloatInput>,
-	increasePerShot: Listener<FloatInput>,
-	cooldownFactor: Listener<FloatInput>,
-	cooldownModifier: Listener<FloatInput>,
-	tempModifier: Listener<FloatInput>,
-	jamThresholdModifier: Listener<FloatInput>,
-	damageThresholdModifier: Listener<FloatInput>,
+	jamThreshold: FloatInput,
+	dmgThreshold: FloatInput,
+	increasePerShot: FloatInput,
+	cooldownFactor: FloatInput,
+	cooldownModifier: FloatInput,
+	tempModifier: FloatInput,
+	jamThresholdModifier: FloatInput,
+	damageThresholdModifier: FloatInput,
 }
 struct WeaponAreaModifiers
 {
 	// ranged
-	damage: Listener<IntInput>,
-	range: Listener<IntInput>,
-	magSize: Listener<IntInput>,
-	burstSize: Listener<IntInput>,
-	shotsper4turns: Listener<IntInput>,
-	bulletspeed: Listener<IntInput>,
-	noiseReduction: Listener<IntInput>,
+	damage: IntInput,
+	range: IntInput,
+	magSize: IntInput,
+	burstSize: IntInput,
+	shotsper4turns: IntInput,
+	bulletspeed: IntInput,
+	noiseReduction: IntInput,
 	// to hit
-	general: Listener<IntInput>,
-	aimedShot: Listener<IntInput>,
-	bipodProne: Listener<IntInput>,
-	burst: Listener<IntInput>,
-	autofire: Listener<IntInput>,
-	laserRange: Listener<IntInput>,
-	minRange: Listener<IntInput>,
+	general: IntInput,
+	aimedShot: IntInput,
+	bipodProne: IntInput,
+	burst: IntInput,
+	autofire: IntInput,
+	laserRange: IntInput,
+	minRange: IntInput,
 	// AP reductions
-	generalAP: Listener<IntInput>,
-	readyAP: Listener<IntInput>,
-	reloadAP: Listener<IntInput>,
-	burstAP: Listener<IntInput>,
-	autofireAP: Listener<IntInput>,
+	generalAP: IntInput,
+	readyAP: IntInput,
+	reloadAP: IntInput,
+	burstAP: IntInput,
+	autofireAP: IntInput,
 	// bonuses
-	bonusAP: Listener<IntInput>,
-	bonusHearing: Listener<IntInput>,
-	bonusKitStatus: Listener<IntInput>,
-	bonusSize: Listener<IntInput>,
+	bonusAP: IntInput,
+	bonusHearing: IntInput,
+	bonusKitStatus: IntInput,
+	bonusSize: IntInput,
 }
 struct WeaponArea
 {
@@ -2320,8 +2321,8 @@ struct WeaponArea
 	ncth: WeaponAreaNCTH,
 	temp: WeaponAreaTemperature,
 	modifiers: WeaponAreaModifiers,
-	dirtDamageChance: Listener<IntInput>,
-	dirtIncreaseFactor: Listener<FloatInput>,
+	dirtDamageChance: IntInput,
+	dirtIncreaseFactor: FloatInput,
 	bloodyItem: Listener<Choice>
 }
 impl WeaponArea
@@ -2348,7 +2349,7 @@ impl WeaponArea
 		let mut flex = Pack::new(main.x() + main.w() - 80, main.y() + 10, 70, main.h() - 10, None);
 		flex.set_spacing(5);
 		let caliber = Choice::default().with_size(width, height).with_label("Caliber").into();
-		let magsize = IntInput::default().with_size(width, height).with_label("Capacity").into();
+		let magsize = IntInput::default().with_size(width, height).with_label("Capacity");
 		flex.end();
 
 
@@ -2363,14 +2364,14 @@ impl WeaponArea
 
 		let mut flex = Pack::new(frame.x() + 70, frame.y() + 10, 70, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let range = IntInput::default().with_size(width, height).with_label("Range").into();
-		let accuracy = IntInput::default().with_size(width, height).with_label("Accuracy").into();
+		let range = IntInput::default().with_size(width, height).with_label("Range");
+		let accuracy = IntInput::default().with_size(width, height).with_label("Accuracy");
 		flex.end();
 		let mut flex = Pack::new(frame.x() + frame.w() - 80, frame.y() + 10, 70, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let damage = IntInput::default().with_size(width, height).with_label("Damage").into();
-		let deadliness = IntInput::default().with_size(width, height).with_label("Deadliness").into();
-		let messydeath =  IntInput::default().with_size(width, height).with_label("Messy Death Dist.").into();
+		let damage = IntInput::default().with_size(width, height).with_label("Damage");
+		let deadliness = IntInput::default().with_size(width, height).with_label("Deadliness");
+		let messydeath =  IntInput::default().with_size(width, height).with_label("Messy Death Dist.");
 		flex.end();
 
 		//-------------------------------------------------
@@ -2390,8 +2391,8 @@ impl WeaponArea
 		flex.end();
 		let mut flex = Pack::new(frame2.x() + frame2.w() - 80, frame2.y() + 5, 70, frame2.h() - 10, None);
 		flex.set_spacing(5);
-		let meleeDamage = IntInput::default().with_size(width, height).with_label("Dmg bonus").into();
-		let crowbarBonus = IntInput::default().with_size(width, height).with_label("Crowbar bonus").into();
+		let meleeDamage = IntInput::default().with_size(width, height).with_label("Dmg bonus");
+		let crowbarBonus = IntInput::default().with_size(width, height).with_label("Crowbar bonus");
 		flex.end();
 
 
@@ -2406,15 +2407,15 @@ impl WeaponArea
 
 		let mut flex = Pack::new(frame.x() + 100, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let autofirespeed = IntInput::default().with_size(width, height).with_label("Shots / 5 APs").into();
-		let autofirepenalty = IntInput::default().with_size(width, height).with_label("To-Hit Penalty").into();
+		let autofirespeed = IntInput::default().with_size(width, height).with_label("Shots / 5 APs");
+		let autofirepenalty = IntInput::default().with_size(width, height).with_label("To-Hit Penalty");
 		let fullauto = CheckButton::default().with_size(width, height).with_label("Full Auto only").with_align(Align::Left).into();
 		flex.end();
 		let mut flex = Pack::new(frame.x() + frame.w() - 55, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let burstshots = IntInput::default().with_size(width, height).with_label("Shots / Burst").into();
-		let burstpenalty = IntInput::default().with_size(width, height).with_label("To-Hit Penalty").into();
-		let burstAPcost = IntInput::default().with_size(width, height).with_label("AP Cost").into();
+		let burstshots = IntInput::default().with_size(width, height).with_label("Shots / Burst");
+		let burstpenalty = IntInput::default().with_size(width, height).with_label("To-Hit Penalty");
+		let burstAPcost = IntInput::default().with_size(width, height).with_label("AP Cost");
 		flex.end();
 
 
@@ -2429,14 +2430,14 @@ impl WeaponArea
 
 		let mut flex = Pack::new(frame.x() + 100, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let reloadAP = IntInput::default().with_size(width, height).with_label("Reload").into();
-		let manualreloadAP = IntInput::default().with_size(width, height).with_label("Manual Reload").into();
+		let reloadAP = IntInput::default().with_size(width, height).with_label("Reload");
+		let manualreloadAP = IntInput::default().with_size(width, height).with_label("Manual Reload");
 		flex.end();
 		let mut flex = Pack::new(frame.x() + frame.w() - 55, frame.y() + 10, 45, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let readyAP = IntInput::default().with_size(width, height).with_label("Ready Weapon").into();
-		let shotsper4turns = IntInput::default().with_size(width, height).with_label("Shots / 4 turns").into();
-		let brRateOfFire = IntInput::default().with_size(width, height).with_label("BR ROF").into();
+		let readyAP = IntInput::default().with_size(width, height).with_label("Ready Weapon");
+		let shotsper4turns = FloatInput::default().with_size(width, height).with_label("Shots / 4 turns");
+		let brRateOfFire = IntInput::default().with_size(width, height).with_label("BR ROF");
 		flex.end();
 
 
@@ -2449,9 +2450,9 @@ impl WeaponArea
 			(frame.w()-w)/2, 100, "Animation"
 		);
 
-		let reloadAnimDelay = IntInput::new(x + mainWidth - width - 10, frame.y() + 10, width, height, "Reload Delay").into();
-		let burstfireAnimDelay = IntInput::new(x + mainWidth - width - 10, frame.y() + 40, width, height, "Burst Fire Delay").into();
-		let bulletspeed = IntInput::new(x + mainWidth - width - 10, frame.y() + 70, width, height, "Bullet Speed").into();
+		let reloadAnimDelay = IntInput::new(x + mainWidth - width - 10, frame.y() + 10, width, height, "Reload Delay");
+		let burstfireAnimDelay = IntInput::new(x + mainWidth - width - 10, frame.y() + 40, width, height, "Burst Fire Delay");
+		let bulletspeed = IntInput::new(x + mainWidth - width - 10, frame.y() + 70, width, height, "Bullet Speed");
 
 
 		//-------------------------------------------------
@@ -2503,64 +2504,64 @@ impl WeaponArea
 			100, 60, "NCTH"
 		);
 
-		let mut flatbase: Vec<Listener<IntInput>> = Vec::new();
-		let mut flataim: Vec<Listener<IntInput>> = Vec::new();
-		let mut base: Vec<Listener<IntInput>> = Vec::new();
-		let mut cap: Vec<Listener<IntInput>> = Vec::new();
-		let mut handling: Vec<Listener<IntInput>> = Vec::new();
-		let mut tracking: Vec<Listener<IntInput>> = Vec::new();
-		let mut dropCompensation: Vec<Listener<IntInput>> = Vec::new();
-		let mut maxCounterforce: Vec<Listener<IntInput>> = Vec::new();
-		let mut CFaccuracy: Vec<Listener<IntInput>> = Vec::new();
-		let mut CFfrequency: Vec<Listener<IntInput>> = Vec::new();
-		let mut aimlevel: Vec<Listener<IntInput>> = Vec::new();
+		let mut flatbase: Vec<IntInput> = Vec::new();
+		let mut flataim: Vec<IntInput> = Vec::new();
+		let mut base: Vec<IntInput> = Vec::new();
+		let mut cap: Vec<IntInput> = Vec::new();
+		let mut handling: Vec<IntInput> = Vec::new();
+		let mut tracking: Vec<IntInput> = Vec::new();
+		let mut dropCompensation: Vec<IntInput> = Vec::new();
+		let mut maxCounterforce: Vec<IntInput> = Vec::new();
+		let mut CFaccuracy: Vec<IntInput> = Vec::new();
+		let mut CFfrequency: Vec<IntInput> = Vec::new();
+		let mut aimlevel: Vec<IntInput> = Vec::new();
 	
 
 		let width = 75; let height = 20;
 		let mut flex = Pack::new(main.x() + 150, main.y(), width, 300, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Standing");
-		flatbase.push( IntInput::default().with_size(width, height).with_label("Flat Base").into() );
-		flataim.push( IntInput::default().with_size(width, height).with_label("Flat Aim").into() );
-		base.push( IntInput::default().with_size(width, height).with_label("Base %").into() );
-		cap.push( IntInput::default().with_size(width, height).with_label("Cap %").into() );
-		handling.push( IntInput::default().with_size(width, height).with_label("Handling % ").into() );
-		tracking.push( IntInput::default().with_size(width, height).with_label("Tracking %").into() );
-		dropCompensation.push( IntInput::default().with_size(width, height).with_label("Drop Compensation %").into() );
-		maxCounterforce.push( IntInput::default().with_size(width, height).with_label("Max Counterforce %").into() );
-		CFaccuracy.push( IntInput::default().with_size(width, height).with_label("CF Accuracy %").into() );
-		CFfrequency.push( IntInput::default().with_size(width, height).with_label("CF Frequency %").into() );
-		aimlevel.push( IntInput::default().with_size(width, height).with_label("Aimlevel Modifier").into() );
+		flatbase.push( IntInput::default().with_size(width, height).with_label("Flat Base") );
+		flataim.push( IntInput::default().with_size(width, height).with_label("Flat Aim") );
+		base.push( IntInput::default().with_size(width, height).with_label("Base %") );
+		cap.push( IntInput::default().with_size(width, height).with_label("Cap %") );
+		handling.push( IntInput::default().with_size(width, height).with_label("Handling % ") );
+		tracking.push( IntInput::default().with_size(width, height).with_label("Tracking %") );
+		dropCompensation.push( IntInput::default().with_size(width, height).with_label("Drop Compensation %") );
+		maxCounterforce.push( IntInput::default().with_size(width, height).with_label("Max Counterforce %") );
+		CFaccuracy.push( IntInput::default().with_size(width, height).with_label("CF Accuracy %") );
+		CFfrequency.push( IntInput::default().with_size(width, height).with_label("CF Frequency %") );
+		aimlevel.push( IntInput::default().with_size(width, height).with_label("Aimlevel Modifier") );
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w(), flex.y(), width, 300, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Crouching");
-		flatbase.push( IntInput::default().with_size(width, height).into() );
-		flataim.push( IntInput::default().with_size(width, height).into() );
-		base.push( IntInput::default().with_size(width, height).into() );
-		cap.push( IntInput::default().with_size(width, height).into() );
-		handling.push( IntInput::default().with_size(width, height).into() );
-		tracking.push( IntInput::default().with_size(width, height).into() );
-		dropCompensation.push( IntInput::default().with_size(width, height).into() );
-		maxCounterforce.push( IntInput::default().with_size(width, height).into() );
-		CFaccuracy.push( IntInput::default().with_size(width, height).into() );
-		CFfrequency.push( IntInput::default().with_size(width, height).into() );
-		aimlevel.push( IntInput::default().with_size(width, height).into() );
+		flatbase.push( IntInput::default().with_size(width, height) );
+		flataim.push( IntInput::default().with_size(width, height) );
+		base.push( IntInput::default().with_size(width, height) );
+		cap.push( IntInput::default().with_size(width, height) );
+		handling.push( IntInput::default().with_size(width, height) );
+		tracking.push( IntInput::default().with_size(width, height) );
+		dropCompensation.push( IntInput::default().with_size(width, height) );
+		maxCounterforce.push( IntInput::default().with_size(width, height) );
+		CFaccuracy.push( IntInput::default().with_size(width, height) );
+		CFfrequency.push( IntInput::default().with_size(width, height) );
+		aimlevel.push( IntInput::default().with_size(width, height) );
 		flex.end();
 		let mut flex = Pack::new(flex.x() + flex.w(), flex.y(), width, 300, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Prone");
-		flatbase.push( IntInput::default().with_size(width, height).into() );
-		flataim.push( IntInput::default().with_size(width, height).into() );
-		base.push( IntInput::default().with_size(width, height).into() );
-		cap.push( IntInput::default().with_size(width, height).into() );
-		handling.push( IntInput::default().with_size(width, height).into() );
-		tracking.push( IntInput::default().with_size(width, height).into() );
-		dropCompensation.push( IntInput::default().with_size(width, height).into() );
-		maxCounterforce.push( IntInput::default().with_size(width, height).into() );
-		CFaccuracy.push( IntInput::default().with_size(width, height).into() );
-		CFfrequency.push( IntInput::default().with_size(width, height).into() );
-		aimlevel.push( IntInput::default().with_size(width, height).into() );
+		flatbase.push( IntInput::default().with_size(width, height) );
+		flataim.push( IntInput::default().with_size(width, height) );
+		base.push( IntInput::default().with_size(width, height) );
+		cap.push( IntInput::default().with_size(width, height) );
+		handling.push( IntInput::default().with_size(width, height) );
+		tracking.push( IntInput::default().with_size(width, height) );
+		dropCompensation.push( IntInput::default().with_size(width, height) );
+		maxCounterforce.push( IntInput::default().with_size(width, height) );
+		CFaccuracy.push( IntInput::default().with_size(width, height) );
+		CFfrequency.push( IntInput::default().with_size(width, height) );
+		aimlevel.push( IntInput::default().with_size(width, height) );
 		flex.end();
 
 
@@ -2576,12 +2577,12 @@ impl WeaponArea
 		let width = 75; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let scopeMagFactor: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Scope Mag Factor").into() );
-		let laserProjFactor: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Laser Proj. Factor").into() );
-		let recoilXmodifier: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil X Modifier").into() );
-		let recoilYmodifier: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil Y Modifier").into() );
-		let recoilModifier: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Modifier %").into() );
-		let accuracyModifier: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Accuracy Modifier %").into() );
+		let scopeMagFactor: FloatInput = ( FloatInput::default().with_size(width, height).with_label("Scope Mag Factor") );
+		let laserProjFactor: IntInput = ( IntInput::default().with_size(width, height).with_label("Laser Proj. Factor") );
+		let recoilXmodifier: FloatInput = ( FloatInput::default().with_size(width, height).with_label("Recoil X Modifier") );
+		let recoilYmodifier: FloatInput = ( FloatInput::default().with_size(width, height).with_label("Recoil Y Modifier") );
+		let recoilModifier: IntInput = ( IntInput::default().with_size(width, height).with_label("Recoil Modifier %") );
+		let accuracyModifier: IntInput = ( IntInput::default().with_size(width, height).with_label("Accuracy Modifier %") );
 		flex.end();
 
 
@@ -2597,12 +2598,12 @@ impl WeaponArea
 		let width = 75; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let NCTHaccuracy: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("NCTH Accuracy").into() );
-		let recoilX: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil X").into() );
-		let recoilY: Listener<FloatInput> = ( FloatInput::default().with_size(width, height).with_label("Recoil Y").into() );
-		let recoilDelay: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Recoil Delay").into() );
-		let defaultAimLevels: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Default Aim Levels").into() );
-		let weaponHandling: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Weapon Handling").into() );
+		let NCTHaccuracy: IntInput = ( IntInput::default().with_size(width, height).with_label("NCTH Accuracy") );
+		let recoilX: FloatInput = ( FloatInput::default().with_size(width, height).with_label("Recoil X") );
+		let recoilY: FloatInput = ( FloatInput::default().with_size(width, height).with_label("Recoil Y") );
+		let recoilDelay: IntInput = ( IntInput::default().with_size(width, height).with_label("Recoil Delay") );
+		let defaultAimLevels: IntInput = ( IntInput::default().with_size(width, height).with_label("Default Aim Levels") );
+		let weaponHandling: IntInput = ( IntInput::default().with_size(width, height).with_label("Weapon Handling") );
 		flex.end();
 
 
@@ -2625,13 +2626,13 @@ impl WeaponArea
 		let width = 45; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let modifierdamage: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Damage").into() );
-		let modifierrange: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Range").into() );
-		let modifiermagSize: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Mag Size").into() );
-		let modifierburstSize: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst Size").into() );
-		let modifiershotsper4turns: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Shots / 4 turns").into() );
-		let modifierbulletspeed: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Bullet Speed").into() );
-		let modifiernoiseReduction: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Noise Reduction").into() );
+		let modifierdamage: IntInput = ( IntInput::default().with_size(width, height).with_label("Damage") );
+		let modifierrange: IntInput = ( IntInput::default().with_size(width, height).with_label("Range") );
+		let modifiermagSize: IntInput = ( IntInput::default().with_size(width, height).with_label("Mag Size") );
+		let modifierburstSize: IntInput = ( IntInput::default().with_size(width, height).with_label("Burst Size") );
+		let modifiershotsper4turns: IntInput = ( IntInput::default().with_size(width, height).with_label("Shots / 4 turns") );
+		let modifierbulletspeed: IntInput = ( IntInput::default().with_size(width, height).with_label("Bullet Speed") );
+		let modifiernoiseReduction: IntInput = ( IntInput::default().with_size(width, height).with_label("Noise Reduction") );
 		flex.end();
 
 
@@ -2645,13 +2646,13 @@ impl WeaponArea
 		let width = 45; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let modifiergeneral: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("General %").into() );
-		let modifieraimedShot: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Aimed Shot %").into() );
-		let modifierbipodProne: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Bipod/Prone %").into() );
-		let modifierburst: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst %").into() );
-		let modifierautofire: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Autofire %").into() );
-		let modifierlaserRange: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Laser Range").into() );
-		let modifierminRange: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Min. Range").into() );
+		let modifiergeneral: IntInput = ( IntInput::default().with_size(width, height).with_label("General %") );
+		let modifieraimedShot: IntInput = ( IntInput::default().with_size(width, height).with_label("Aimed Shot %") );
+		let modifierbipodProne: IntInput = ( IntInput::default().with_size(width, height).with_label("Bipod/Prone %") );
+		let modifierburst: IntInput = ( IntInput::default().with_size(width, height).with_label("Burst %") );
+		let modifierautofire: IntInput = ( IntInput::default().with_size(width, height).with_label("Autofire %") );
+		let modifierlaserRange: IntInput = ( IntInput::default().with_size(width, height).with_label("Laser Range") );
+		let modifierminRange: IntInput = ( IntInput::default().with_size(width, height).with_label("Min. Range") );
 		flex.end();
 
 
@@ -2665,11 +2666,11 @@ impl WeaponArea
 		let width = 45; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let modifiergeneralAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("General %").into() );
-		let modifierreadyAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Ready %").into() );
-		let modifierreloadAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Reload %").into() );
-		let modifierburstAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Burst %").into() );
-		let modifierautofireAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Autofire %").into() );
+		let modifiergeneralAP: IntInput = ( IntInput::default().with_size(width, height).with_label("General %") );
+		let modifierreadyAP: IntInput = ( IntInput::default().with_size(width, height).with_label("Ready %") );
+		let modifierreloadAP: IntInput = ( IntInput::default().with_size(width, height).with_label("Reload %") );
+		let modifierburstAP: IntInput = ( IntInput::default().with_size(width, height).with_label("Burst %") );
+		let modifierautofireAP: IntInput = ( IntInput::default().with_size(width, height).with_label("Autofire %") );
 		flex.end();
 
 
@@ -2683,10 +2684,10 @@ impl WeaponArea
 		let width = 45; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - width - 10, frame.y() + 10, width, 300, None);
 		flex.set_spacing(5);
-		let bonusAP: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Action points").into() );
-		let bonusHearing: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Hearing Range").into() );
-		let bonusKitStatus: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Kit Status %").into() );
-		let bonusSize: Listener<IntInput> = ( IntInput::default().with_size(width, height).with_label("Size Adjustment").into() );
+		let bonusAP: IntInput = ( IntInput::default().with_size(width, height).with_label("Action points") );
+		let bonusHearing: IntInput = ( IntInput::default().with_size(width, height).with_label("Hearing Range") );
+		let bonusKitStatus: IntInput = ( IntInput::default().with_size(width, height).with_label("Kit Status %") );
+		let bonusSize: IntInput = ( IntInput::default().with_size(width, height).with_label("Size Adjustment") );
 		flex.end();
 
 		//-------------------------------------------------
@@ -2701,18 +2702,18 @@ impl WeaponArea
 		let mut flex = Pack::new(frame.x() + 100, frame.y() + 10, 50, frame.h() - 10, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Weapon");
-		let jamThreshold = FloatInput::default().with_size(width, height).with_label("Jam Threshold").into();
-		let dmgThreshold = FloatInput::default().with_size(width, height).with_label("Dmg Threshold").into();
-		let increasePerShot = FloatInput::default().with_size(width, height).with_label("Increase / Shot").into();
+		let jamThreshold = FloatInput::default().with_size(width, height).with_label("Jam Threshold");
+		let dmgThreshold = FloatInput::default().with_size(width, height).with_label("Dmg Threshold");
+		let increasePerShot = FloatInput::default().with_size(width, height).with_label("Increase / Shot");
 		flex.end();
 		let mut flex = Pack::new(frame.x() + frame.w() - 50, frame.y() + 10, 40, frame.h() - 10, None);
 		flex.set_spacing(5);
 		let _ = Frame::default().with_size(width, height).with_label("Item");
-		let cooldownFactor = FloatInput::default().with_size(width, height).with_label("Cooldown Factor").into();
-		let cooldownModifier = FloatInput::default().with_size(width, height).with_label("Cooldown Modifier").into();
-		let tempModifier = FloatInput::default().with_size(width, height).with_label("Temp. Modifier").into();
-		let jamThresholdModifier = FloatInput::default().with_size(width, height).with_label("Jam Threshold Modifier").into();
-		let damageThresholdModifier = FloatInput::default().with_size(width, height).with_label("Damage Threshold Modifier").into();
+		let cooldownFactor = FloatInput::default().with_size(width, height).with_label("Cooldown Factor");
+		let cooldownModifier = FloatInput::default().with_size(width, height).with_label("Cooldown Modifier");
+		let tempModifier = FloatInput::default().with_size(width, height).with_label("Temp. Modifier");
+		let jamThresholdModifier = FloatInput::default().with_size(width, height).with_label("Jam Threshold Modifier");
+		let damageThresholdModifier = FloatInput::default().with_size(width, height).with_label("Damage Threshold Modifier");
 		flex.end();
 
 
@@ -2727,8 +2728,8 @@ impl WeaponArea
 
 		let mut flex = Pack::new(frame.x() + frame.w() - 55, frame.y() + 10, 50, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let dirtDamageChance: Listener<IntInput> = IntInput::default().with_size(width, height).with_label("Damage Chance").into();
-		let dirtIncreaseFactor = FloatInput::default().with_size(width, height).with_label("Increase Factor").into();
+		let dirtDamageChance: IntInput = IntInput::default().with_size(width, height).with_label("Damage Chance");
+		let dirtIncreaseFactor = FloatInput::default().with_size(width, height).with_label("Increase Factor");
 		flex.end();
 
 
@@ -3053,14 +3054,209 @@ impl WeaponArea
 		self.dirtDamageChance.set_value( &format!("{}", item.usDamageChance) );
 		self.dirtIncreaseFactor.set_value( &format!("{}", item.dirtIncreaseFactor) );
 	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+
+		if let Some(weapon) = xmldata.getWeapon_mut(uiIndex as u32)
+		{
+			let widget = &mut self.general.class;
+			if widget.triggered()
+			{
+				weapon.ubWeaponClass = widget.value() as u8;
+				s.send(Message::Update);
+			}
+			let widget = &mut self.general.guntype;
+			if widget.triggered()
+			{
+				weapon.ubWeaponType = widget.value() as u8;
+				s.send(Message::Update);
+			}
+			let widget = &mut self.general.caliber;
+			if widget.triggered()
+			{
+				weapon.ubCalibre = widget.value() as u8;
+				s.send(Message::Update);
+			}
+
+			if let Some(value) = u16IntInput(&mut self.general.magsize, s) { weapon.ubMagSize = value; }
+
+			if let Some(value) = u16IntInput(&mut self.stats.range, s) { weapon.usRange = value; }
+			if let Some(value) = i8IntInput(&mut self.stats.accuracy, s) { weapon.bAccuracy = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.damage, s) { weapon.ubImpact = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.deadliness, s) { weapon.ubDeadliness = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.messydeath, s) { weapon.maxdistformessydeath = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.autofirespeed, s) { weapon.bAutofireShotsPerFiveAP = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.autofirepenalty, s) { weapon.AutoPenalty = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.burstshots, s) { weapon.ubShotsPerBurst = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.burstpenalty, s) { weapon.ubBurstPenalty = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.burstAPcost, s) { weapon.bBurstAP = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.reloadAP, s) { weapon.APsToReload = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.manualreloadAP, s) { weapon.APsToReloadManually = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.readyAP, s) { weapon.ubReadyTime = value; }
+			if let Some(value) = f32FloatInput(&mut self.stats.shotsper4turns, s) { weapon.ubShotsPer4Turns = value; }
+			if let Some(value) = u16IntInput(&mut self.stats.reloadAnimDelay, s) { weapon.usReloadDelay = value; }
+			if let Some(value) = i16IntInput(&mut self.stats.burstfireAnimDelay, s) { weapon.sAniDelay = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.bulletspeed, s) { weapon.ubBulletSpeed = value; }
+
+			let widget = &mut self.properties.fullauto;
+			if widget.triggered() { weapon.NoSemiAuto = widget.value(); }
+			let widget = &mut self.properties.easyunjam;
+			if widget.triggered() { weapon.EasyUnjam = widget.value(); }
+			let widget = &mut self.properties.heavyweapon;
+			if widget.triggered() { weapon.HeavyGun = widget.value(); }
+			let widget = &mut self.properties.magazinefed;
+			if widget.triggered() { weapon.swapClips = widget.value(); }
+
+			if let Some(value) = i8IntInput(&mut self.ncth.NCTHaccuracy, s) { weapon.nAccuracy = value; }
+			if let Some(value) = f32FloatInput(&mut self.ncth.recoilX, s) { weapon.bRecoilX = value; }
+			if let Some(value) = f32FloatInput(&mut self.ncth.recoilY, s) { weapon.bRecoilY = value; }
+			if let Some(value) = u8IntInput(&mut self.ncth.recoilDelay, s) { weapon.ubRecoilDelay = value; }
+			if let Some(value) = u8IntInput(&mut self.ncth.defaultAimLevels, s) { weapon.ubAimLevels = value; }
+			if let Some(value) = u8IntInput(&mut self.ncth.weaponHandling, s) { weapon.ubHandling = value; }
+	
+			if let Some(value) = f32FloatInput(&mut self.temp.jamThreshold, s) { weapon.usOverheatingJamThreshold = value; }
+			if let Some(value) = f32FloatInput(&mut self.temp.dmgThreshold, s) { weapon.usOverheatingDamageThreshold = value; }
+			if let Some(value) = f32FloatInput(&mut self.temp.increasePerShot, s) { weapon.usOverheatingSingleShotTemperature = value; }
+		}
+
+
+		// Items.xml related data
+		let item = &mut xmldata.items.items[uiIndex];
+		if let Some(value) = i16IntInput(&mut self.stats.meleeDamage, s) { item.meleedamagebonus = value; }
+		if let Some(value) = u8IntInput(&mut self.stats.crowbarBonus, s) { item.CrowbarModifier = value; }
+		if let Some(value) = i16IntInput(&mut self.stats.brRateOfFire, s) { item.BR_ROF = value; }
+
+		let widget = &mut self.properties.crowbar;
+		if widget.triggered() { item.crowbar = widget.value(); }
+		let widget = &mut self.properties.brassknuckles;
+		if widget.triggered() { item.brassknuckles = widget.value(); }
+		let widget = &mut self.properties.rocketrifle;
+		if widget.triggered() { item.rocketrifle = widget.value(); }
+		let widget = &mut self.properties.fingerprintid;
+		if widget.triggered() { item.fingerprintid = widget.value(); }
+		let widget = &mut self.properties.hidemuzzleflash;
+		if widget.triggered() { item.hidemuzzleflash = widget.value(); }
+		let widget = &mut self.properties.barrel;
+		if widget.triggered() { item.barrel = widget.value(); }
+
+
+		for i in 0..3
+		{
+			if let Some(value) = i16IntInput(&mut self.ncth.flatbase[i], s) {
+				item.flatbasemodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.flataim[i], s) {
+				item.flataimmodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.base[i], s) {
+				item.percentbasemodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.cap[i], s) {
+				item.percentcapmodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.handling[i], s) {
+				item.percenthandlingmodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.tracking[i], s) {
+				item.targettrackingmodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.dropCompensation[i], s) {
+				item.percentdropcompensationmodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.maxCounterforce[i], s) {
+				item.maxcounterforcemodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.CFaccuracy[i], s) {
+				item.counterforceaccuracymodifier[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.CFfrequency[i], s) {
+				item.counterforcefrequency[i] = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.aimlevel[i], s) {
+				item.aimlevelsmodifier[i] = value;
+			}
+		}
+
+
+		if let Some(value) = f32FloatInput(&mut self.ncth.scopeMagFactor, s) {
+			item.scopemagfactor = value;
+		}
+		if let Some(value) = i16IntInput(&mut self.ncth.laserProjFactor, s) {
+			item.bestlaserrange = value;
+		}
+		if let Some(value) = f32FloatInput(&mut self.ncth.recoilXmodifier, s) {
+			item.RecoilModifierX = value;
+		}
+		if let Some(value) = f32FloatInput(&mut self.ncth.recoilYmodifier, s) {
+			item.RecoilModifierY = value;
+		}
+		if let Some(value) = i16IntInput(&mut self.ncth.recoilModifier, s) {
+			item.PercentRecoilModifier = value;
+		}
+		if let Some(value) = i16IntInput(&mut self.ncth.accuracyModifier, s) {
+			item.percentaccuracymodifier = value;
+		}
+
+
+		if let Some(value) = f32FloatInput(&mut self.temp.cooldownFactor, s) {
+			item.usOverheatingCooldownFactor = value;
+		}
+		if let Some(value) = f32FloatInput(&mut self.temp.cooldownModifier, s) {
+			item.overheatCooldownModificator = value;
+		}
+		if let Some(value) = f32FloatInput(&mut self.temp.tempModifier, s) {
+			item.overheatTemperatureModificator = value;
+		}
+		if let Some(value) = f32FloatInput(&mut self.temp.jamThresholdModifier, s) {
+			item.overheatJamThresholdModificator = value;
+		}
+		if let Some(value) = f32FloatInput(&mut self.temp.damageThresholdModifier, s) {
+			item.overheatDamageThresholdModificator = value;
+		}
+
+
+		// // ranged
+		if let Some(value) = i16IntInput(&mut self.modifiers.damage, s) { item.damagebonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.range, s) { item.rangebonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.magSize, s) { item.magsizebonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.burstSize, s) { item.burstsizebonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.shotsper4turns, s) { item.rateoffirebonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.bulletspeed, s) { item.bulletspeedbonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.noiseReduction, s) { item.stealthbonus = value; }
+		// // to hit
+		if let Some(value) = i16IntInput(&mut self.modifiers.general, s) { item.tohitbonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.aimedShot, s) { item.aimbonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.bipodProne, s) { item.bipod = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.burst, s) { item.bursttohitbonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.autofire, s) { item.autofiretohitbonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.laserRange, s) { item.bestlaserrange = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.minRange, s) { item.minrangeforaimbonus = value; }
+		// // AP reductions
+		if let Some(value) = i16IntInput(&mut self.modifiers.generalAP, s) { item.percentapreduction = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.readyAP, s) { item.percentreadytimeapreduction = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.reloadAP, s) { item.percentreloadtimeapreduction = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.burstAP, s) { item.percentburstfireapreduction = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.autofireAP, s) { item.percentautofireapreduction = value; }
+		// // bonuses
+		if let Some(value) = i16IntInput(&mut self.modifiers.bonusAP, s) { item.APBonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.bonusHearing, s) { item.hearingrangebonus = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.bonusKitStatus, s) { item.percentstatusdrainreduction = value; }
+		if let Some(value) = i16IntInput(&mut self.modifiers.bonusSize, s) { item.ItemSizeBonus = value; }
+
+
+		if let Some(value) = u8IntInput(&mut self.dirtDamageChance, s) { item.usDamageChance = value; }
+		if let Some(value) = f32FloatInput(&mut self.dirtIncreaseFactor, s) { item.dirtIncreaseFactor = value; }
+
+	}
 }
 
 
 struct AmmoTypesArea
 {
-	index: Listener<IntInput>,
-	name: Listener<Input>,
-	nbullets: Listener<IntInput>,
+	index: IntInput,
+	name: Input,
+	nbullets: IntInput,
 	explosionid: Listener<Choice>,
 	explosionsize: Listener<Choice>,
 	rgb: (u8, u8, u8),
@@ -3072,46 +3268,46 @@ struct AmmoTypesArea
 	tracer: Listener<CheckButton>,
 	zeromindamage: Listener<CheckButton>,
 	monsterspit: Listener<CheckButton>,
-	structImpactMultiplier: Listener<IntInput>,
-	armorImpactMultiplier: Listener<IntInput>,
-	beforeArmorMultpilier: Listener<IntInput>,
-	afterArmorMultiplier: Listener<IntInput>,
-	bulletsMultiplier	: Listener<IntInput>,
-	structImpactDivisor: Listener<IntInput>,
-	armorImpactDivisor: Listener<IntInput>,
-	beforeArmorDivisor: Listener<IntInput>,
-	afterArmorDivisor: Listener<IntInput>,
-	bulletsDivisor: Listener<IntInput>,
-	healthModifier: Listener<FloatInput>,
-	breathModifier: Listener<FloatInput>,
-	tankModifier: Listener<FloatInput>,
-	armoredVehicleModifier: Listener<FloatInput>,
-	civilianVehicleModifier: Listener<FloatInput>,
-	zombieModifier: Listener<FloatInput>,
-	lockModifier: Listener<IntInput>,
-	pierceModifier: Listener<IntInput>,
-	temperatureModifier: Listener<FloatInput>,
-	dirtModifier: Listener<FloatInput>,
+	structImpactMultiplier: IntInput,
+	armorImpactMultiplier: IntInput,
+	beforeArmorMultpilier: IntInput,
+	afterArmorMultiplier: IntInput,
+	bulletsMultiplier	: IntInput,
+	structImpactDivisor: IntInput,
+	armorImpactDivisor: IntInput,
+	beforeArmorDivisor: IntInput,
+	afterArmorDivisor: IntInput,
+	bulletsDivisor: IntInput,
+	healthModifier: FloatInput,
+	breathModifier: FloatInput,
+	tankModifier: FloatInput,
+	armoredVehicleModifier: FloatInput,
+	civilianVehicleModifier: FloatInput,
+	zombieModifier: FloatInput,
+	lockModifier: IntInput,
+	pierceModifier: IntInput,
+	temperatureModifier: FloatInput,
+	dirtModifier: FloatInput,
 	freezingFlag: Listener<CheckButton>,
 	blindingFlag: Listener<CheckButton>,
 	antimaterialFlag: Listener<CheckButton>,
 	smoketrailFlag: Listener<CheckButton>,
 	firetrailFlag: Listener<CheckButton>,
-	shotAnimation: Listener<Input>,
+	shotAnimation: Input,
 	spreadpattern: Listener<Choice>,
 }
 struct AmmoStringsArea
 {
-	index: Listener<IntInput>,
-	caliber: Listener<Input>,
-	brcaliber: Listener<Input>,
-	nwsscaliber: Listener<Input>,
+	index: IntInput,
+	caliber: Input,
+	brcaliber: Input,
+	nwsscaliber: Input,
 }
 struct MagazineArea
 {
 	caliber: Listener<Choice>,
 	ammotype: Listener<Choice>,
-	magsize: Listener<IntInput>,
+	magsize: IntInput,
 	magtype: Listener<Choice>,
 	ammostrings: AmmoStringsArea,
 	ammotypes: AmmoTypesArea,
@@ -3135,7 +3331,7 @@ impl MagazineArea
 		flex.set_spacing(5);
 		let caliber: Listener<Choice> = Choice::default().with_size(width, height).with_label("Caliber").into();
 		let ammotype = Choice::default().with_size(width, height).with_label("Ammo type").into();
-		let magsize = IntInput::default().with_size(width, height).with_label("Magazine size").into();
+		let magsize = IntInput::default().with_size(width, height).with_label("Magazine size");
 		let magtype = Choice::default().with_size(width, height).with_label("Magazine type").into();
 		flex.end();
 
@@ -3150,10 +3346,10 @@ impl MagazineArea
 		let width = 100; let height = 20;
 		let mut flex = Pack::new(frame.x() + frame.w() - (width+5), frame.y() + 10, width, frame.h() - 10, None);
 		flex.set_spacing(5);
-		let index = IntInput::default().with_size(width, height).with_label("Index").into();
-		let ammocaliber = Input::default().with_size(width, height).with_label("Caliber").into();
-		let brcaliber = Input::default().with_size(width, height).with_label("Bobby Ray's").into();
-		let nwsscaliber = Input::default().with_size(width, height).with_label("NWSS").into();
+		let index = IntInput::default().with_size(width, height).with_label("Index");
+		let ammocaliber = Input::default().with_size(width, height).with_label("Caliber");
+		let brcaliber = Input::default().with_size(width, height).with_label("Bobby Ray's");
+		let nwsscaliber = Input::default().with_size(width, height).with_label("NWSS");
 		flex.end();
 		let ammostrings = AmmoStringsArea { index, caliber: ammocaliber, brcaliber, nwsscaliber };
 
@@ -3172,13 +3368,13 @@ impl MagazineArea
 		let mut flex = Pack::new(frame.x()+50, frame.y()+10, 30, 20, None);
 		flex.set_type(group::PackType::Horizontal);
 		flex.set_spacing(45);
-		let index = IntInput::default().with_size(40, height).with_label("Index").into();
-		let name = Input::default().with_size(80, height).with_label("Name").into();
+		let index = IntInput::default().with_size(40, height).with_label("Index");
+		let name = Input::default().with_size(80, height).with_label("Name");
 		flex.end();
 
 		let mut flex = Pack::new(frame.x()+155, flex.y()+flex.h()+10, 60, 20, None);
 		flex.set_spacing(5);
-		let nbullets = IntInput::default().with_size(40, height).with_label("Bullets / shot").into();
+		let nbullets = IntInput::default().with_size(40, height).with_label("Bullets / shot");
 		let explosionid = Choice::default().with_size(40, height).with_label("Explosion Item Id").into();
 		let explosionsize = Choice::default().with_size(40, height).with_label("Explosion Size").into();
 		flex.end();
@@ -3207,22 +3403,22 @@ impl MagazineArea
 		flex.set_spacing(5);
 		let mut title = Frame::default().with_size(width, height).with_label("Multiplier");
 		title.set_label_font(Font::HelveticaBold);
-		let structImpactMultiplier = IntInput::default().with_size(width, height).with_label("Struct. Impact Red.").into();
-		let armorImpactMultiplier = IntInput::default().with_size(width, height).with_label("Armor Impact Red.").into();
-		let beforeArmorMultpilier = IntInput::default().with_size(width, height).with_label("Before Armor Dmg").into();
-		let afterArmorMultiplier = IntInput::default().with_size(width, height).with_label("After Armor Dmg").into();
-		let bulletsMultiplier = IntInput::default().with_size(width, height).with_label("Multiple Bullet Dmg").into();
+		let structImpactMultiplier = IntInput::default().with_size(width, height).with_label("Struct. Impact Red.");
+		let armorImpactMultiplier = IntInput::default().with_size(width, height).with_label("Armor Impact Red.");
+		let beforeArmorMultpilier = IntInput::default().with_size(width, height).with_label("Before Armor Dmg");
+		let afterArmorMultiplier = IntInput::default().with_size(width, height).with_label("After Armor Dmg");
+		let bulletsMultiplier = IntInput::default().with_size(width, height).with_label("Multiple Bullet Dmg");
 		flex.end();
 
 		let mut flex = Pack::new(flex.x() + flex.w() + 25, flex.y(), 30, 100, None);
 		flex.set_spacing(5);
 		let mut title = Frame::default().with_size(width, height).with_label("Divisor");
 		title.set_label_font(Font::HelveticaBold);
-		let structImpactDivisor = IntInput::default().with_size(width, height).into();
-		let armorImpactDivisor = IntInput::default().with_size(width, height).into();
-		let beforeArmorDivisor = IntInput::default().with_size(width, height).into();
-		let afterArmorDivisor = IntInput::default().with_size(width, height).into();
-		let bulletsDivisor = IntInput::default().with_size(width, height).into();
+		let structImpactDivisor = IntInput::default().with_size(width, height);
+		let armorImpactDivisor = IntInput::default().with_size(width, height);
+		let beforeArmorDivisor = IntInput::default().with_size(width, height);
+		let afterArmorDivisor = IntInput::default().with_size(width, height);
+		let bulletsDivisor = IntInput::default().with_size(width, height);
 		flex.end();
 
 
@@ -3231,20 +3427,20 @@ impl MagazineArea
 
 		let mut flex = Pack::new(frame.x()+155, flex.y()+flex.h()+70, 35, 100, None);
 		flex.set_spacing(5);
-		let healthModifier = FloatInput::default().with_size(width, height).with_label("Life Dmg").into();
-		let breathModifier = FloatInput::default().with_size(width, height).with_label("Breath Dmg").into();
-		let tankModifier = FloatInput::default().with_size(width, height).with_label("Tank Dmg").into();
-		let armoredVehicleModifier = FloatInput::default().with_size(width, height).with_label("Armoured Vehicle Dmg").into();
-		let civilianVehicleModifier = FloatInput::default().with_size(width, height).with_label("Civilian Vehicle Dmg").into();
+		let healthModifier = FloatInput::default().with_size(width, height).with_label("Life Dmg");
+		let breathModifier = FloatInput::default().with_size(width, height).with_label("Breath Dmg");
+		let tankModifier = FloatInput::default().with_size(width, height).with_label("Tank Dmg");
+		let armoredVehicleModifier = FloatInput::default().with_size(width, height).with_label("Armoured Vehicle Dmg");
+		let civilianVehicleModifier = FloatInput::default().with_size(width, height).with_label("Civilian Vehicle Dmg");
 		flex.end();
 
 		let mut flex = Pack::new(flex.x() + 200, flex.y(), 35, 100, None);
 		flex.set_spacing(5);
-		let zombieModifier = FloatInput::default().with_size(width, height).with_label("Zombie Dmg").into();
-		let lockModifier = IntInput::default().with_size(width, height).with_label("Lock Bonus Dmg").into();
-		let pierceModifier = IntInput::default().with_size(width, height).with_label("Pierce person chance").into();
-		let temperatureModifier = FloatInput::default().with_size(width, height).with_label("Temperature").into();
-		let dirtModifier = FloatInput::default().with_size(width, height).with_label("Dirt").into();
+		let zombieModifier = FloatInput::default().with_size(width, height).with_label("Zombie Dmg");
+		let lockModifier = IntInput::default().with_size(width, height).with_label("Lock Bonus Dmg");
+		let pierceModifier = IntInput::default().with_size(width, height).with_label("Pierce person chance");
+		let temperatureModifier = FloatInput::default().with_size(width, height).with_label("Temperature");
+		let dirtModifier = FloatInput::default().with_size(width, height).with_label("Dirt");
 		flex.end();
 
 		
@@ -3260,7 +3456,7 @@ impl MagazineArea
 		flex.end();
 		
 		
-		let shotAnimation = Input::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-30).with_label("Shot Animation").into();
+		let shotAnimation = Input::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-30).with_label("Shot Animation");
 		let spreadpattern = Choice::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-60).with_label("Spread Pattern").into();
 		let mut color: Listener<_> = Button::new(frame.x()+10, frame.y() + frame.h() - 40, 80, 30, "Ammo color").into();
 		color.emit(*sender, Message::AmmoTypeFontColor);
@@ -3435,21 +3631,21 @@ struct ExplosivesArea
 	// Bomb/Grenade
 	explosionType: Listener<Choice>,
 	animID: Listener<Choice>,
-	damage: Listener<IntInput>,
-	startRadius: Listener<IntInput>,
-	endRadius: Listener<IntInput>,
-	duration: Listener<IntInput>,
-	volatility: Listener<IntInput>,
-	stundamage: Listener<IntInput>,
-	volume: Listener<IntInput>,
-	magsize: Listener<IntInput>,
+	damage: IntInput,
+	startRadius: IntInput,
+	endRadius: IntInput,
+	duration: IntInput,
+	volatility: IntInput,
+	stundamage: IntInput,
+	volume: IntInput,
+	magsize: IntInput,
 	fragmentType: Listener<Choice>,
-	fragments: Listener<IntInput>,
-	fragrange: Listener<IntInput>,
-	fragdamage: Listener<IntInput>,
-	indoormodifier: Listener<FloatInput>,
-	horizontaldegrees: Listener<IntInput>,
-	verticaldegrees: Listener<IntInput>,
+	fragments: IntInput,
+	fragrange: IntInput,
+	fragdamage: IntInput,
+	indoormodifier: FloatInput,
+	horizontaldegrees: IntInput,
+	verticaldegrees: IntInput,
 	explodeOnImpact: Listener<CheckButton>,
 	// Launcher
 	launcherType: Listener<Choice>,
@@ -3476,18 +3672,18 @@ impl ExplosivesArea
 
 		let mut flex = Pack::new(frame.x()+100, frame.y()+70, 35, 100, None);
 		flex.set_spacing(5);
-		let damage = IntInput::default().with_size(width, height).with_label("Damage").into();
-		let startRadius = IntInput::default().with_size(width, height).with_label("Start Radius").into();
-		let duration = IntInput::default().with_size(width, height).with_label("Duration").into();
-		let volatility = IntInput::default().with_size(width, height).with_label("Volatility").into();
+		let damage = IntInput::default().with_size(width, height).with_label("Damage");
+		let startRadius = IntInput::default().with_size(width, height).with_label("Start Radius");
+		let duration = IntInput::default().with_size(width, height).with_label("Duration");
+		let volatility = IntInput::default().with_size(width, height).with_label("Volatility");
 		flex.end();
 
 		let mut flex = Pack::new(flex.x()+150, flex.y(), 35, 100, None);
 		flex.set_spacing(5);
-		let stundamage = IntInput::default().with_size(width, height).with_label("Stun Damage").into();
-		let endRadius = IntInput::default().with_size(width, height).with_label("End Radius").into();
-		let volume = IntInput::default().with_size(width, height).with_label("Volume").into();
-		let magsize = IntInput::default().with_size(width, height).with_label("Mag Size").into();
+		let stundamage = IntInput::default().with_size(width, height).with_label("Stun Damage");
+		let endRadius = IntInput::default().with_size(width, height).with_label("End Radius");
+		let volume = IntInput::default().with_size(width, height).with_label("Volume");
+		let magsize = IntInput::default().with_size(width, height).with_label("Mag Size");
 		flex.end();
 
 
@@ -3495,16 +3691,16 @@ impl ExplosivesArea
 
 		let mut flex = Pack::new(fragmentType.x(), fragmentType.y()+fragmentType.h()+10, 35, 80, None);
 		flex.set_spacing(5);
-		let fragments = IntInput::default().with_size(width, height).with_label("# of Fragments").into();
-		let fragrange = IntInput::default().with_size(width, height).with_label("Frag Range").into();
-		let horizontaldegrees = IntInput::default().with_size(width, height).with_label("Horiz. Degrees").into();
+		let fragments = IntInput::default().with_size(width, height).with_label("# of Fragments");
+		let fragrange = IntInput::default().with_size(width, height).with_label("Frag Range");
+		let horizontaldegrees = IntInput::default().with_size(width, height).with_label("Horiz. Degrees");
 		flex.end();
 
 		let mut flex = Pack::new(flex.x()+150, flex.y(), 35, 80, None);
 		flex.set_spacing(5);
-		let fragdamage = IntInput::default().with_size(width, height).with_label("Frag Damage").into();
-		let indoormodifier = FloatInput::default().with_size(width, height).with_label("Indoor Mod.").into();
-		let verticaldegrees = IntInput::default().with_size(width, height).with_label("Vert. Degrees").into();
+		let fragdamage = IntInput::default().with_size(width, height).with_label("Frag Damage");
+		let indoormodifier = FloatInput::default().with_size(width, height).with_label("Indoor Mod.");
+		let verticaldegrees = IntInput::default().with_size(width, height).with_label("Vert. Degrees");
 		flex.end();
 
 
@@ -3637,8 +3833,8 @@ impl ExplosivesArea
 
 struct SoundsArea
 {
-	attackVolume: Listener<IntInput>,
-	hitVolume: Listener<IntInput>,
+	attackVolume: IntInput,
+	hitVolume: IntInput,
 	attack: Listener<Choice>,
 	burst: Listener<Choice>,
 	silenced: Listener<Choice>,
@@ -3663,8 +3859,8 @@ impl SoundsArea
 		let width = 80; let height = 20;
 		let mut flex = Pack::new(frame.x()+150, frame.y()+20, width, 50, None);
 		flex.set_spacing(5);
-		let attackVolume = IntInput::default().with_size(width, height).with_label("Attack Volume").into();
-		let hitVolume = IntInput::default().with_size(width, height).with_label("Hit Volume").into();
+		let attackVolume = IntInput::default().with_size(width, height).with_label("Attack Volume");
+		let hitVolume = IntInput::default().with_size(width, height).with_label("Hit Volume");
 		flex.end();
 
 
@@ -3821,6 +4017,31 @@ fn stringFromMultiLineInput(widget: &mut MultilineInput, s: &app::Sender<Message
 
 	return None;
 }
+
+fn f32FloatInput(widget: &mut FloatInput, s: &app::Sender<Message>) -> Option<f32>
+{
+	if widget.changed()
+	{
+		let value = widget.value().parse::<f32>();
+		match value
+		{
+			Ok(value) => 
+			{
+				widget.set_text_color(Color::Black);
+				s.send(Message::Update);
+				return Some(value);
+			}
+			_ => 
+			{ 
+				widget.set_text_color(Color::Red); 
+				s.send(Message::Redraw);
+				return None;
+			}
+		}
+	}
+	else { return None; }
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 // Enums
 //---------------------------------------------------------------------------------------------------------------------
