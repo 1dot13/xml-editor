@@ -373,6 +373,28 @@ impl Data
 		
 		return None;
 	}
+	pub fn findIndexbyName(&self, name: &str) -> Option<u32>
+	{
+		for item in &self.items.items
+		{
+			if item.szItemName == name
+			{
+				return Some(item.uiIndex);
+			}
+		}
+		
+		return None;
+	}
+
+	pub fn getItem(&self, uiIndex: u32) -> Option<&ITEM>
+	{
+		for item in &self.items.items
+		{
+			if item.uiIndex == uiIndex { return Some(item); }
+		}
+		
+		return None;
+	}
 
 	pub fn getWeapon(&self, uiIndex: u32) -> Option<&WEAPON>
 	{
@@ -393,6 +415,27 @@ impl Data
 		
 		return None;
 	}
+
+	pub fn getMagazine_mut(&mut self, uiIndex: u32) -> Option<&mut MAGAZINE>
+	{
+		for item in &mut self.magazines.items
+		{
+			if item.uiIndex == uiIndex { return Some(item); }
+		}
+		
+		return None;
+	}
+
+	pub fn getAmmoType_mut(&mut self, uiIndex: u32) -> Option<&mut AMMOTYPE>
+	{
+		for item in &mut self.ammotypes.items
+		{
+			if item.uiIndex == uiIndex { return Some(item); }
+		}
+		
+		return None;
+	}
+
 }
 
 

@@ -1066,6 +1066,7 @@ impl UIdata
 		self.itemKit.poll(xmldata, uiIndex, s);
 		self.itemVision.poll(xmldata, uiIndex, s);
 		self.weaponArea.poll(xmldata, uiIndex, s);
+		self.magArea.poll(xmldata, uiIndex, s);
 	}
 }
 
@@ -3623,6 +3624,206 @@ impl MagazineArea
 		self.ammostrings.nwsscaliber.set_value(&format!("{}", item.NWSSCaliber));
 	}
 
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		if let Some(item) = xmldata.getItem(uiIndex as u32)
+		{
+			let itemclass = item.usItemClass;
+			let classIndex = item.ubClassIndex;
+
+			if itemclass == JAxml::ItemClass::Ammo as u32
+			{
+				if let Some(mag) = xmldata.getMagazine_mut(classIndex as u32)
+				{
+					let widget = &mut self.caliber;
+					if widget.triggered()
+					{
+						mag.ubCalibre = widget.value() as u8;
+						s.send(Message::Update);
+					}
+					let widget = &mut self.ammotype;
+					if widget.triggered()
+					{
+						mag.ubAmmoType = widget.value() as u8;
+						s.send(Message::Update);
+					}
+					let widget = &mut self.magtype;
+					if widget.triggered()
+					{
+						mag.ubMagType = widget.value() as u8;
+						s.send(Message::Update);
+					}
+
+					if let Some(value) = u16IntInput(&mut self.magsize, s) { mag.ubMagSize = value; }
+				
+					
+					let calibreIdx = mag.ubCalibre as usize;
+					let ammoTypeIdx = mag.ubAmmoType as usize;
+					
+					self.pollcaliber(xmldata, calibreIdx, s);
+					self.pollAmmoType(xmldata, ammoTypeIdx, s);
+				}
+			}
+		}
+	}
+
+	fn pollcaliber(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		let item = &mut xmldata.calibers.items[uiIndex];
+
+		if let Some(value) = u32IntInput(&mut self.ammostrings.index, s) 
+		{
+			// TODO
+			// This requires special handling to keep references between ammotypes, magazines, items & calibers intact.
+			// item.uiIndex = value; 
+		}
+
+		if let Some(text) = stringFromInput(&mut self.ammostrings.caliber, s, 20) { item.AmmoCaliber = text; }
+		if let Some(text) = stringFromInput(&mut self.ammostrings.brcaliber, s, 20) { item.BRCaliber = text; }
+		if let Some(text) = stringFromInput(&mut self.ammostrings.nwsscaliber, s, 20) { item.NWSSCaliber = text; }
+	}
+
+	fn pollAmmoType(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		if let Some(item) = xmldata.getAmmoType_mut(uiIndex as u32)
+		{
+			if let Some(value) = u32IntInput(&mut self.ammotypes.index, s) 
+			{
+				// TODO
+				// This requires special handling to keep references between ammotypes, magazines, items & calibers intact.
+				// item.uiIndex = value; 
+			}
+			if let Some(text) = stringFromInput(&mut self.ammotypes.name, s, 80) { item.name = text; }
+
+			// self.ammotypes.rgb = (item.red, item.green, item.blue);
+			if let Some(value) = u16IntInput(&mut self.ammotypes.nbullets, s) { item.numberOfBullets = value; }
+			if let Some(text) = stringFromInput(&mut self.ammotypes.shotAnimation, s, 100) { item.shotAnimation = text; }
+			let widget = &mut self.ammotypes.explosionsize;
+			if widget.triggered()
+			{
+				item.explosionSize = widget.value() as u8;
+				s.send(Message::Update);
+			}
+
+			if let Some(value) = u8IntInput(&mut self.ammotypes.structImpactMultiplier, s) { item.structureImpactReductionMultiplier = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.structImpactDivisor, s) { item.structureImpactReductionDivisor = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.armorImpactMultiplier, s) { item.armourImpactReductionMultiplier = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.armorImpactDivisor, s) { item.armourImpactReductionDivisor = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.beforeArmorMultpilier, s) { item.beforeArmourDamageMultiplier = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.beforeArmorDivisor, s) { item.beforeArmourDamageDivisor = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.afterArmorMultiplier, s) { item.afterArmourDamageMultiplier = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.afterArmorDivisor, s) { item.afterArmourDamageDivisor = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.bulletsMultiplier, s) { item.multipleBulletDamageMultiplier = value; }
+			if let Some(value) = u8IntInput(&mut self.ammotypes.bulletsDivisor, s) { item.multipleBulletDamageDivisor = value; }
+			
+			let widget = &mut self.ammotypes.acidic;
+			if widget.triggered() { item.acidic = widget.value(); }
+			let widget = &mut self.ammotypes.dart;
+			if widget.triggered() { item.dart = widget.value(); }
+			let widget = &mut self.ammotypes.standardissue;
+			if widget.triggered() { item.standardIssue = widget.value(); }
+			let widget = &mut self.ammotypes.knife;
+			if widget.triggered() { item.knife = widget.value(); }
+			let widget = &mut self.ammotypes.ignorearmor;
+			if widget.triggered() { item.ignoreArmour = widget.value(); }
+			let widget = &mut self.ammotypes.tracer;
+			if widget.triggered() { item.tracerEffect = widget.value(); }
+			let widget = &mut self.ammotypes.zeromindamage;
+			if widget.triggered() { item.zeroMinimumDamage = widget.value(); }
+			let widget = &mut self.ammotypes.monsterspit;
+			if widget.triggered() { item.monsterSpit = widget.value(); }
+
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.healthModifier, s) { item.dDamageModifierLife = value; }
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.breathModifier, s) { item.dDamageModifierBreath = value; }
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.tankModifier, s) { item.dDamageModifierTank = value; }
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.armoredVehicleModifier, s) { item.dDamageModifierArmouredVehicle = value; }
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.civilianVehicleModifier, s) { item.dDamageModifierCivilianVehicle = value; }
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.zombieModifier, s) { item.dDamageModifierZombie = value; }
+			if let Some(value) = u16IntInput(&mut self.ammotypes.lockModifier, s) { item.lockBustingPower = value; }
+			if let Some(value) = u16IntInput(&mut self.ammotypes.pierceModifier, s) { item.usPiercePersonChanceModifier = value; }
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.temperatureModifier, s) { item.temperatureModificator = value; }
+			if let Some(value) = f32FloatInput(&mut self.ammotypes.dirtModifier, s) { item.dirtModificator = value; }
+
+			let flags = item.ammoflag;
+			let widget = &mut self.ammotypes.freezingFlag;
+			if widget.triggered() 
+			{ 
+				let value =  widget.value() as u8;
+				if let Some(value) =  set_bit_at(flags, 0, value ) { item.ammoflag = value; } 
+			}
+			let widget = &mut self.ammotypes.blindingFlag;
+			if widget.triggered() 
+			{ 
+				let value =  widget.value() as u8;
+				if let Some(value) =  set_bit_at(flags, 1, value ) { item.ammoflag = value; } 
+			}
+			let widget = &mut self.ammotypes.antimaterialFlag;
+			if widget.triggered() 
+			{ 
+				let value =  widget.value() as u8;
+				if let Some(value) =  set_bit_at(flags, 2, value ) { item.ammoflag = value; } 
+			}
+			let widget = &mut self.ammotypes.smoketrailFlag;
+			if widget.triggered() 
+			{ 
+				let value =  widget.value() as u8;
+				if let Some(value) =  set_bit_at(flags, 3, value ) { item.ammoflag = value; } 
+			}
+			let widget = &mut self.ammotypes.firetrailFlag;
+			if widget.triggered() 
+			{ 
+				let value =  widget.value() as u8;
+				if let Some(value) =  set_bit_at(flags,4, value ) { item.ammoflag = value; } 
+			}
+		}
+
+
+		// Does the job, but should probably be written more clearly
+		let widget = &mut self.ammotypes.explosionid;
+		if widget.triggered()
+		{
+			let idx = widget.value();
+			if idx == 0
+			{
+				let item = xmldata.getAmmoType_mut(uiIndex as u32).unwrap();
+				item.highExplosive = 0; 
+			}
+			else if let Some(menuitem) = widget.at(idx)
+			{
+				let label = menuitem.label().unwrap();
+				let expIdx = xmldata.findIndexbyName(&label);
+				match expIdx
+				{
+					Some(expIdx) => 
+					{
+						let item = xmldata.getAmmoType_mut(uiIndex as u32).unwrap();
+						item.highExplosive = expIdx;
+					}
+					None => {}
+				}
+			}
+		}
+
+		let widget = &mut self.ammotypes.spreadpattern;
+		if widget.triggered()
+		{
+			let idx = widget.value();
+			if idx <= 0
+			{
+				let item = xmldata.getAmmoType_mut(uiIndex as u32).unwrap();
+				item.spreadPattern.clear();
+			}
+			else if let Some(menuitem) = widget.at( widget.value() )
+			{
+				let label = menuitem.label().unwrap();
+				if !label.is_empty()
+				{
+					let item = xmldata.getAmmoType_mut(uiIndex as u32).unwrap();
+					item.spreadPattern = label;
+				}
+			}
+		}
+	}
 }
 
 
@@ -4147,4 +4348,4 @@ macro_rules! IntInputs {
 	};
 }
 
-IntInputs!(u16IntInput, u16, u8IntInput, u8, i8IntInput, i8, i16IntInput, i16);
+IntInputs!(u16IntInput, u16, u8IntInput, u8, i8IntInput, i8, i16IntInput, i16, u32IntInput, u32);
