@@ -38,9 +38,9 @@ mod STI;
 // Only allow saving of valid data
 // Compatible launchers list for explosives
 // Launchables list for launchers
-// Context aware (de)activation of widgets
 // Bloody item selection
 // Attachments
+// bloodbag & splint flags
 
 
 fn main() 
@@ -723,7 +723,7 @@ fn createMenuBar(s: &app::Sender<Message>) -> menu::SysMenuBar
 	);
 	menu.add_emit(
 	    "&Items/Show/All\t",
-		Shortcut::None,
+		Shortcut::Alt | 'q',
 		MenuFlag::MenuDivider,
 		*s,
 		Message::ShowAll
@@ -3588,95 +3588,249 @@ impl MagazineArea
 		let itemclass = item.usItemClass;
 		let classIndex = item.ubClassIndex;
 
+		self.caliber.deactivate();
+		self.ammotype.deactivate();
+		self.magsize.deactivate();
+		self.magtype.deactivate();
+		self.color.deactivate();
+		self.colorbox.deactivate();
+		self.ammotypes.index.deactivate();
+		self.ammotypes.name.deactivate();
+		self.ammotypes.nbullets.deactivate();
+		self.ammotypes.explosionid.deactivate();
+		self.ammotypes.explosionsize.deactivate();
+		self.ammotypes.standardissue.deactivate();
+		self.ammotypes.dart.deactivate();
+		self.ammotypes.knife.deactivate();
+		self.ammotypes.acidic.deactivate();
+		self.ammotypes.ignorearmor.deactivate();
+		self.ammotypes.tracer.deactivate();
+		self.ammotypes.zeromindamage.deactivate();
+		self.ammotypes.monsterspit.deactivate();
+		self.ammotypes.structImpactMultiplier.deactivate();
+		self.ammotypes.armorImpactMultiplier.deactivate();
+		self.ammotypes.beforeArmorMultpilier.deactivate();
+		self.ammotypes.afterArmorMultiplier.deactivate();
+		self.ammotypes.bulletsMultiplier.deactivate();
+		self.ammotypes.structImpactDivisor.deactivate();
+		self.ammotypes.armorImpactDivisor.deactivate();
+		self.ammotypes.beforeArmorDivisor.deactivate();
+		self.ammotypes.afterArmorDivisor.deactivate();
+		self.ammotypes.bulletsDivisor.deactivate();
+		self.ammotypes.healthModifier.deactivate();
+		self.ammotypes.breathModifier.deactivate();
+		self.ammotypes.tankModifier.deactivate();
+		self.ammotypes.armoredVehicleModifier.deactivate();
+		self.ammotypes.civilianVehicleModifier.deactivate();
+		self.ammotypes.zombieModifier.deactivate();
+		self.ammotypes.lockModifier.deactivate();
+		self.ammotypes.pierceModifier.deactivate();
+		self.ammotypes.temperatureModifier.deactivate();
+		self.ammotypes.dirtModifier.deactivate();
+		self.ammotypes.freezingFlag.deactivate();
+		self.ammotypes.blindingFlag.deactivate();
+		self.ammotypes.antimaterialFlag.deactivate();
+		self.ammotypes.smoketrailFlag.deactivate();
+		self.ammotypes.firetrailFlag.deactivate();
+		self.ammotypes.shotAnimation.deactivate();
+		self.ammotypes.spreadpattern.deactivate();
+		self.ammostrings.index.deactivate();
+		self.ammostrings.caliber.deactivate();
+		self.ammostrings.brcaliber.deactivate();
+		self.ammostrings.nwsscaliber.deactivate();
+	
 		if itemclass == JAxml::ItemClass::Ammo as u32
 		{
-			let mag = &xmldata.magazines.items[classIndex as usize];
+			self.caliber.activate();
+			self.ammotype.activate();
+			self.magsize.activate();
+			self.magtype.activate();
+			self.color.activate();
+			self.colorbox.activate();
+		
+			if let Some(mag) = xmldata.getMagazine(classIndex as u32)
+			{
+				self.caliber.set_value(mag.ubCalibre as i32);
+				self.ammotype.set_value(mag.ubAmmoType as i32);
+				self.magtype.set_value(mag.ubMagType as i32);
+				self.magsize.set_value(&format!("{}", mag.ubMagSize));
 
-			self.caliber.set_value(mag.ubCalibre as i32);
-			self.ammotype.set_value(mag.ubAmmoType as i32);
-			self.magtype.set_value(mag.ubMagType as i32);
-			self.magsize.set_value(&format!("{}", mag.ubMagSize));
-
-			self.updateAmmoType(xmldata, mag.ubAmmoType as usize);
-			self.updateCaliber(xmldata, mag.ubCalibre as usize);
+				self.updateAmmoType(xmldata, mag.ubAmmoType as usize);
+				self.updateCaliber(xmldata, mag.ubCalibre as usize);
+			}
 		}
 	}
 
 	fn updateAmmoType(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
-		let item = &xmldata.ammotypes.items[uiIndex];
-		self.ammotypes.index.set_value(&format!("{}", item.uiIndex));
-		self.ammotypes.name.set_value(&format!("{}", item.name));
-		self.ammotypes.rgb = (item.red, item.green, item.blue);
-		self.colorbox.set_color(Color::from_rgb(item.red, item.green, item.blue));
-		self.ammotypes.nbullets.set_value(&format!("{}", item.numberOfBullets));
-		self.ammotypes.shotAnimation.set_value(&format!("{}", item.shotAnimation));
-		self.ammotypes.explosionsize.set_value(item.explosionSize as i32);
-
-		self.ammotypes.structImpactMultiplier.set_value(&format!("{}", item.structureImpactReductionMultiplier));
-		self.ammotypes.structImpactDivisor.set_value(&format!("{}", item.structureImpactReductionDivisor));
-		self.ammotypes.armorImpactMultiplier.set_value(&format!("{}", item.armourImpactReductionMultiplier));
-		self.ammotypes.armorImpactDivisor.set_value(&format!("{}", item.armourImpactReductionDivisor));
-		self.ammotypes.beforeArmorMultpilier.set_value(&format!("{}", item.beforeArmourDamageMultiplier));
-		self.ammotypes.beforeArmorDivisor.set_value(&format!("{}", item.beforeArmourDamageDivisor));
-		self.ammotypes.afterArmorMultiplier.set_value(&format!("{}", item.afterArmourDamageMultiplier));
-		self.ammotypes.afterArmorDivisor.set_value(&format!("{}", item.afterArmourDamageDivisor));
-		self.ammotypes.bulletsMultiplier.set_value(&format!("{}", item.multipleBulletDamageMultiplier));
-		self.ammotypes.bulletsDivisor.set_value(&format!("{}", item.multipleBulletDamageDivisor));
-		
-		self.ammotypes.acidic.set_value(item.acidic);
-		self.ammotypes.dart.set_value(item.dart);
-		self.ammotypes.standardissue.set_value(item.standardIssue);
-		self.ammotypes.knife.set_value(item.knife);
-		self.ammotypes.ignorearmor.set_value(item.ignoreArmour);
-		self.ammotypes.tracer.set_value(item.tracerEffect);
-		self.ammotypes.zeromindamage.set_value(item.zeroMinimumDamage);
-		self.ammotypes.monsterspit.set_value(item.monsterSpit);
-
-		self.ammotypes.healthModifier.set_value(&format!("{}", item.dDamageModifierLife));
-		self.ammotypes.breathModifier.set_value(&format!("{}", item.dDamageModifierBreath));
-		self.ammotypes.tankModifier.set_value(&format!("{}", item.dDamageModifierTank));
-		self.ammotypes.armoredVehicleModifier.set_value(&format!("{}", item.dDamageModifierArmouredVehicle));
-		self.ammotypes.civilianVehicleModifier.set_value(&format!("{}", item.dDamageModifierCivilianVehicle));
-		self.ammotypes.zombieModifier.set_value(&format!("{}", item.dDamageModifierZombie));
-		self.ammotypes.lockModifier.set_value(&format!("{}", item.lockBustingPower));
-		self.ammotypes.pierceModifier.set_value(&format!("{}", item.usPiercePersonChanceModifier));
-		self.ammotypes.temperatureModifier.set_value(&format!("{}", item.temperatureModificator));
-		self.ammotypes.dirtModifier.set_value(&format!("{}", item.dirtModificator));
-
-		let flags = item.ammoflag;
-		self.ammotypes.freezingFlag.set_value(get_bit_at(flags, 0).unwrap() != 0);
-		self.ammotypes.blindingFlag.set_value(get_bit_at(flags, 1).unwrap() != 0);
-		self.ammotypes.antimaterialFlag.set_value(get_bit_at(flags, 2).unwrap() != 0);
-		self.ammotypes.smoketrailFlag.set_value(get_bit_at(flags, 3).unwrap() != 0);
-		self.ammotypes.firetrailFlag.set_value(get_bit_at(flags, 4).unwrap() != 0);
-
-		if item.highExplosive != 0
+		self.ammotypes.index.deactivate();
+		self.ammotypes.name.deactivate();
+		self.ammotypes.nbullets.deactivate();
+		self.ammotypes.explosionid.deactivate();
+		self.ammotypes.explosionsize.deactivate();
+		self.ammotypes.standardissue.deactivate();
+		self.ammotypes.dart.deactivate();
+		self.ammotypes.knife.deactivate();
+		self.ammotypes.acidic.deactivate();
+		self.ammotypes.ignorearmor.deactivate();
+		self.ammotypes.tracer.deactivate();
+		self.ammotypes.zeromindamage.deactivate();
+		self.ammotypes.monsterspit.deactivate();
+		self.ammotypes.structImpactMultiplier.deactivate();
+		self.ammotypes.armorImpactMultiplier.deactivate();
+		self.ammotypes.beforeArmorMultpilier.deactivate();
+		self.ammotypes.afterArmorMultiplier.deactivate();
+		self.ammotypes.bulletsMultiplier.deactivate();
+		self.ammotypes.structImpactDivisor.deactivate();
+		self.ammotypes.armorImpactDivisor.deactivate();
+		self.ammotypes.beforeArmorDivisor.deactivate();
+		self.ammotypes.afterArmorDivisor.deactivate();
+		self.ammotypes.bulletsDivisor.deactivate();
+		self.ammotypes.healthModifier.deactivate();
+		self.ammotypes.breathModifier.deactivate();
+		self.ammotypes.tankModifier.deactivate();
+		self.ammotypes.armoredVehicleModifier.deactivate();
+		self.ammotypes.civilianVehicleModifier.deactivate();
+		self.ammotypes.zombieModifier.deactivate();
+		self.ammotypes.lockModifier.deactivate();
+		self.ammotypes.pierceModifier.deactivate();
+		self.ammotypes.temperatureModifier.deactivate();
+		self.ammotypes.dirtModifier.deactivate();
+		self.ammotypes.freezingFlag.deactivate();
+		self.ammotypes.blindingFlag.deactivate();
+		self.ammotypes.antimaterialFlag.deactivate();
+		self.ammotypes.smoketrailFlag.deactivate();
+		self.ammotypes.firetrailFlag.deactivate();
+		self.ammotypes.shotAnimation.deactivate();
+		self.ammotypes.spreadpattern.deactivate();
+	
+		if let Some(item) = xmldata.getAmmoType(uiIndex as u32)
 		{
-			let name = &xmldata.items.items[item.highExplosive as usize].szItemName;
+			self.ammotypes.index.activate();
+			self.ammotypes.name.activate();
+			self.ammotypes.nbullets.activate();
+			self.ammotypes.explosionid.activate();
+			self.ammotypes.explosionsize.activate();
+			self.ammotypes.standardissue.activate();
+			self.ammotypes.dart.activate();
+			self.ammotypes.knife.activate();
+			self.ammotypes.acidic.activate();
+			self.ammotypes.ignorearmor.activate();
+			self.ammotypes.tracer.activate();
+			self.ammotypes.zeromindamage.activate();
+			self.ammotypes.monsterspit.activate();
+			self.ammotypes.structImpactMultiplier.activate();
+			self.ammotypes.armorImpactMultiplier.activate();
+			self.ammotypes.beforeArmorMultpilier.activate();
+			self.ammotypes.afterArmorMultiplier.activate();
+			self.ammotypes.bulletsMultiplier.activate();
+			self.ammotypes.structImpactDivisor.activate();
+			self.ammotypes.armorImpactDivisor.activate();
+			self.ammotypes.beforeArmorDivisor.activate();
+			self.ammotypes.afterArmorDivisor.activate();
+			self.ammotypes.bulletsDivisor.activate();
+			self.ammotypes.healthModifier.activate();
+			self.ammotypes.breathModifier.activate();
+			self.ammotypes.tankModifier.activate();
+			self.ammotypes.armoredVehicleModifier.activate();
+			self.ammotypes.civilianVehicleModifier.activate();
+			self.ammotypes.zombieModifier.activate();
+			self.ammotypes.lockModifier.activate();
+			self.ammotypes.pierceModifier.activate();
+			self.ammotypes.temperatureModifier.activate();
+			self.ammotypes.dirtModifier.activate();
+			self.ammotypes.freezingFlag.activate();
+			self.ammotypes.blindingFlag.activate();
+			self.ammotypes.antimaterialFlag.activate();
+			self.ammotypes.smoketrailFlag.activate();
+			self.ammotypes.firetrailFlag.activate();
+			self.ammotypes.shotAnimation.activate();
+			self.ammotypes.spreadpattern.activate();
+	
+			self.ammotypes.index.set_value(&format!("{}", item.uiIndex));
+			self.ammotypes.name.set_value(&format!("{}", item.name));
+			self.ammotypes.rgb = (item.red, item.green, item.blue);
+			self.colorbox.set_color(Color::from_rgb(item.red, item.green, item.blue));
+			self.ammotypes.nbullets.set_value(&format!("{}", item.numberOfBullets));
+			self.ammotypes.shotAnimation.set_value(&format!("{}", item.shotAnimation));
+			self.ammotypes.explosionsize.set_value(item.explosionSize as i32);
 
-			let widgetindex = self.ammotypes.explosionid.find_index(name);
-			self.ammotypes.explosionid.set_value(widgetindex);
-		} else { self.ammotypes.explosionid.set_value(-1); }
+			self.ammotypes.structImpactMultiplier.set_value(&format!("{}", item.structureImpactReductionMultiplier));
+			self.ammotypes.structImpactDivisor.set_value(&format!("{}", item.structureImpactReductionDivisor));
+			self.ammotypes.armorImpactMultiplier.set_value(&format!("{}", item.armourImpactReductionMultiplier));
+			self.ammotypes.armorImpactDivisor.set_value(&format!("{}", item.armourImpactReductionDivisor));
+			self.ammotypes.beforeArmorMultpilier.set_value(&format!("{}", item.beforeArmourDamageMultiplier));
+			self.ammotypes.beforeArmorDivisor.set_value(&format!("{}", item.beforeArmourDamageDivisor));
+			self.ammotypes.afterArmorMultiplier.set_value(&format!("{}", item.afterArmourDamageMultiplier));
+			self.ammotypes.afterArmorDivisor.set_value(&format!("{}", item.afterArmourDamageDivisor));
+			self.ammotypes.bulletsMultiplier.set_value(&format!("{}", item.multipleBulletDamageMultiplier));
+			self.ammotypes.bulletsDivisor.set_value(&format!("{}", item.multipleBulletDamageDivisor));
+			
+			self.ammotypes.acidic.set_value(item.acidic);
+			self.ammotypes.dart.set_value(item.dart);
+			self.ammotypes.standardissue.set_value(item.standardIssue);
+			self.ammotypes.knife.set_value(item.knife);
+			self.ammotypes.ignorearmor.set_value(item.ignoreArmour);
+			self.ammotypes.tracer.set_value(item.tracerEffect);
+			self.ammotypes.zeromindamage.set_value(item.zeroMinimumDamage);
+			self.ammotypes.monsterspit.set_value(item.monsterSpit);
+
+			self.ammotypes.healthModifier.set_value(&format!("{}", item.dDamageModifierLife));
+			self.ammotypes.breathModifier.set_value(&format!("{}", item.dDamageModifierBreath));
+			self.ammotypes.tankModifier.set_value(&format!("{}", item.dDamageModifierTank));
+			self.ammotypes.armoredVehicleModifier.set_value(&format!("{}", item.dDamageModifierArmouredVehicle));
+			self.ammotypes.civilianVehicleModifier.set_value(&format!("{}", item.dDamageModifierCivilianVehicle));
+			self.ammotypes.zombieModifier.set_value(&format!("{}", item.dDamageModifierZombie));
+			self.ammotypes.lockModifier.set_value(&format!("{}", item.lockBustingPower));
+			self.ammotypes.pierceModifier.set_value(&format!("{}", item.usPiercePersonChanceModifier));
+			self.ammotypes.temperatureModifier.set_value(&format!("{}", item.temperatureModificator));
+			self.ammotypes.dirtModifier.set_value(&format!("{}", item.dirtModificator));
+
+			let flags = item.ammoflag;
+			self.ammotypes.freezingFlag.set_value(get_bit_at(flags, 0).unwrap() != 0);
+			self.ammotypes.blindingFlag.set_value(get_bit_at(flags, 1).unwrap() != 0);
+			self.ammotypes.antimaterialFlag.set_value(get_bit_at(flags, 2).unwrap() != 0);
+			self.ammotypes.smoketrailFlag.set_value(get_bit_at(flags, 3).unwrap() != 0);
+			self.ammotypes.firetrailFlag.set_value(get_bit_at(flags, 4).unwrap() != 0);
+
+			if item.highExplosive != 0
+			{
+				let name = &xmldata.items.items[item.highExplosive as usize].szItemName;
+
+				let widgetindex = self.ammotypes.explosionid.find_index(name);
+				self.ammotypes.explosionid.set_value(widgetindex);
+			} else { self.ammotypes.explosionid.set_value(-1); }
 
 
-		if !item.spreadPattern.is_empty()
-		{
-			let name = &item.spreadPattern;
+			if !item.spreadPattern.is_empty()
+			{
+				let name = &item.spreadPattern;
 
-			let widgetindex = self.ammotypes.spreadpattern.find_index(name);
-			self.ammotypes.spreadpattern.set_value(widgetindex);
-		} else { self.ammotypes.spreadpattern.set_value(-1); }
+				let widgetindex = self.ammotypes.spreadpattern.find_index(name);
+				self.ammotypes.spreadpattern.set_value(widgetindex);
+			} else { self.ammotypes.spreadpattern.set_value(-1); }
+		}
 	}
 
 	fn updateCaliber(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
-		let item = &xmldata.calibers.items[uiIndex];
+		self.ammostrings.index.deactivate();
+		self.ammostrings.caliber.deactivate();
+		self.ammostrings.brcaliber.deactivate();
+		self.ammostrings.nwsscaliber.deactivate();
 
-		self.ammostrings.index.set_value(&format!("{}", item.uiIndex));
-		self.ammostrings.caliber.set_value(&format!("{}", item.AmmoCaliber));
-		self.ammostrings.brcaliber.set_value(&format!("{}", item.BRCaliber));
-		self.ammostrings.nwsscaliber.set_value(&format!("{}", item.NWSSCaliber));
+		if let Some(item) = xmldata.getAmmoString(uiIndex as u32)
+		{
+			self.ammostrings.index.activate();
+			self.ammostrings.caliber.activate();
+			self.ammostrings.brcaliber.activate();
+			self.ammostrings.nwsscaliber.activate();
+				
+			self.ammostrings.index.set_value(&format!("{}", item.uiIndex));
+			self.ammostrings.caliber.set_value(&format!("{}", item.AmmoCaliber));
+			self.ammostrings.brcaliber.set_value(&format!("{}", item.BRCaliber));
+			self.ammostrings.nwsscaliber.set_value(&format!("{}", item.NWSSCaliber));
+		}
 	}
 
 	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
@@ -4032,34 +4186,77 @@ impl ExplosivesArea
 		let itemclass = item.usItemClass;
 		let classIndex = item.ubClassIndex;
 
+		self.explosionType.deactivate();
+		self.animID.deactivate();
+		self.damage.deactivate();
+		self.startRadius.deactivate();
+		self.endRadius.deactivate();
+		self.duration.deactivate();
+		self.volatility.deactivate();
+		self.stundamage.deactivate();
+		self.volume.deactivate();
+		self.magsize.deactivate();
+		self.fragmentType.deactivate();
+		self.fragments.deactivate();
+		self.fragrange.deactivate();
+		self.fragdamage.deactivate();
+		self.indoormodifier.deactivate();
+		self.horizontaldegrees.deactivate();
+		self.verticaldegrees.deactivate();
+		self.explodeOnImpact.deactivate();
+		self.launcherType.deactivate();
+		self.discardeditem.deactivate();
+
 		use JAxml::ItemClass::*;
 		match itemclass
 		{
 			x if x == Grenade as u32 || x == Bomb as u32 =>
 			{
-				let explosive = &xmldata.explosives.items[classIndex as usize];
-
-				self.explosionType.set_value(explosive.ubType as i32);
-				self.animID.set_value(explosive.ubAnimationID as i32);
-				self.fragmentType.set_value(explosive.ubFragType as i32);
-				self.damage.set_value( &format!("{}", explosive.ubDamage) );
-				self.startRadius.set_value( &format!("{}", explosive.ubStartRadius) );
-				self.endRadius.set_value( &format!("{}", explosive.ubRadius) );
-				self.duration.set_value( &format!("{}", explosive.ubDuration) );
-				self.volatility.set_value( &format!("{}", explosive.ubVolatility) );
-				self.stundamage.set_value( &format!("{}", explosive.ubStunDamage) );
-				self.volume.set_value( &format!("{}", explosive.ubVolume) );
-				self.magsize.set_value( &format!("{}", explosive.ubMagSize) );
-				self.fragments.set_value( &format!("{}", explosive.usNumFragments) );
-				self.fragrange.set_value( &format!("{}", explosive.ubFragRange) );
-				self.fragdamage.set_value( &format!("{}", explosive.ubFragDamage) );
-				self.indoormodifier.set_value( &format!("{}", explosive.bIndoorModifier) );
-				self.horizontaldegrees.set_value( &format!("{}", explosive.ubHorizontalDegree) );
-				self.verticaldegrees.set_value( &format!("{}", explosive.ubVerticalDegree) );
-				self.explodeOnImpact.set_value(explosive.fExplodeOnImpact);
+				if let Some(explosive) = xmldata.getExplosive(classIndex as u32)
+				{
+					self.explosionType.activate();
+					self.animID.activate();
+					self.damage.activate();
+					self.startRadius.activate();
+					self.endRadius.activate();
+					self.duration.activate();
+					self.volatility.activate();
+					self.stundamage.activate();
+					self.volume.activate();
+					self.magsize.activate();
+					self.fragmentType.activate();
+					self.fragments.activate();
+					self.fragrange.activate();
+					self.fragdamage.activate();
+					self.indoormodifier.activate();
+					self.horizontaldegrees.activate();
+					self.verticaldegrees.activate();
+					self.explodeOnImpact.activate();
+			
+					self.explosionType.set_value(explosive.ubType as i32);
+					self.animID.set_value(explosive.ubAnimationID as i32);
+					self.fragmentType.set_value(explosive.ubFragType as i32);
+					self.damage.set_value( &format!("{}", explosive.ubDamage) );
+					self.startRadius.set_value( &format!("{}", explosive.ubStartRadius) );
+					self.endRadius.set_value( &format!("{}", explosive.ubRadius) );
+					self.duration.set_value( &format!("{}", explosive.ubDuration) );
+					self.volatility.set_value( &format!("{}", explosive.ubVolatility) );
+					self.stundamage.set_value( &format!("{}", explosive.ubStunDamage) );
+					self.volume.set_value( &format!("{}", explosive.ubVolume) );
+					self.magsize.set_value( &format!("{}", explosive.ubMagSize) );
+					self.fragments.set_value( &format!("{}", explosive.usNumFragments) );
+					self.fragrange.set_value( &format!("{}", explosive.ubFragRange) );
+					self.fragdamage.set_value( &format!("{}", explosive.ubFragDamage) );
+					self.indoormodifier.set_value( &format!("{}", explosive.bIndoorModifier) );
+					self.horizontaldegrees.set_value( &format!("{}", explosive.ubHorizontalDegree) );
+					self.verticaldegrees.set_value( &format!("{}", explosive.ubVerticalDegree) );
+					self.explodeOnImpact.set_value(explosive.fExplodeOnImpact);
+				}
 			}
 			x if x == Launcher as u32 =>
 			{
+				self.launcherType.activate();
+
 				let gl = item.grenadelauncher;
 				let rl = item.rocketlauncher;
 				let singleshot = item.singleshotrocketlauncher;
@@ -4292,6 +4489,17 @@ impl SoundsArea
 
 	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
+		self.attackVolume.deactivate();
+		self.hitVolume.deactivate();
+		self.attack.deactivate();
+		self.burst.deactivate();
+		self.silenced.deactivate();
+		self.silencedBurst.deactivate();
+		self.reload.deactivate();
+		self.locknload.deactivate();
+		self.manualreload.deactivate();
+	
+
 		let item = &xmldata.items.items[uiIndex];
 		let itemclass = item.usItemClass;
 
@@ -4302,7 +4510,16 @@ impl SoundsArea
 			{
 				if let Some(weapon) = &xmldata.getWeapon(uiIndex as u32)
 				{
-					
+					self.attackVolume.activate();
+					self.hitVolume.activate();
+					self.attack.activate();
+					self.burst.activate();
+					self.silenced.activate();
+					self.silencedBurst.activate();
+					self.reload.activate();
+					self.locknload.activate();
+					self.manualreload.activate();
+
 					self.attackVolume.set_value(&format!("{}", weapon.ubAttackVolume));
 					self.hitVolume.set_value(&format!("{}", weapon.ubHitVolume));
 					
@@ -4404,6 +4621,12 @@ impl ArmorArea
 
 	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
+		self.index.deactivate();
+		self.class.deactivate();
+		self.protection.deactivate();
+		self.coverage.deactivate();
+		self.degrade.deactivate();
+
 		let item = &xmldata.items.items[uiIndex];
 		let itemclass = item.usItemClass;
 		let classIndex = item.ubClassIndex;
@@ -4418,6 +4641,12 @@ impl ArmorArea
 			{
 				if let Some(armor) =  &xmldata.getArmor(classIndex as u32)
 				{
+					self.index.activate();
+					self.class.activate();
+					self.protection.activate();
+					self.coverage.activate();
+					self.degrade.activate();
+					
 					self.index.set_value(&format!("{}", armor.uiIndex));
 					self.class.set_value(armor.ubArmourClass as i32);
 					self.protection.set_value(&format!("{}", armor.ubProtection));
@@ -4431,8 +4660,20 @@ impl ArmorArea
 
 	fn updateFromArmorData(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
 	{
+		self.index.deactivate();
+		self.class.deactivate();
+		self.protection.deactivate();
+		self.coverage.deactivate();
+		self.degrade.deactivate();
+
 		if let Some(armor) =  &xmldata.getArmor(uiIndex as u32)
 		{
+			self.index.activate();
+			self.class.activate();
+			self.protection.activate();
+			self.coverage.activate();
+			self.degrade.activate();
+
 			self.index.set_value(&format!("{}", armor.uiIndex));
 			self.class.set_value(armor.ubArmourClass as i32);
 			self.protection.set_value(&format!("{}", armor.ubProtection));

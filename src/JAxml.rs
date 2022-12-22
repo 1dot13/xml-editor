@@ -423,7 +423,6 @@ impl Data
 		{
 			if weapon.uiIndex == uiIndex { return Some(weapon); }
 		}
-		
 		return None;
 	}
 
@@ -433,7 +432,6 @@ impl Data
 		{
 			if weapon.uiIndex == uiIndex { return Some(weapon); }
 		}
-		
 		return None;
 	}
 
@@ -443,7 +441,6 @@ impl Data
 		{
 			if item.uiIndex == classIndex { return Some(item); }
 		}
-		
 		return None;
 	}
 
@@ -453,7 +450,15 @@ impl Data
 		{
 			if item.uiIndex == classIndex { return Some(item); }
 		}
-		
+		return None;
+	}
+
+	pub fn getMagazine(&self, classIndex: u32) -> Option<&MAGAZINE>
+	{
+		for item in &self.magazines.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
 		return None;
 	}
 
@@ -463,7 +468,15 @@ impl Data
 		{
 			if item.uiIndex == classIndex { return Some(item); }
 		}
-		
+		return None;
+	}
+
+	pub fn getAmmoType(&self, classIndex: u32) -> Option<&AMMOTYPE>
+	{
+		for item in &self.ammotypes.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
 		return None;
 	}
 
@@ -473,7 +486,24 @@ impl Data
 		{
 			if item.uiIndex == classIndex { return Some(item); }
 		}
-		
+		return None;
+	}
+
+	pub fn getAmmoString(&self, classIndex: u32) -> Option<&AMMOSTRING>
+	{
+		for item in &self.calibers.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
+		return None;
+	}
+
+	pub fn getExplosive(&self, classIndex: u32) -> Option<&EXPLOSIVE>
+	{
+		for item in &self.explosives.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
 		return None;
 	}
 
