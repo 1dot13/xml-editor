@@ -29,9 +29,6 @@ mod STI;
 
 
 // TODO
-// Build item info layout
-// Display existing items' data
-// Allow editing item data
 // Add/Delete/Duplicate items
 // Change item class & uiIndex
 // Prompt to save work upon quitting if needed
@@ -39,11 +36,11 @@ mod STI;
 // Merchants?
 // Error checking
 // Only allow saving of valid data
-// Update Caliber & Ammo Type sections if Caliber or ammotype is changed for the selected Magazine
 // Compatible launchers list for explosives
 // Launchables list for launchers
 // Context aware (de)activation of widgets
 // Bloody item selection
+// Attachments
 
 
 fn main() 
@@ -86,7 +83,7 @@ fn main()
 	//-----------------------------------------------------------------------------
 	// Okay, so this is stupid, but I can't get the widgets to work without defining them outside of tabs when using app.wait()
 	// With app.run() it works as expected, but I need app.wait() for better event handling via messages and fltk_evented crate
-	let tabLabels = vec!["Item\t\t", "Item / Weapon\t", "Ammo / Explosives / Sounds", "Tab4\t\t"];
+	let tabLabels = vec!["Item\t\t", "Item / Weapon\t", "Ammo / Explosives / Sounds", "Armor\t\t"];
 	let mut tabs = Tabs::new(0, 0, itemWindow.w(), 20, "tabs");
 	
 	let w = itemWindow.w(); let h = itemWindow.h() - tabs.h();
@@ -132,6 +129,7 @@ fn main()
 	tabGroups.push( g );
 
 	let mut g = Group::default().with_size(itemWindow.w(), itemWindow.h()).with_pos(tabs.x(), tabs.y()+tabs.h());
+	let mut armorArea = ArmorArea::initialize(x, y, &s);
 	g.end();
 	g.hide();
 	tabGroups.push( g );
@@ -151,7 +149,7 @@ fn main()
 
 	let mut uidata = UIdata{ 
 		images, itemDescription, itemGraphics, itemKit, itemProperties, itemStats, itemVision, magArea, weaponArea, expArea, soundArea,
-		state: State::Item 
+		armorArea, state: State::Item 
 	};
 	//-----------------------------------------------------------------------------
 	// Main loop
@@ -203,7 +201,8 @@ fn main()
 				ShowRandom | ShowMerges | ShowAttachmentMerges | ShowLaunchables | ShowCompatibleFaceGear | 
 				ShowTransforms | ShowRandomItems | ShowAttachmentList | ShowAttachmentInfo | ShowIncompatibleAttachments | 
 				ShowMedical | ShowScifi | ShowNonScifi | ShowTonsOfGuns | ShowReducedGuns | ShowAttachments |
-				ShowDrugs | ShowAmmoTypeData | ShowCaliberData | ShowSoundData | ShowBurstSoundData => 
+				ShowDrugs | ShowAmmoTypeData | ShowCaliberData | ShowSoundData | ShowBurstSoundData | ShowClothesData
+				| ShowArmorData => 
 				{
 					fillTree(&mut tree, &xmldata, msg);
 					uidata.changeState(msg);
@@ -241,10 +240,6 @@ fn main()
 					}
 
 					itemWindow.redraw();
-				}
-				AmmoTypeFontColor =>
-				{
-					uidata.magArea.changeColor();
 				}
 				_ => {}
 	        }
@@ -595,6 +590,26 @@ fn fillTree(tree: &mut Listener<tree::Tree>, xmldata: &JAxml::Data, msg: Message
 				treeitem.set_user_data(i);
 			}
 		}
+		ShowArmorData =>
+		{
+			for item in &xmldata.armors.items
+			{
+				let i = item.uiIndex;
+				let name = "Armor Entry";
+
+				if i < 10
+				{
+					tree.add(&format!("[{}]      {}", i, name) );
+				}
+				else
+				{
+					tree.add(&format!("[{}]    {}", i, name) );
+				}
+				
+				let mut treeitem = tree.last().unwrap();
+				treeitem.set_user_data(i);
+			}
+		}
 		_ => {}
 	}
 
@@ -930,6 +945,13 @@ fn createMenuBar(s: &app::Sender<Message>) -> menu::SysMenuBar
 		*s,
 		Message::ShowClothesData
 	);
+	menu.add_emit(
+	    "&Data/Armor Data\t",
+		Shortcut::None,
+		MenuFlag::Normal,
+		*s,
+		Message::ShowArmorData
+	);
 
 	return menu;
 }
@@ -994,6 +1016,7 @@ struct UIdata
 	magArea: MagazineArea,
 	expArea: ExplosivesArea,
 	soundArea: SoundsArea,
+	armorArea: ArmorArea,
 	state: State,
 }
 impl UIdata
@@ -1010,6 +1033,7 @@ impl UIdata
 				self.updateMagazine(&xmldata, uiIndex);
 				self.expArea.update(&xmldata, uiIndex);
 				self.soundArea.update(&xmldata, uiIndex);
+				self.armorArea.update(&xmldata, uiIndex);
 			}
 			AmmoCalibers => 
 			{
@@ -1019,7 +1043,9 @@ impl UIdata
 			{
 				self.magArea.updateAmmoType(&xmldata, uiIndex);
 			}
+			Armors => { self.armorArea.updateFromArmorData(&xmldata, uiIndex); }
 			Sounds => {}
+			_ => {}
 		}
 
 		s.send(Message::Redraw);
@@ -1053,6 +1079,8 @@ impl UIdata
 			ShowAmmoTypeData => { self.state = State::AmmoTypes; }
 			ShowCaliberData => { self.state = State::AmmoCalibers; }
 			ShowSoundData | ShowBurstSoundData => { self.state = State::Sounds; }
+			ShowClothesData => { self.state = State::Clothes; }
+			ShowArmorData => { self.state = State::Armors; }
 			_ => { self.state = State::Item }
 		}
 	}
@@ -1073,6 +1101,8 @@ impl UIdata
 				self.weaponArea.poll(xmldata, uiIndex, s);
 				self.magArea.poll(xmldata, uiIndex, s);
 				self.expArea.poll(xmldata, uiIndex, s);
+				self.soundArea.poll(xmldata, uiIndex, s);
+				self.armorArea.poll(xmldata, uiIndex, s);
 			}
 			AmmoCalibers => 
 			{
@@ -1082,7 +1112,9 @@ impl UIdata
 			{
 				self.magArea.pollAmmoType(xmldata, uiIndex, s);
 			}
+			Armors => { self.armorArea.pollFromArmorData(xmldata, uiIndex, s); }
 			Sounds => {}
+			_ => {}
 		}
 	}
 }
@@ -3329,7 +3361,8 @@ struct MagazineArea
 	magtype: Listener<Choice>,
 	ammostrings: AmmoStringsArea,
 	ammotypes: AmmoTypesArea,
-	color: Listener<Button>
+	color: Listener<Button>,
+	colorbox: Frame,
 }
 impl MagazineArea
 {
@@ -3477,7 +3510,10 @@ impl MagazineArea
 		let shotAnimation = Input::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-30).with_label("Shot Animation");
 		let spreadpattern = Choice::default().with_size(180, height).with_pos(frame.x()+frame.w()-190, frame.y()+frame.h()-60).with_label("Spread Pattern").into();
 		let mut color: Listener<_> = Button::new(frame.x()+10, frame.y() + frame.h() - 40, 80, 30, "Ammo color").into();
-		color.emit(*sender, Message::AmmoTypeFontColor);
+
+		let mut colorbox = Frame::default().with_size(20, 20).with_pos(color.x() + color.w() + 5, color.y());
+		colorbox.set_frame(FrameType::EmbossedBox);
+		colorbox.set_color(Color::White);
 
 		let ammotypes = AmmoTypesArea{ 
 			index, name, nbullets, rgb: (255, 255, 255), standardissue, zeromindamage, acidic, afterArmorDivisor, afterArmorMultiplier,
@@ -3488,7 +3524,7 @@ impl MagazineArea
 			shotAnimation, spreadpattern
 		};
 
-		return MagazineArea{ammotype, caliber, magsize, magtype, ammostrings, color, ammotypes};
+		return MagazineArea{ammotype, caliber, magsize, magtype, ammostrings, color, ammotypes, colorbox};
 	}
 
 
@@ -3542,6 +3578,7 @@ impl MagazineArea
 		if let Some(color) = dialog::color_chooser("", dialog::ColorMode::Byte)
 		{
 			self.ammotypes.rgb = color;
+			self.colorbox.set_color(Color::from_rgb(color.0, color.1, color.2));
 		}
 	}
 
@@ -3571,6 +3608,7 @@ impl MagazineArea
 		self.ammotypes.index.set_value(&format!("{}", item.uiIndex));
 		self.ammotypes.name.set_value(&format!("{}", item.name));
 		self.ammotypes.rgb = (item.red, item.green, item.blue);
+		self.colorbox.set_color(Color::from_rgb(item.red, item.green, item.blue));
 		self.ammotypes.nbullets.set_value(&format!("{}", item.numberOfBullets));
 		self.ammotypes.shotAnimation.set_value(&format!("{}", item.shotAnimation));
 		self.ammotypes.explosionsize.set_value(item.explosionSize as i32);
@@ -3712,7 +3750,12 @@ impl MagazineArea
 			}
 			if let Some(text) = stringFromInput(&mut self.ammotypes.name, s, 80) { item.name = text; }
 
-			// self.ammotypes.rgb = (item.red, item.green, item.blue);
+			if self.color.triggered()
+			{
+				self.changeColor();
+				(item.red, item.green, item.blue) = self.ammotypes.rgb;
+				s.send(Message::Redraw);
+			}
 			if let Some(value) = u16IntInput(&mut self.ammotypes.nbullets, s) { item.numberOfBullets = value; }
 			if let Some(text) = stringFromInput(&mut self.ammotypes.shotAnimation, s, 100) { item.shotAnimation = text; }
 			let widget = &mut self.ammotypes.explosionsize;
@@ -4278,6 +4321,169 @@ impl SoundsArea
 			_ => {}
 		}
 	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		if let Some(item) = xmldata.getItem_mut(uiIndex as u32)
+		{
+			let itemclass = item.usItemClass;
+			let classIndex = item.ubClassIndex;
+
+			use JAxml::ItemClass::*;
+			match itemclass
+			{
+				x if x == Gun as u32 || x == Launcher as u32 || x == Punch as u32 =>
+				{
+					if let Some(weapon) = xmldata.getWeapon_mut(uiIndex as u32)
+					{
+						if let Some(value) = u8IntInput(&mut self.attackVolume, s) { weapon.ubAttackVolume = value; }
+						if let Some(value) = u8IntInput(&mut self.hitVolume, s) { weapon.ubHitVolume = value; }
+
+						let widget = &mut self.attack;
+						if widget.triggered() { weapon.sSound = widget.value() as u16; }
+						let widget = &mut self.silenced;
+						if widget.triggered() { weapon.silencedSound = widget.value() as u16; }
+						let widget = &mut self.reload;
+						if widget.triggered() { weapon.sReloadSound = widget.value() as u16; }
+						let widget = &mut self.locknload;
+						if widget.triggered() { weapon.sLocknLoadSound = widget.value() as u16; }
+						let widget = &mut self.manualreload;
+						if widget.triggered() { weapon.ManualReloadSound = widget.value() as u16; }
+						let widget = &mut self.burst;
+						if widget.triggered() { weapon.sBurstSound = widget.value() as u16; }
+						let widget = &mut self.silencedBurst;
+						if widget.triggered() { weapon.sSilencedBurstSound = widget.value() as u16; }
+					}	
+				}
+				_ => {}
+			}
+		}
+	}
+}
+
+
+struct ArmorArea
+{
+	index: Input,
+	class: Listener<Choice>,
+	protection: IntInput,
+	coverage: IntInput,
+	degrade: IntInput,
+	flakjacket: Listener<CheckButton>,
+	leatherjacket: Listener<CheckButton>,
+}
+impl ArmorArea
+{
+	fn initialize(x: i32, y: i32, s: &app::Sender<Message>) -> ArmorArea
+	{
+		let mainWidth = 210; let mainHeight = 185;
+
+		// Main framed box. Everything else is located relative to this
+		let (frame, _) = createBox(
+			x, y,
+			mainWidth, mainHeight,
+			120, 80, "Armor"
+		);
+
+		let mut flex = Pack::new(x+80, y+10, 120, 100, None);
+		flex.set_spacing(5);
+		let index = Input::default().with_size(40, 20).with_label("Index");
+		let mut class: Listener<_> = Choice::default().with_size(100, 20).with_label("Class").into();
+		let protection = IntInput::default().with_size(40, 20).with_label("Protection");
+		let coverage = IntInput::default().with_size(40, 20).with_label("Coverage");
+		let degrade = IntInput::default().with_size(40, 20).with_label("Degrade %");
+		let flakjacket: Listener<_>= CheckButton::default().with_size(40, 20).with_label("Flakjacket").into();
+		let leatherjacket: Listener<_>= CheckButton::default().with_size(40, 20).with_label("Leatherjacket").into();
+		flex.end();
+
+		// Needs to match JAxml enum ArmorClass
+		class.add_choice("Helmet|Vest|Leggings|Plate|Monster|Vehicle");
+
+		return ArmorArea{ class, coverage, degrade, index, protection, flakjacket, leatherjacket };
+	}
+
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		let item = &xmldata.items.items[uiIndex];
+		let itemclass = item.usItemClass;
+		let classIndex = item.ubClassIndex;
+
+		self.flakjacket.set_value(item.flakjacket);
+		self.leatherjacket.set_value(item.leatherjacket);
+
+		use JAxml::ItemClass::*;
+		match itemclass
+		{
+			x if x == Armor as u32 =>
+			{
+				if let Some(armor) =  &xmldata.getArmor(classIndex as u32)
+				{
+					self.index.set_value(&format!("{}", armor.uiIndex));
+					self.class.set_value(armor.ubArmourClass as i32);
+					self.protection.set_value(&format!("{}", armor.ubProtection));
+					self.coverage.set_value(&format!("{}", armor.ubCoverage));
+					self.degrade.set_value(&format!("{}", armor.ubDegradePercent));
+				}
+			}
+			_ => {}
+		}
+	}
+
+	fn updateFromArmorData(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	{
+		if let Some(armor) =  &xmldata.getArmor(uiIndex as u32)
+		{
+			self.index.set_value(&format!("{}", armor.uiIndex));
+			self.class.set_value(armor.ubArmourClass as i32);
+			self.protection.set_value(&format!("{}", armor.ubProtection));
+			self.coverage.set_value(&format!("{}", armor.ubCoverage));
+			self.degrade.set_value(&format!("{}", armor.ubDegradePercent));
+		}
+	}
+
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		if let Some(item) = xmldata.getItem_mut(uiIndex as u32)
+		{
+			let itemclass = item.usItemClass;
+			let classIndex = item.ubClassIndex;
+
+			if self.flakjacket.triggered() { item.flakjacket = self.flakjacket.value(); }
+			if self.leatherjacket.triggered() { item.leatherjacket = self.leatherjacket.value(); }
+
+			use JAxml::ItemClass::*;
+			match itemclass
+			{
+				x if x == Armor as u32 =>
+				{
+					if let Some(armor) =  xmldata.getArmor_mut(classIndex as u32)
+					{
+						// self.index.set_value(&format!("{}", armor.uiIndex));
+						if self.class.triggered() { armor.ubArmourClass = self.class.value() as u8; }
+
+						if let Some(value) = u8IntInput(&mut self.protection, s) { armor.ubProtection = value; }
+						if let Some(value) = u8IntInput(&mut self.coverage, s) { armor.ubCoverage = value; }
+						if let Some(value) = u8IntInput(&mut self.degrade, s) { armor.ubDegradePercent = value; }
+					}
+				}
+				_ => {}
+			}
+		}
+	}
+
+	fn pollFromArmorData(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	{
+		if let Some(armor) =  xmldata.getArmor_mut(uiIndex as u32)
+		{
+			// self.index.set_value(&format!("{}", armor.uiIndex));
+			if self.class.triggered() { armor.ubArmourClass = self.class.value() as u8; }
+
+			if let Some(value) = u8IntInput(&mut self.protection, s) { armor.ubProtection = value; }
+			if let Some(value) = u8IntInput(&mut self.coverage, s) { armor.ubCoverage = value; }
+			if let Some(value) = u8IntInput(&mut self.degrade, s) { armor.ubDegradePercent = value; }
+		}
+	}
+
 }
 
 
@@ -4417,6 +4623,7 @@ pub enum Message {
 	ShowSoundData,
 	ShowBurstSoundData,
 	ShowClothesData,
+	ShowArmorData,
     Redraw,
     GraphicScroll,
 	GraphicType,
@@ -4432,6 +4639,8 @@ pub enum State {
 	AmmoTypes,
 	AmmoCalibers,
 	Sounds,
+	Clothes,
+	Armors,
 }
 
 

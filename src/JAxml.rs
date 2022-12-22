@@ -407,6 +407,16 @@ impl Data
 		return None;
 	}
 
+	pub fn getItem_mut(&mut self, uiIndex: u32) -> Option<&mut ITEM>
+	{
+		for item in &mut self.items.items
+		{
+			if item.uiIndex == uiIndex { return Some(item); }
+		}
+		
+		return None;
+	}
+
 	pub fn getWeapon(&self, uiIndex: u32) -> Option<&WEAPON>
 	{
 		for weapon in &self.weapons.items
@@ -427,21 +437,41 @@ impl Data
 		return None;
 	}
 
-	pub fn getMagazine_mut(&mut self, uiIndex: u32) -> Option<&mut MAGAZINE>
+	pub fn getArmor(&self, classIndex: u32) -> Option<&ARMOUR>
 	{
-		for item in &mut self.magazines.items
+		for item in &self.armors.items
 		{
-			if item.uiIndex == uiIndex { return Some(item); }
+			if item.uiIndex == classIndex { return Some(item); }
 		}
 		
 		return None;
 	}
 
-	pub fn getAmmoType_mut(&mut self, uiIndex: u32) -> Option<&mut AMMOTYPE>
+	pub fn getArmor_mut(&mut self, classIndex: u32) -> Option<&mut ARMOUR>
+	{
+		for item in &mut self.armors.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
+		
+		return None;
+	}
+
+	pub fn getMagazine_mut(&mut self, classIndex: u32) -> Option<&mut MAGAZINE>
+	{
+		for item in &mut self.magazines.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
+		
+		return None;
+	}
+
+	pub fn getAmmoType_mut(&mut self, classIndex: u32) -> Option<&mut AMMOTYPE>
 	{
 		for item in &mut self.ammotypes.items
 		{
-			if item.uiIndex == uiIndex { return Some(item); }
+			if item.uiIndex == classIndex { return Some(item); }
 		}
 		
 		return None;
@@ -2891,10 +2921,10 @@ impl ATTACHMENTCOMBOMERGE {
 pub struct ARMOUR
 {
     pub uiIndex: u32,
-    ubArmourClass: u8,
-    ubProtection: u8, 
-    ubCoverage: u8,
-    ubDegradePercent: u8
+    pub ubArmourClass: u8,
+    pub ubProtection: u8, 
+    pub ubCoverage: u8,
+    pub ubDegradePercent: u8
 }
 impl ARMOUR {
     pub fn new() -> ARMOUR
@@ -5103,4 +5133,14 @@ pub enum ExplosionAnimationID {
 	ROOF_COLLAPSE,
 	ROOF_COLLAPSE_SMOKE,
 	NUM_EXP_TYPES=50
+}
+
+pub enum ArmorClass
+{
+	Helmet,
+	Vest,
+	Leggings,
+	Plate,
+	Monster,
+	Vehicle,
 }
