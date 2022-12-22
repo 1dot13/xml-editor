@@ -144,6 +144,30 @@ macro_rules! generateListStructs {
         })*
     }
 }
+
+macro_rules! getters {
+	($($member:ident, $type:ty, $get:ident, $getmut:ident)*) => {
+		$(
+			pub fn $get(&self, classIndex: u32) -> Option<&$type>
+			{
+				for item in &self.$member.items
+				{
+					if item.uiIndex == classIndex { return Some(item); }
+				}
+				return None;
+			}
+		
+			pub fn $getmut(&mut self, classIndex: u32) -> Option<&mut $type>
+			{
+				for item in &mut self.$member.items
+				{
+					if item.uiIndex == classIndex { return Some(item); }
+				}
+				return None;
+			}
+		)*
+	};
+}
 //-----------------------------------------------------------------------------
 // Structs
 //-----------------------------------------------------------------------------
@@ -383,7 +407,7 @@ impl Data
 		}
 		return None;
 	}
-	
+
 	pub fn findIndexbyName(&self, name: &str) -> Option<u32>
 	{
 		for item in &self.items.items
@@ -396,132 +420,15 @@ impl Data
 		return None;
 	}
 
-	pub fn getItem(&self, uiIndex: u32) -> Option<&ITEM>
-	{
-		for item in &self.items.items
-		{
-			if item.uiIndex == uiIndex { return Some(item); }
-		}
-		return None;
+	getters!{
+		explosives, EXPLOSIVE, getExplosive, getExplosive_mut
+		calibers, AMMOSTRING, getAmmoString, getAmmoString_mut
+		ammotypes, AMMOTYPE, getAmmoType, getAmmoType_mut
+		magazines, MAGAZINE, getMagazine, getMagazine_mut
+		armors, ARMOUR, getArmor, getArmor_mut
+		weapons, WEAPON, getWeapon, getWeapon_mut
+		items, ITEM, getItem, getItem_mut
 	}
-
-	pub fn getItem_mut(&mut self, uiIndex: u32) -> Option<&mut ITEM>
-	{
-		for item in &mut self.items.items
-		{
-			if item.uiIndex == uiIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getWeapon(&self, uiIndex: u32) -> Option<&WEAPON>
-	{
-		for weapon in &self.weapons.items
-		{
-			if weapon.uiIndex == uiIndex { return Some(weapon); }
-		}
-		return None;
-	}
-
-	pub fn getWeapon_mut(&mut self, uiIndex: u32) -> Option<&mut WEAPON>
-	{
-		for weapon in &mut self.weapons.items
-		{
-			if weapon.uiIndex == uiIndex { return Some(weapon); }
-		}
-		return None;
-	}
-
-	pub fn getArmor(&self, classIndex: u32) -> Option<&ARMOUR>
-	{
-		for item in &self.armors.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getArmor_mut(&mut self, classIndex: u32) -> Option<&mut ARMOUR>
-	{
-		for item in &mut self.armors.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getMagazine(&self, classIndex: u32) -> Option<&MAGAZINE>
-	{
-		for item in &self.magazines.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getMagazine_mut(&mut self, classIndex: u32) -> Option<&mut MAGAZINE>
-	{
-		for item in &mut self.magazines.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getAmmoType(&self, classIndex: u32) -> Option<&AMMOTYPE>
-	{
-		for item in &self.ammotypes.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getAmmoType_mut(&mut self, classIndex: u32) -> Option<&mut AMMOTYPE>
-	{
-		for item in &mut self.ammotypes.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getAmmoString(&self, classIndex: u32) -> Option<&AMMOSTRING>
-	{
-		for item in &self.calibers.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getAmmoString_mut(&mut self, classIndex: u32) -> Option<&mut AMMOSTRING>
-	{
-		for item in &mut self.calibers.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getExplosive(&self, classIndex: u32) -> Option<&EXPLOSIVE>
-	{
-		for item in &self.explosives.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
-	pub fn getExplosive_mut(&mut self, classIndex: u32) -> Option<&mut EXPLOSIVE>
-	{
-		for item in &mut self.explosives.items
-		{
-			if item.uiIndex == classIndex { return Some(item); }
-		}
-		return None;
-	}
-
 }
 
 
