@@ -154,7 +154,7 @@ fn main()
 	//-----------------------------------------------------------------------------
 	// Main loop
 	//-----------------------------------------------------------------------------    
-    let mut uiIndex = usize::MAX;
+    let mut uiIndex = u32::MAX;
     while a.wait() 
     {
 		// if let Some(w) = app::belowmouse::<widget::Widget>()
@@ -167,7 +167,7 @@ fn main()
  			if let Some(item) = tree.first_selected_item() 
  			{
                 println!("{} selected", item.label().unwrap());
-                uiIndex = unsafe{item.user_data::<u32>()}.unwrap() as usize;
+                uiIndex = unsafe{item.user_data::<u32>()}.unwrap();
                 println!("uiIndex {}", uiIndex);
                 
 				uidata.update(&xmldata, uiIndex, &s);
@@ -245,7 +245,7 @@ fn main()
 	        }
         }
 
-		if uiIndex != usize::MAX { uidata.poll( &mut xmldata, uiIndex, &s); }
+		if uiIndex != u32::MAX { uidata.poll( &mut xmldata, uiIndex, &s); }
     }
 }
 
@@ -1021,7 +1021,7 @@ struct UIdata
 }
 impl UIdata
 {
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
 		use State::*;
 		match self.state
@@ -1029,8 +1029,8 @@ impl UIdata
 			Item => 
 			{
 				self.updateItem(&xmldata, uiIndex, s);
-				self.updateWeapon(&xmldata, uiIndex);
-				self.updateMagazine(&xmldata, uiIndex);
+				self.weaponArea.update(&xmldata, uiIndex);
+				self.magArea.update(&xmldata, uiIndex);
 				self.expArea.update(&xmldata, uiIndex);
 				self.soundArea.update(&xmldata, uiIndex);
 				self.armorArea.update(&xmldata, uiIndex);
@@ -1051,7 +1051,7 @@ impl UIdata
 		s.send(Message::Redraw);
 	}
 
-	fn updateItem(&mut self, xmldata: &JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn updateItem(&mut self, xmldata: &JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
 		self.itemGraphics.update(&xmldata, &self.images, uiIndex, s);
 		self.itemDescription.update(&xmldata, uiIndex);
@@ -1059,16 +1059,6 @@ impl UIdata
 		self.itemStats.update(&xmldata, uiIndex);
 		self.itemKit.update(&xmldata, uiIndex);
 		self.itemVision.update(&xmldata, uiIndex);
-	}
-
-	fn updateWeapon(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
-	{
-		self.weaponArea.update(&xmldata, uiIndex);
-	}
-
-	fn updateMagazine(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
-	{
-		self.magArea.update(&xmldata, uiIndex);
 	}
 
 	fn changeState(&mut self, msg: Message)
@@ -1085,7 +1075,7 @@ impl UIdata
 		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
 		use State::*;
 		match self.state
@@ -1340,14 +1330,20 @@ impl ItemGraphicsArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, images: &STI::Images, uiIndex: usize, s: &app::Sender<Message>)
+	fn update(&mut self, xmldata: &JAxml::Data, images: &STI::Images, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let item = &xmldata.items.items[uiIndex];
+		let item = &xmldata.items.items[uiIndex as usize];
 
 		let stiType = item.ubGraphicType as usize;
 		let stiIndex = item.ubGraphicNum as usize;
-		println!("Graphic Type {}", stiType);
-		println!("Graphic index {}", stiIndex);
+		// Only print type and item index if they change
+		// if let Some(value) = self.itemIndex.value().parse::<i32>().ok()
+		// {
+		// 	if value != stiIndex as i32 { 
+		// 		println!("Graphic Type {}", stiType);
+		// 		println!("Graphic index {}", stiIndex); 
+		// 	}
+		// }
 
 		if stiType < images.big.len() && stiIndex < images.big[stiType].len()
 		{
@@ -1409,63 +1405,63 @@ impl ItemGraphicsArea
 		self.small.set_image(None::<RgbImage>);
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, sti: &STI::Images, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, sti: &STI::Images, s: &app::Sender<Message>)
 	{
-		let item = &mut xmldata.items.items[uiIndex];
-		
-		
-		let start = (self.scrollbar.value() as usize / 16);
-		let j = self.itemType.value() as usize;
-		for i in 0..self.images.len()
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
-			let image = &self.images[i];
-
-			if image.triggered()
+			let start = (self.scrollbar.value() as usize / 16);
+			let j = self.itemType.value() as usize;
+			for i in 0..self.images.len()
 			{
-				let index = start + i;
+				let image = &self.images[i];
 
-				if index < sti.big[j].len()
+				if image.triggered()
 				{
-					item.ubGraphicNum = index as u16;
-					s.send(Message::Update);
-				}
-				else 
-				{
-					println!("!!! Tried to access image [{}][{}] !!!", j, index);
-				}
-			}
-		}
+					let index = start + i;
 
-		if self.itemIndex.changed()
-		{
-			let value = self.itemIndex.value().parse::<u32>();
-			match value
-			{
-				Ok(value) => 
-				{
-					if value < sti.big[j].len() as u32
+					if index < sti.big[j].len()
 					{
-						item.ubGraphicNum = value as u16;
-						self.itemIndex.set_text_color(Color::Black);
+						item.ubGraphicNum = index as u16;
 						s.send(Message::Update);
 					}
-					else { 
-						self.itemIndex.set_text_color(Color::Red); 
-						s.send(Message::Redraw);
+					else 
+					{
+						println!("!!! Tried to access image [{}][{}] !!!", j, index);
 					}
 				}
-				_ => { self.itemIndex.set_text_color(Color::Red); }
 			}
-		}
 
-		if self.itemType.triggered() && item.ubGraphicType != j as u8
-		{
-			item.ubGraphicType = self.itemType.value() as u8;
-			item.ubGraphicNum = 0;
+			if self.itemIndex.changed()
+			{
+				let value = self.itemIndex.value().parse::<u32>();
+				match value
+				{
+					Ok(value) => 
+					{
+						if value < sti.big[j].len() as u32
+						{
+							item.ubGraphicNum = value as u16;
+							self.itemIndex.set_text_color(Color::Black);
+							s.send(Message::Update);
+						}
+						else { 
+							self.itemIndex.set_text_color(Color::Red); 
+							s.send(Message::Redraw);
+						}
+					}
+					_ => { self.itemIndex.set_text_color(Color::Red); }
+				}
+			}
 
-			self.updateScrollBarBounds(sti);
-			self.redrawScrollAreaImages(sti, s);
-			s.send(Message::Update);
+			if self.itemType.triggered() && item.ubGraphicType != j as u8
+			{
+				item.ubGraphicType = self.itemType.value() as u8;
+				item.ubGraphicNum = 0;
+
+				self.updateScrollBarBounds(sti);
+				self.redrawScrollAreaImages(sti, s);
+				s.send(Message::Update);
+			}
 		}
 	}
 }
@@ -1569,92 +1565,94 @@ impl ItemStatsArea
 		return ItemStatsArea { price, nperpocket, reliability, repairease, size, weight, cursor }
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		let item = &xmldata.items.items[uiIndex];
-		self.price.set_value(&format!("{}", item.usPrice));
-		self.weight.set_value(&format!("{}", item.ubWeight));
-		self.nperpocket.set_value(&format!("{}", item.ubPerPocket));
-		self.size.set_value(&format!("{}", item.ItemSize));
-		self.reliability.set_value(&format!("{}", item.bReliability));
-		self.repairease.set_value(&format!("{}", item.bRepairEase));
-
-		self.cursor.set_value(item.ubCursor as i32);
+		if let Some(item) = xmldata.getItem(uiIndex)
+		{
+			self.price.set_value(&format!("{}", item.usPrice));
+			self.weight.set_value(&format!("{}", item.ubWeight));
+			self.nperpocket.set_value(&format!("{}", item.ubPerPocket));
+			self.size.set_value(&format!("{}", item.ItemSize));
+			self.reliability.set_value(&format!("{}", item.bReliability));
+			self.repairease.set_value(&format!("{}", item.bRepairEase));
+			self.cursor.set_value(item.ubCursor as i32);
+		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let item = &mut xmldata.items.items[uiIndex];
-
-		if let Some(value) = u16IntInput(&mut self.price, s)
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
-			item.usPrice = value;
-		}
-
-		if let Some(value) = u16IntInput(&mut self.weight, s)
-		{
-			item.ubWeight = value;
-		}
-
-		if let Some(value) = u8IntInput(&mut self.nperpocket, s)
-		{
-			item.ubPerPocket = value;
-		}
-
-		if let Some(value) = u16IntInput(&mut self.size, s)
-		{
-			item.ItemSize = value;
-		}
-
-		if let Some(value) = i8IntInput(&mut self.reliability, s)
-		{
-			item.bReliability = value;
-		}
-
-		if let Some(value) = i8IntInput(&mut self.repairease, s)
-		{
-			item.bRepairEase = value;
-		}
-		// cursor
-		if self.cursor.triggered()
-		{
-			use JAxml::Cursor::*;
-
-			let value = self.cursor.value();
-			match value
+			if let Some(value) = u16IntInput(&mut self.price, s)
 			{
-				x if x == Invalid as i32 => { item.ubCursor = Invalid as u8; }
-				x if x == Quest as i32 => { item.ubCursor = Quest as u8; }
-				x if x == Punch as i32 => { item.ubCursor = Punch as u8; }
-				x if x == Target as i32 => { item.ubCursor = Target as u8; }
-				x if x == Knife as i32 => { item.ubCursor = Knife as u8; }
-				x if x == Aid as i32 => { item.ubCursor = Aid as u8; }
-				x if x == Throw as i32 => { item.ubCursor = Throw as u8; }
-				x if x == Mine as i32 => { item.ubCursor = Mine as u8; }
-				x if x == Lockpick as i32 => { item.ubCursor = Lockpick as u8; }
-				x if x == MineDetector as i32 => { item.ubCursor = MineDetector as u8; }
-				x if x == Crowbar as i32 => { item.ubCursor = Crowbar as u8; }
-				x if x == CCTV as i32 => { item.ubCursor = CCTV as u8; }
-				x if x == Camera as i32 => { item.ubCursor = Camera as u8; }
-				x if x == Key as i32 => { item.ubCursor = Key as u8; }
-				x if x == Saw as i32 => { item.ubCursor = Saw as u8; }
-				x if x == WireCutters as i32 => { item.ubCursor = WireCutters as u8; }
-				x if x == Remote as i32 => { item.ubCursor = Remote as u8; }
-				x if x == Bomb as i32 => { item.ubCursor = Bomb as u8; }
-				x if x == Repair as i32 => { item.ubCursor = Repair as u8; }
-				x if x == Trajectory as i32 => { item.ubCursor = Trajectory as u8; }
-				x if x == Jar as i32 => { item.ubCursor = Jar as u8; }
-				x if x == Tincan as i32 => { item.ubCursor = Tincan as u8; }
-				x if x == Refuel as i32 => { item.ubCursor = Refuel as u8; }
-				x if x == Fortification as i32 => { item.ubCursor = Fortification as u8; }
-				x if x == Handcuffs as i32 => { item.ubCursor = Handcuffs as u8; }
-				x if x == ApplyItem as i32 => { item.ubCursor = ApplyItem as u8; }
-				x if x == InteractiveAction as i32 => { item.ubCursor = InteractiveAction as u8; }
-				x if x == Bloodbag as i32 => { item.ubCursor = Bloodbag as u8; }
-				x if x == Splint as i32 => { item.ubCursor = Splint as u8; }
-				_ => { println!("!!! Tried to set item cursor to value not in enum::Cursor !!! "); }
+				item.usPrice = value;
 			}
-			s.send(Message::Update);
+
+			if let Some(value) = u16IntInput(&mut self.weight, s)
+			{
+				item.ubWeight = value;
+			}
+
+			if let Some(value) = u8IntInput(&mut self.nperpocket, s)
+			{
+				item.ubPerPocket = value;
+			}
+
+			if let Some(value) = u16IntInput(&mut self.size, s)
+			{
+				item.ItemSize = value;
+			}
+
+			if let Some(value) = i8IntInput(&mut self.reliability, s)
+			{
+				item.bReliability = value;
+			}
+
+			if let Some(value) = i8IntInput(&mut self.repairease, s)
+			{
+				item.bRepairEase = value;
+			}
+			// cursor
+			if self.cursor.triggered()
+			{
+				use JAxml::Cursor::*;
+
+				let value = self.cursor.value();
+				match value
+				{
+					x if x == Invalid as i32 => { item.ubCursor = Invalid as u8; }
+					x if x == Quest as i32 => { item.ubCursor = Quest as u8; }
+					x if x == Punch as i32 => { item.ubCursor = Punch as u8; }
+					x if x == Target as i32 => { item.ubCursor = Target as u8; }
+					x if x == Knife as i32 => { item.ubCursor = Knife as u8; }
+					x if x == Aid as i32 => { item.ubCursor = Aid as u8; }
+					x if x == Throw as i32 => { item.ubCursor = Throw as u8; }
+					x if x == Mine as i32 => { item.ubCursor = Mine as u8; }
+					x if x == Lockpick as i32 => { item.ubCursor = Lockpick as u8; }
+					x if x == MineDetector as i32 => { item.ubCursor = MineDetector as u8; }
+					x if x == Crowbar as i32 => { item.ubCursor = Crowbar as u8; }
+					x if x == CCTV as i32 => { item.ubCursor = CCTV as u8; }
+					x if x == Camera as i32 => { item.ubCursor = Camera as u8; }
+					x if x == Key as i32 => { item.ubCursor = Key as u8; }
+					x if x == Saw as i32 => { item.ubCursor = Saw as u8; }
+					x if x == WireCutters as i32 => { item.ubCursor = WireCutters as u8; }
+					x if x == Remote as i32 => { item.ubCursor = Remote as u8; }
+					x if x == Bomb as i32 => { item.ubCursor = Bomb as u8; }
+					x if x == Repair as i32 => { item.ubCursor = Repair as u8; }
+					x if x == Trajectory as i32 => { item.ubCursor = Trajectory as u8; }
+					x if x == Jar as i32 => { item.ubCursor = Jar as u8; }
+					x if x == Tincan as i32 => { item.ubCursor = Tincan as u8; }
+					x if x == Refuel as i32 => { item.ubCursor = Refuel as u8; }
+					x if x == Fortification as i32 => { item.ubCursor = Fortification as u8; }
+					x if x == Handcuffs as i32 => { item.ubCursor = Handcuffs as u8; }
+					x if x == ApplyItem as i32 => { item.ubCursor = ApplyItem as u8; }
+					x if x == InteractiveAction as i32 => { item.ubCursor = InteractiveAction as u8; }
+					x if x == Bloodbag as i32 => { item.ubCursor = Bloodbag as u8; }
+					x if x == Splint as i32 => { item.ubCursor = Splint as u8; }
+					_ => { println!("!!! Tried to set item cursor to value not in enum::Cursor !!! "); }
+				}
+				s.send(Message::Update);
+			}
 		}
 	}
 }
@@ -1705,11 +1703,10 @@ impl ItemDescriptionArea
 		return ItemDescriptionArea { name, longname, BRname, description, BRdescription };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		if uiIndex < xmldata.items.items.len()
+		if let Some(item) = xmldata.getItem(uiIndex)
 		{
-			let item = &xmldata.items.items[uiIndex];
 			self.name.set_value(&item.szItemName);
 			self.longname.set_value(&item.szLongItemName);
 			self.description.set_value(&item.szItemDesc);
@@ -1733,39 +1730,40 @@ impl ItemDescriptionArea
 		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let item = &mut xmldata.items.items[uiIndex];
-
-		let widget = &mut self.name;
-		if let Some(text) = stringFromInput(widget, s, 80)
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
-			item.szItemName = text;
-		}
+			let widget = &mut self.name;
+			if let Some(text) = stringFromInput(widget, s, 80)
+			{
+				item.szItemName = text;
+			}
 
-		let widget = &mut self.longname;
-		if let Some(text) = stringFromInput(widget, s, 80)
-		{
-			item.szLongItemName = text;
-		}
+			let widget = &mut self.longname;
+			if let Some(text) = stringFromInput(widget, s, 80)
+			{
+				item.szLongItemName = text;
+			}
 
-		let widget = &mut self.BRname;
-		if let Some(text) = stringFromInput(widget, s, 80)
-		{
-			item.szBRName = text;
-		}
+			let widget = &mut self.BRname;
+			if let Some(text) = stringFromInput(widget, s, 80)
+			{
+				item.szBRName = text;
+			}
 
 
-		let widget = &mut self.description;
-		if let Some(text) = stringFromMultiLineInput(widget, s, 400)
-		{
-			item.szItemDesc = text;
-		}
+			let widget = &mut self.description;
+			if let Some(text) = stringFromMultiLineInput(widget, s, 400)
+			{
+				item.szItemDesc = text;
+			}
 
-		let widget = &mut self.BRdescription;
-		if let Some(text) = stringFromMultiLineInput(widget, s, 400)
-		{
-			item.szBRDesc = text;
+			let widget = &mut self.BRdescription;
+			if let Some(text) = stringFromMultiLineInput(widget, s, 400)
+			{
+				item.szBRDesc = text;
+			}
 		}
 	}
 }
@@ -1847,103 +1845,104 @@ impl ItemPropertiesArea
 		return ItemPropertiesArea { inputs };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		let item = &xmldata.items.items[uiIndex];
+		if let Some(item) = xmldata.getItem(uiIndex)
+		{
+			self.inputs[0].set_value(item.showstatus);
+			self.inputs[1].set_value(item.Damageable);
+			self.inputs[2].set_value(item.Repairable);
+			self.inputs[3].set_value(item.WaterDamages);
+			self.inputs[4].set_value(item.Sinks);
+			self.inputs[5].set_value(item.unaerodynamic);
+			self.inputs[6].set_value(item.electronic);
+			self.inputs[7].set_value(item.Metal);
+			self.inputs[8].set_value(item.twohanded);
 
-		self.inputs[0].set_value(item.showstatus);
-		self.inputs[1].set_value(item.Damageable);
-		self.inputs[2].set_value(item.Repairable);
-		self.inputs[3].set_value(item.WaterDamages);
-		self.inputs[4].set_value(item.Sinks);
-		self.inputs[5].set_value(item.unaerodynamic);
-		self.inputs[6].set_value(item.electronic);
-		self.inputs[7].set_value(item.Metal);
-		self.inputs[8].set_value(item.twohanded);
+			self.inputs[9].set_value(item.biggunlist);
+			self.inputs[10].set_value(item.scifi);
+			self.inputs[11].set_value(item.notbuyable);
+			self.inputs[12].set_value(item.defaultundroppable);
+			self.inputs[13].set_value(item.notineditor);
+			self.inputs[14].set_value(item.newinv);
+			self.inputs[15].set_value(item.tripwire);
+			self.inputs[16].set_value(item.tripwireactivation);
+			self.inputs[17].set_value(item.remotetrigger);
 
-		self.inputs[9].set_value(item.biggunlist);
-		self.inputs[10].set_value(item.scifi);
-		self.inputs[11].set_value(item.notbuyable);
-		self.inputs[12].set_value(item.defaultundroppable);
-		self.inputs[13].set_value(item.notineditor);
-		self.inputs[14].set_value(item.newinv);
-		self.inputs[15].set_value(item.tripwire);
-		self.inputs[16].set_value(item.tripwireactivation);
-		self.inputs[17].set_value(item.remotetrigger);
-
-		self.inputs[18].set_value(item.containsliquid);
-		self.inputs[19].set_value(item.canteen);
-		self.inputs[20].set_value(item.gascan);
-		self.inputs[21].set_value(item.cigarette);
-		self.inputs[22].set_value(item.jar);
-		self.inputs[23].set_value(item.medical);
-		self.inputs[24].set_value(item.gasmask);
-		self.inputs[25].set_value(item.robotremotecontrol);
-		self.inputs[26].set_value(item.walkman);
-
-		self.inputs[27].set_value(item.rock);
-		self.inputs[28].set_value(item.canandstring);
-		self.inputs[29].set_value(item.marbles);
-		self.inputs[30].set_value(item.duckbill);
-		self.inputs[31].set_value(item.wirecutters);
-		self.inputs[32].set_value(item.xray);
-		self.inputs[33].set_value(item.metaldetector);
-		self.inputs[34].set_value(item.batteries);
-		self.inputs[35].set_value(item.needsbatteries);
-
+			self.inputs[18].set_value(item.containsliquid);
+			self.inputs[19].set_value(item.canteen);
+			self.inputs[20].set_value(item.gascan);
+			self.inputs[21].set_value(item.cigarette);
+			self.inputs[22].set_value(item.jar);
+			self.inputs[23].set_value(item.medical);
+			self.inputs[24].set_value(item.gasmask);
+			self.inputs[25].set_value(item.robotremotecontrol);
+			self.inputs[26].set_value(item.walkman);
+			
+			self.inputs[27].set_value(item.rock);
+			self.inputs[28].set_value(item.canandstring);
+			self.inputs[29].set_value(item.marbles);
+			self.inputs[30].set_value(item.duckbill);
+			self.inputs[31].set_value(item.wirecutters);
+			self.inputs[32].set_value(item.xray);
+			self.inputs[33].set_value(item.metaldetector);
+			self.inputs[34].set_value(item.batteries);
+			self.inputs[35].set_value(item.needsbatteries);
+		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let item = &mut xmldata.items.items[uiIndex];
-
-		for i in 0..self.inputs.len()
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
-			let widget = &mut self.inputs[i];
-			if widget.triggered()
+			for i in 0..self.inputs.len()
 			{
-				match i
+				let widget = &mut self.inputs[i];
+				if widget.triggered()
 				{
-					0 => { item.showstatus = widget.value(); }	
-					1 => { item.Damageable = widget.value(); }	
-					2 => { item.Repairable = widget.value(); }	
-					3 => { item.WaterDamages = widget.value(); }	
-					4 => { item.Sinks = widget.value(); }	
-					5 => { item.unaerodynamic = widget.value(); }	
-					6 => { item.electronic = widget.value(); }	
-					7 => { item.Metal = widget.value(); }	
-					8 => { item.twohanded = widget.value(); }	
+					match i
+					{
+						0 => { item.showstatus = widget.value(); }	
+						1 => { item.Damageable = widget.value(); }	
+						2 => { item.Repairable = widget.value(); }	
+						3 => { item.WaterDamages = widget.value(); }	
+						4 => { item.Sinks = widget.value(); }	
+						5 => { item.unaerodynamic = widget.value(); }	
+						6 => { item.electronic = widget.value(); }	
+						7 => { item.Metal = widget.value(); }	
+						8 => { item.twohanded = widget.value(); }	
 
-					9 => { item.biggunlist = widget.value(); }	
-					10 => { item.scifi = widget.value(); }	
-					11 => { item.notbuyable = widget.value(); }	
-					12 => { item.defaultundroppable = widget.value(); }	
-					13 => { item.notineditor = widget.value(); }	
-					14 => { item.newinv = widget.value(); }	
-					15 => { item.tripwire = widget.value(); }	
-					16 => { item.tripwireactivation = widget.value(); }	
-					17 => { item.remotetrigger = widget.value(); }	
+						9 => { item.biggunlist = widget.value(); }	
+						10 => { item.scifi = widget.value(); }	
+						11 => { item.notbuyable = widget.value(); }	
+						12 => { item.defaultundroppable = widget.value(); }	
+						13 => { item.notineditor = widget.value(); }	
+						14 => { item.newinv = widget.value(); }	
+						15 => { item.tripwire = widget.value(); }	
+						16 => { item.tripwireactivation = widget.value(); }	
+						17 => { item.remotetrigger = widget.value(); }	
 
-					18 => { item.containsliquid = widget.value(); }	
-					19 => { item.canteen = widget.value(); }	
-					20 => { item.gascan = widget.value(); }	
-					21 => { item.cigarette = widget.value(); }
-					22 => { item.jar = widget.value(); }	
-					23 => { item.medical = widget.value(); }	
-					24 => { item.gasmask = widget.value(); }	
-					25 => { item.robotremotecontrol = widget.value(); }	
-					26 => { item.walkman = widget.value(); }	
+						18 => { item.containsliquid = widget.value(); }	
+						19 => { item.canteen = widget.value(); }	
+						20 => { item.gascan = widget.value(); }	
+						21 => { item.cigarette = widget.value(); }
+						22 => { item.jar = widget.value(); }	
+						23 => { item.medical = widget.value(); }	
+						24 => { item.gasmask = widget.value(); }	
+						25 => { item.robotremotecontrol = widget.value(); }	
+						26 => { item.walkman = widget.value(); }	
 
-					27 => { item.rock = widget.value(); }	
-					28 => { item.canandstring = widget.value(); }	
-					29 => { item.marbles = widget.value(); }	
-					30 => { item.duckbill = widget.value(); }	
-					31 => { item.wirecutters = widget.value(); }	
-					32 => { item.xray = widget.value(); }	
-					33 => { item.metaldetector = widget.value(); }	
-					34 => { item.batteries = widget.value(); }	
-					35 => { item.needsbatteries = widget.value(); }	
-					_ => {}
+						27 => { item.rock = widget.value(); }	
+						28 => { item.canandstring = widget.value(); }	
+						29 => { item.marbles = widget.value(); }	
+						30 => { item.duckbill = widget.value(); }	
+						31 => { item.wirecutters = widget.value(); }	
+						32 => { item.xray = widget.value(); }	
+						33 => { item.metaldetector = widget.value(); }	
+						34 => { item.batteries = widget.value(); }	
+						35 => { item.needsbatteries = widget.value(); }	
+						_ => {}
+					}
 				}
 			}
 		}
@@ -2005,86 +2004,87 @@ impl ItemKitArea
 		return ItemKitArea { inputs, ints };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		let item = &xmldata.items.items[uiIndex];
-
-		self.inputs[0].set_value(item.hardware);
-		self.inputs[1].set_value(item.toolkit);
-		self.inputs[2].set_value(item.locksmithkit);
-		self.inputs[3].set_value(item.camouflagekit);
-		self.inputs[4].set_value(item.medicalkit);
-		self.inputs[5].set_value(item.firstaidkit);
-
-		self.ints[0].set_value(&format!("{}", item.RepairModifier));
-		self.ints[1].set_value(&format!("{}", item.LockPickModifier));
-		self.ints[2].set_value(&format!("{}", item.DisarmModifier));
-		self.ints[3].set_value(&format!("{}", item.ubSleepModifier));
+		if let Some(item) = xmldata.getItem(uiIndex)
+		{
+			self.inputs[0].set_value(item.hardware);
+			self.inputs[1].set_value(item.toolkit);
+			self.inputs[2].set_value(item.locksmithkit);
+			self.inputs[3].set_value(item.camouflagekit);
+			self.inputs[4].set_value(item.medicalkit);
+			self.inputs[5].set_value(item.firstaidkit);
+			
+			self.ints[0].set_value(&format!("{}", item.RepairModifier));
+			self.ints[1].set_value(&format!("{}", item.LockPickModifier));
+			self.ints[2].set_value(&format!("{}", item.DisarmModifier));
+			self.ints[3].set_value(&format!("{}", item.ubSleepModifier));
+		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let item = &mut xmldata.items.items[uiIndex];
-
-		for i in 0..self.inputs.len()
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
-			let widget = &mut self.inputs[i];
-			if widget.triggered()
+			for i in 0..self.inputs.len()
 			{
-				match i
+				let widget = &mut self.inputs[i];
+				if widget.triggered()
 				{
-					0 => { item.hardware = widget.value(); }
-					1 => { item.toolkit = widget.value(); }	
-					2 => { item.locksmithkit = widget.value(); }	
-					3 => { item.camouflagekit = widget.value(); }	
-					4 => { item.medicalkit = widget.value(); }	
-					5 => { item.firstaidkit = widget.value(); }	
-					_ => {}
+					match i
+					{
+						0 => { item.hardware = widget.value(); }
+						1 => { item.toolkit = widget.value(); }	
+						2 => { item.locksmithkit = widget.value(); }	
+						3 => { item.camouflagekit = widget.value(); }	
+						4 => { item.medicalkit = widget.value(); }	
+						5 => { item.firstaidkit = widget.value(); }	
+						_ => {}
+					}
+				}
+			}
+
+			for i in 0..self.ints.len()
+			{
+				let widget = &mut self.ints[i];
+
+				if widget.changed()
+				{
+					match i
+					{
+						0 => 
+						{ 
+							if let Some(value) = i8IntInput(widget, s) 
+							{
+								item.RepairModifier = value; 
+							}
+						}
+						1 => 
+						{ 
+							if let Some(value) = i8IntInput(widget, s) 
+							{
+								item.LockPickModifier = value; 
+							}
+						}
+						2 => 
+						{ 
+							if let Some(value) = u8IntInput(widget, s) 
+							{
+								item.DisarmModifier = value; 
+							}
+						}
+						3 => 
+						{ 
+							if let Some(value) = u8IntInput(widget, s) 
+							{
+								item.ubSleepModifier = value; 
+							}
+						}
+						_ => {}
+					}
 				}
 			}
 		}
-
-		for i in 0..self.ints.len()
-		{
-			let widget = &mut self.ints[i];
-
-			if widget.changed()
-			{
-				match i
-				{
-					0 => 
-					{ 
-						if let Some(value) = i8IntInput(widget, s) 
-						{
-							item.RepairModifier = value; 
-						}
-					}
-					1 => 
-					{ 
-						if let Some(value) = i8IntInput(widget, s) 
-						{
-							item.LockPickModifier = value; 
-						}
-					}
-					2 => 
-					{ 
-						if let Some(value) = u8IntInput(widget, s) 
-						{
-							item.DisarmModifier = value; 
-						}
-					}
-					3 => 
-					{ 
-						if let Some(value) = u8IntInput(widget, s) 
-						{
-							item.ubSleepModifier = value; 
-						}
-					}
-					_ => {}
-				}
-			}
-		}
-
 	}
 }
 
@@ -2148,101 +2148,103 @@ impl ItemVisionArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		let item = &xmldata.items.items[uiIndex];
-
-		self.ints[0].set_value(&format!("{}", item.visionrangebonus));
-		self.ints[1].set_value(&format!("{}", item.nightvisionrangebonus));
-		self.ints[2].set_value(&format!("{}", item.dayvisionrangebonus));
-		self.ints[3].set_value(&format!("{}", item.cavevisionrangebonus));
-		self.ints[4].set_value(&format!("{}", item.brightlightvisionrangebonus));
-		self.ints[5].set_value(&format!("{}", item.percenttunnelvision));
-		self.ints[6].set_value(&format!("{}", item.usFlashLightRange));
-		self.ints[7].set_value(&format!("{}", item.usSpotting));
-
-		self.ints[8].set_value(&format!("{}", item.camobonus));
-		self.ints[9].set_value(&format!("{}", item.urbanCamobonus));
-		self.ints[10].set_value(&format!("{}", item.desertCamobonus));
-		self.ints[11].set_value(&format!("{}", item.snowCamobonus));
-		self.ints[12].set_value(&format!("{}", item.stealthbonus));
-		
-		self.thermal.set_value(item.thermaloptics);
-		self.clothesType.set_value(item.clothestype as i32);
+		if let Some(item) = xmldata.getItem(uiIndex)
+		{
+			self.ints[0].set_value(&format!("{}", item.visionrangebonus));
+			self.ints[1].set_value(&format!("{}", item.nightvisionrangebonus));
+			self.ints[2].set_value(&format!("{}", item.dayvisionrangebonus));
+			self.ints[3].set_value(&format!("{}", item.cavevisionrangebonus));
+			self.ints[4].set_value(&format!("{}", item.brightlightvisionrangebonus));
+			self.ints[5].set_value(&format!("{}", item.percenttunnelvision));
+			self.ints[6].set_value(&format!("{}", item.usFlashLightRange));
+			self.ints[7].set_value(&format!("{}", item.usSpotting));
+			
+			self.ints[8].set_value(&format!("{}", item.camobonus));
+			self.ints[9].set_value(&format!("{}", item.urbanCamobonus));
+			self.ints[10].set_value(&format!("{}", item.desertCamobonus));
+			self.ints[11].set_value(&format!("{}", item.snowCamobonus));
+			self.ints[12].set_value(&format!("{}", item.stealthbonus));
+			
+			self.thermal.set_value(item.thermaloptics);
+			self.clothesType.set_value(item.clothestype as i32);
+		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let item = &mut xmldata.items.items[uiIndex];
-
-		let widget = &mut self.thermal;
-		if widget.triggered() { item.thermaloptics = widget.value(); }
-
-		let widget = &mut self.clothesType;
-		if widget.triggered() { item.clothestype = widget.value() as u32; }
-
-
-		for i in 0..self.ints.len()
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
-			let widget = &mut self.ints[i];
+			let widget = &mut self.thermal;
+			if widget.triggered() { item.thermaloptics = widget.value(); }
 
-			if widget.changed()
+			let widget = &mut self.clothesType;
+			if widget.triggered() { item.clothestype = widget.value() as u32; }
+
+
+			for i in 0..self.ints.len()
 			{
-				match i
+				let widget = &mut self.ints[i];
+
+				if widget.changed()
 				{
-					0 => { if let Some(value) = i16IntInput(widget, s) {
-							item.visionrangebonus = value; 
+					match i
+					{
+						0 => { if let Some(value) = i16IntInput(widget, s) {
+								item.visionrangebonus = value; 
+							}
 						}
-					}
-					1 => { if let Some(value) = i16IntInput(widget, s) {
-							item.nightvisionrangebonus = value; 
+						1 => { if let Some(value) = i16IntInput(widget, s) {
+								item.nightvisionrangebonus = value; 
+							}
 						}
-					}
-					2 => { if let Some(value) = i16IntInput(widget, s) {
-							item.dayvisionrangebonus = value; 
+						2 => { if let Some(value) = i16IntInput(widget, s) {
+								item.dayvisionrangebonus = value; 
+							}
 						}
-					}
-					3 => { if let Some(value) = i16IntInput(widget, s) {
-							item.cavevisionrangebonus = value; 
+						3 => { if let Some(value) = i16IntInput(widget, s) {
+								item.cavevisionrangebonus = value; 
+							}
 						}
-					}
-					4 => { if let Some(value) = i16IntInput(widget, s) {
-							item.brightlightvisionrangebonus = value; 
+						4 => { if let Some(value) = i16IntInput(widget, s) {
+								item.brightlightvisionrangebonus = value; 
+							}
 						}
-					}
-					5 => { if let Some(value) = u8IntInput(widget, s) {
-							item.percenttunnelvision = value; 
+						5 => { if let Some(value) = u8IntInput(widget, s) {
+								item.percenttunnelvision = value; 
+							}
 						}
-					}
-					6 => { if let Some(value) = u8IntInput(widget, s) {
-							item.usFlashLightRange = value; 
+						6 => { if let Some(value) = u8IntInput(widget, s) {
+								item.usFlashLightRange = value; 
+							}
 						}
-					}
-					7 => { if let Some(value) = i16IntInput(widget, s) {
-							item.usSpotting = value; 
+						7 => { if let Some(value) = i16IntInput(widget, s) {
+								item.usSpotting = value; 
+							}
 						}
-					}
-					8 => { if let Some(value) = i16IntInput(widget, s) {
-							item.camobonus = value; 
+						8 => { if let Some(value) = i16IntInput(widget, s) {
+								item.camobonus = value; 
+							}
 						}
-					}
-					9 => { if let Some(value) = i16IntInput(widget, s) {
-							item.urbanCamobonus = value; 
+						9 => { if let Some(value) = i16IntInput(widget, s) {
+								item.urbanCamobonus = value; 
+							}
 						}
-					}
-					10 => { if let Some(value) = i16IntInput(widget, s) {
-							item.desertCamobonus = value; 
+						10 => { if let Some(value) = i16IntInput(widget, s) {
+								item.desertCamobonus = value; 
+							}
 						}
-					}
-					11 => { if let Some(value) = i16IntInput(widget, s) {
-							item.snowCamobonus = value; 
+						11 => { if let Some(value) = i16IntInput(widget, s) {
+								item.snowCamobonus = value; 
+							}
 						}
-					}
-					12 => { if let Some(value) = i16IntInput(widget, s) {
-							item.stealthbonus = value; 
+						12 => { if let Some(value) = i16IntInput(widget, s) {
+								item.stealthbonus = value; 
+							}
 						}
+						_ => {}
 					}
-					_ => {}
 				}
 			}
 		}
@@ -2862,253 +2864,247 @@ impl WeaponArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		let item = &xmldata.items.items[uiIndex];
+		if let Some(item) = xmldata.getItem(uiIndex)
+		{
+			// Update weapon related widgets only if we find a match
+			if let Some(weapon) = xmldata.getWeapon(uiIndex)
+			{
+				self.general.class.activate();
+				self.general.guntype.activate();
+				self.general.caliber.activate();
+				self.general.magsize.activate();
+				self.stats.range.activate();
+				self.stats.accuracy.activate();
+				self.stats.damage.activate();
+				self.stats.deadliness.activate();
+				self.stats.messydeath.activate();
+				self.stats.meleeDamage.activate();
+				self.stats.crowbarBonus.activate();
+				self.stats.autofirespeed.activate();
+				self.stats.autofirepenalty.activate();
+				self.stats.burstshots.activate();
+				self.stats.burstpenalty.activate();
+				self.stats.burstAPcost.activate();
+				self.stats.reloadAP.activate();
+				self.stats.manualreloadAP.activate();
+				self.stats.readyAP.activate();
+				self.stats.shotsper4turns.activate();
+				self.stats.brRateOfFire.activate();
+				self.stats.reloadAnimDelay.activate();
+				self.stats.burstfireAnimDelay.activate();
+				self.stats.bulletspeed.activate();
+				self.properties.fullauto.activate();
+				self.properties.easyunjam.activate();
+				self.properties.heavyweapon.activate();
+				self.properties.magazinefed.activate();
+				self.ncth.NCTHaccuracy.activate();
+				self.ncth.recoilX.activate();
+				self.ncth.recoilY.activate();
+				self.ncth.recoilDelay.activate();
+				self.ncth.defaultAimLevels.activate();
+				self.ncth.weaponHandling.activate();
+				self.temp.jamThreshold.activate();
+				self.temp.dmgThreshold.activate();
+				self.temp.increasePerShot.activate();
+
+				self.general.class.set_value(weapon.ubWeaponClass as i32);
+				self.general.guntype.set_value(weapon.ubWeaponType as i32);
+				self.general.caliber.set_value(weapon.ubCalibre as i32);
+				self.general.magsize.set_value(&format!("{}", weapon.ubMagSize));
+
+				self.stats.range.set_value( &format!("{}", weapon.usRange) );
+				self.stats.accuracy.set_value( &format!("{}", weapon.bAccuracy) );
+				self.stats.damage.set_value( &format!("{}", weapon.ubImpact) );
+				self.stats.deadliness.set_value( &format!("{}", weapon.ubDeadliness) );
+				self.stats.messydeath.set_value( &format!("{}", weapon.maxdistformessydeath) );
+				self.stats.meleeDamage.set_value( &format!("{}", item.meleedamagebonus) );
+				self.stats.crowbarBonus.set_value( &format!("{}", item.CrowbarModifier) );
+				self.stats.autofirespeed.set_value( &format!("{}", weapon.bAutofireShotsPerFiveAP) );
+				self.stats.autofirepenalty.set_value( &format!("{}", weapon.AutoPenalty) );
+				self.stats.burstshots.set_value( &format!("{}", weapon.ubShotsPerBurst) );
+				self.stats.burstpenalty.set_value( &format!("{}", weapon.ubBurstPenalty) );
+				self.stats.burstAPcost.set_value( &format!("{}", weapon.bBurstAP) );
+				self.stats.reloadAP.set_value( &format!("{}", weapon.APsToReload) );
+				self.stats.manualreloadAP.set_value( &format!("{}", weapon.APsToReloadManually) );
+				self.stats.readyAP.set_value( &format!("{}", weapon.ubReadyTime) );
+				self.stats.shotsper4turns.set_value( &format!("{}", weapon.ubShotsPer4Turns) );
+				self.stats.brRateOfFire.set_value( &format!("{}", item.BR_ROF) );
+				self.stats.reloadAnimDelay.set_value( &format!("{}", weapon.usReloadDelay) );
+				self.stats.burstfireAnimDelay.set_value( &format!("{}", weapon.sAniDelay) );
+				self.stats.bulletspeed.set_value( &format!("{}", weapon.ubBulletSpeed) );
+
+				self.properties.fullauto.set_value(weapon.NoSemiAuto);
+				self.properties.easyunjam.set_value(weapon.EasyUnjam);
+				self.properties.heavyweapon.set_value(weapon.HeavyGun);
+				self.properties.magazinefed.set_value(weapon.swapClips);
+
+				self.ncth.NCTHaccuracy.set_value( &format!("{}", weapon.nAccuracy) );
+				self.ncth.recoilX.set_value( &format!("{}", weapon.bRecoilX) );
+				self.ncth.recoilY.set_value( &format!("{}", weapon.bRecoilY) );
+				self.ncth.recoilDelay.set_value( &format!("{}", weapon.ubRecoilDelay) );
+				self.ncth.defaultAimLevels.set_value( &format!("{}", weapon.ubAimLevels) );
+				self.ncth.weaponHandling.set_value( &format!("{}", weapon.ubHandling) );
 		
-		// Update weapon related widgets only if we find a match
-		if let Some(weapon) = xmldata.getWeapon(uiIndex as u32)
-		{
-			self.general.class.activate();
-			self.general.guntype.activate();
-			self.general.caliber.activate();
-			self.general.magsize.activate();
-			self.stats.range.activate();
-			self.stats.accuracy.activate();
-			self.stats.damage.activate();
-			self.stats.deadliness.activate();
-			self.stats.messydeath.activate();
-			self.stats.meleeDamage.activate();
-			self.stats.crowbarBonus.activate();
-			self.stats.autofirespeed.activate();
-			self.stats.autofirepenalty.activate();
-			self.stats.burstshots.activate();
-			self.stats.burstpenalty.activate();
-			self.stats.burstAPcost.activate();
-			self.stats.reloadAP.activate();
-			self.stats.manualreloadAP.activate();
-			self.stats.readyAP.activate();
-			self.stats.shotsper4turns.activate();
-			self.stats.brRateOfFire.activate();
-			self.stats.reloadAnimDelay.activate();
-			self.stats.burstfireAnimDelay.activate();
-			self.stats.bulletspeed.activate();
-			self.properties.fullauto.activate();
-			self.properties.easyunjam.activate();
-			self.properties.heavyweapon.activate();
-			self.properties.magazinefed.activate();
-			self.ncth.NCTHaccuracy.activate();
-			self.ncth.recoilX.activate();
-			self.ncth.recoilY.activate();
-			self.ncth.recoilDelay.activate();
-			self.ncth.defaultAimLevels.activate();
-			self.ncth.weaponHandling.activate();
-			self.temp.jamThreshold.activate();
-			self.temp.dmgThreshold.activate();
-			self.temp.increasePerShot.activate();
+				self.temp.jamThreshold.set_value( &format!("{}", weapon.usOverheatingJamThreshold) );
+				self.temp.dmgThreshold.set_value( &format!("{}", weapon.usOverheatingDamageThreshold) );
+				self.temp.increasePerShot.set_value( &format!("{}", weapon.usOverheatingSingleShotTemperature) );
+			}
+			else
+			{
+				self.general.class.deactivate();
+				self.general.guntype.deactivate();
+				self.general.caliber.deactivate();
+				self.general.magsize.deactivate();
+				self.stats.range.deactivate();
+				self.stats.accuracy.deactivate();
+				self.stats.damage.deactivate();
+				self.stats.deadliness.deactivate();
+				self.stats.messydeath.deactivate();
+				self.stats.meleeDamage.deactivate();
+				self.stats.crowbarBonus.deactivate();
+				self.stats.autofirespeed.deactivate();
+				self.stats.autofirepenalty.deactivate();
+				self.stats.burstshots.deactivate();
+				self.stats.burstpenalty.deactivate();
+				self.stats.burstAPcost.deactivate();
+				self.stats.reloadAP.deactivate();
+				self.stats.manualreloadAP.deactivate();
+				self.stats.readyAP.deactivate();
+				self.stats.shotsper4turns.deactivate();
+				self.stats.brRateOfFire.deactivate();
+				self.stats.reloadAnimDelay.deactivate();
+				self.stats.burstfireAnimDelay.deactivate();
+				self.stats.bulletspeed.deactivate();
+				self.properties.fullauto.deactivate();
+				self.properties.easyunjam.deactivate();
+				self.properties.heavyweapon.deactivate();
+				self.properties.magazinefed.deactivate();
+				self.ncth.NCTHaccuracy.deactivate();
+				self.ncth.recoilX.deactivate();
+				self.ncth.recoilY.deactivate();
+				self.ncth.recoilDelay.deactivate();
+				self.ncth.defaultAimLevels.deactivate();
+				self.ncth.weaponHandling.deactivate();
+				self.temp.jamThreshold.deactivate();
+				self.temp.dmgThreshold.deactivate();
+				self.temp.increasePerShot.deactivate();
 
-			self.general.class.set_value(weapon.ubWeaponClass as i32);
-			self.general.guntype.set_value(weapon.ubWeaponType as i32);
-			self.general.caliber.set_value(weapon.ubCalibre as i32);
-			self.general.magsize.set_value(&format!("{}", weapon.ubMagSize));
 
-			self.stats.range.set_value( &format!("{}", weapon.usRange) );
-			self.stats.accuracy.set_value( &format!("{}", weapon.bAccuracy) );
-			self.stats.damage.set_value( &format!("{}", weapon.ubImpact) );
-			self.stats.deadliness.set_value( &format!("{}", weapon.ubDeadliness) );
-			self.stats.messydeath.set_value( &format!("{}", weapon.maxdistformessydeath) );
-			self.stats.meleeDamage.set_value( &format!("{}", item.meleedamagebonus) );
-			self.stats.crowbarBonus.set_value( &format!("{}", item.CrowbarModifier) );
-			self.stats.autofirespeed.set_value( &format!("{}", weapon.bAutofireShotsPerFiveAP) );
-			self.stats.autofirepenalty.set_value( &format!("{}", weapon.AutoPenalty) );
-			self.stats.burstshots.set_value( &format!("{}", weapon.ubShotsPerBurst) );
-			self.stats.burstpenalty.set_value( &format!("{}", weapon.ubBurstPenalty) );
-			self.stats.burstAPcost.set_value( &format!("{}", weapon.bBurstAP) );
-			self.stats.reloadAP.set_value( &format!("{}", weapon.APsToReload) );
-			self.stats.manualreloadAP.set_value( &format!("{}", weapon.APsToReloadManually) );
-			self.stats.readyAP.set_value( &format!("{}", weapon.ubReadyTime) );
-			self.stats.shotsper4turns.set_value( &format!("{}", weapon.ubShotsPer4Turns) );
-			self.stats.brRateOfFire.set_value( &format!("{}", item.BR_ROF) );
-			self.stats.reloadAnimDelay.set_value( &format!("{}", weapon.usReloadDelay) );
-			self.stats.burstfireAnimDelay.set_value( &format!("{}", weapon.sAniDelay) );
-			self.stats.bulletspeed.set_value( &format!("{}", weapon.ubBulletSpeed) );
 
-			self.properties.fullauto.set_value(weapon.NoSemiAuto);
-			self.properties.easyunjam.set_value(weapon.EasyUnjam);
-			self.properties.heavyweapon.set_value(weapon.HeavyGun);
-			self.properties.magazinefed.set_value(weapon.swapClips);
+				self.general.class.set_value(-1);
+				self.general.guntype.set_value(-1);
+				self.general.caliber.set_value(-1);
 
-			self.ncth.NCTHaccuracy.set_value( &format!("{}", weapon.nAccuracy) );
-			self.ncth.recoilX.set_value( &format!("{}", weapon.bRecoilX) );
-			self.ncth.recoilY.set_value( &format!("{}", weapon.bRecoilY) );
-			self.ncth.recoilDelay.set_value( &format!("{}", weapon.ubRecoilDelay) );
-			self.ncth.defaultAimLevels.set_value( &format!("{}", weapon.ubAimLevels) );
-			self.ncth.weaponHandling.set_value( &format!("{}", weapon.ubHandling) );
-	
-			self.temp.jamThreshold.set_value( &format!("{}", weapon.usOverheatingJamThreshold) );
-			self.temp.dmgThreshold.set_value( &format!("{}", weapon.usOverheatingDamageThreshold) );
-			self.temp.increasePerShot.set_value( &format!("{}", weapon.usOverheatingSingleShotTemperature) );
+				self.properties.fullauto.set_value(false);
+				self.properties.easyunjam.set_value(false);
+				self.properties.heavyweapon.set_value(false);
+
+				self.general.magsize.set_value("");
+				self.stats.range.set_value( "" );
+				self.stats.accuracy.set_value( "" );
+				self.stats.damage.set_value( "" );
+				self.stats.deadliness.set_value( "" );
+				self.stats.messydeath.set_value( "" );
+				self.stats.meleeDamage.set_value( "" );
+				self.stats.crowbarBonus.set_value( "" );
+				self.stats.autofirespeed.set_value( "" );
+				self.stats.autofirepenalty.set_value( "" );
+				self.stats.burstshots.set_value( "" );
+				self.stats.burstpenalty.set_value( "" );
+				self.stats.burstAPcost.set_value( "" );
+				self.stats.reloadAP.set_value( "" );
+				self.stats.manualreloadAP.set_value( "" );
+				self.stats.readyAP.set_value( "" );
+				self.stats.shotsper4turns.set_value( "" );
+				self.stats.brRateOfFire.set_value( "" );
+				self.stats.reloadAnimDelay.set_value( "" );
+				self.stats.burstfireAnimDelay.set_value( "" );
+				self.stats.bulletspeed.set_value( "" );
+				self.ncth.NCTHaccuracy.set_value( "" );
+				self.ncth.recoilX.set_value( "" );
+				self.ncth.recoilY.set_value( "" );
+				self.ncth.recoilDelay.set_value( "" );
+				self.ncth.defaultAimLevels.set_value( "" );
+				self.ncth.weaponHandling.set_value( "" );
+				self.temp.jamThreshold.set_value( "" );
+				self.temp.dmgThreshold.set_value( "" );
+				self.temp.increasePerShot.set_value( "" );
+
+			}
+
+			self.properties.crowbar.set_value(item.crowbar);
+			self.properties.brassknuckles.set_value(item.brassknuckles);
+			self.properties.rocketrifle.set_value(item.rocketrifle);
+			self.properties.fingerprintid.set_value(item.fingerprintid);
+			self.properties.hidemuzzleflash.set_value(item.hidemuzzleflash);
+			self.properties.barrel.set_value(item.barrel);
+
+			for i in 0..3
+			{
+				self.ncth.flatbase[i].set_value( &format!("{}", item.flatbasemodifier[i]) );
+				self.ncth.flataim[i].set_value( &format!("{}", item.flataimmodifier[i]) );
+				self.ncth.base[i].set_value( &format!("{}", item.percentbasemodifier[i]) );
+				self.ncth.cap[i].set_value( &format!("{}", item.percentcapmodifier[i]) );
+				self.ncth.handling[i].set_value( &format!("{}", item.percenthandlingmodifier[i]) );
+				self.ncth.tracking[i].set_value( &format!("{}", item.targettrackingmodifier[i]) );
+				self.ncth.dropCompensation[i].set_value( &format!("{}", item.percentdropcompensationmodifier[i]) );
+				self.ncth.maxCounterforce[i].set_value( &format!("{}", item.maxcounterforcemodifier[i]) );
+				self.ncth.CFaccuracy[i].set_value( &format!("{}", item.counterforceaccuracymodifier[i]) );
+				self.ncth.CFfrequency[i].set_value( &format!("{}", item.counterforcefrequency[i]) );
+				self.ncth.aimlevel[i].set_value( &format!("{}", item.aimlevelsmodifier[i]) );
+			}
+
+			self.ncth.scopeMagFactor.set_value( &format!("{}", item.scopemagfactor) );
+			self.ncth.laserProjFactor.set_value( &format!("{}", item.bestlaserrange) );
+			self.ncth.recoilXmodifier.set_value( &format!("{}", item.RecoilModifierX) );
+			self.ncth.recoilYmodifier.set_value( &format!("{}", item.RecoilModifierY) );
+			self.ncth.recoilModifier.set_value( &format!("{}", item.PercentRecoilModifier) );
+			self.ncth.accuracyModifier.set_value( &format!("{}", item.percentaccuracymodifier) );
+
+			self.temp.cooldownFactor.set_value( &format!("{}", item.usOverheatingCooldownFactor) );
+			self.temp.cooldownModifier.set_value( &format!("{}", item.overheatCooldownModificator) );
+			self.temp.tempModifier.set_value( &format!("{}", item.overheatTemperatureModificator) );
+			self.temp.jamThresholdModifier.set_value( &format!("{}", item.overheatJamThresholdModificator) );
+			self.temp.damageThresholdModifier.set_value( &format!("{}", item.overheatDamageThresholdModificator) );
+
+			// ranged
+			self.modifiers.damage.set_value( &format!("{}", item.damagebonus) );
+			self.modifiers.range.set_value( &format!("{}", item.rangebonus) );
+			self.modifiers.magSize.set_value( &format!("{}", item.magsizebonus) );
+			self.modifiers.burstSize.set_value( &format!("{}", item.burstsizebonus) );
+			self.modifiers.shotsper4turns.set_value( &format!("{}", item.rateoffirebonus) );
+			self.modifiers.bulletspeed.set_value( &format!("{}", item.bulletspeedbonus) );
+			self.modifiers.noiseReduction.set_value( &format!("{}", item.stealthbonus) );
+			// to hit
+			self.modifiers.general.set_value( &format!("{}", item.tohitbonus) );
+			self.modifiers.aimedShot.set_value( &format!("{}", item.aimbonus) );
+			self.modifiers.bipodProne.set_value( &format!("{}", item.bipod) );
+			self.modifiers.burst.set_value( &format!("{}", item.bursttohitbonus) );
+			self.modifiers.autofire.set_value( &format!("{}", item.autofiretohitbonus) );
+			self.modifiers.laserRange.set_value( &format!("{}", item.bestlaserrange) );
+			self.modifiers.minRange.set_value( &format!("{}", item.minrangeforaimbonus) );
+			// AP reductions
+			self.modifiers.generalAP.set_value( &format!("{}", item.percentapreduction) );
+			self.modifiers.readyAP.set_value( &format!("{}", item.percentreadytimeapreduction) );
+			self.modifiers.reloadAP.set_value( &format!("{}", item.percentreloadtimeapreduction) );
+			self.modifiers.burstAP.set_value( &format!("{}", item.percentburstfireapreduction) );
+			self.modifiers.autofireAP.set_value( &format!("{}", item.percentautofireapreduction) );
+			// bonuses
+			self.modifiers.bonusAP.set_value( &format!("{}", item.APBonus) );
+			self.modifiers.bonusHearing.set_value( &format!("{}", item.hearingrangebonus) );
+			self.modifiers.bonusKitStatus.set_value( &format!("{}", item.percentstatusdrainreduction) );
+			self.modifiers.bonusSize.set_value( &format!("{}", item.ItemSizeBonus) );
+
+			self.dirtDamageChance.set_value( &format!("{}", item.usDamageChance) );
+			self.dirtIncreaseFactor.set_value( &format!("{}", item.dirtIncreaseFactor) );
 		}
-		else
-		{
-			self.general.class.deactivate();
-			self.general.guntype.deactivate();
-			self.general.caliber.deactivate();
-			self.general.magsize.deactivate();
-			self.stats.range.deactivate();
-			self.stats.accuracy.deactivate();
-			self.stats.damage.deactivate();
-			self.stats.deadliness.deactivate();
-			self.stats.messydeath.deactivate();
-			self.stats.meleeDamage.deactivate();
-			self.stats.crowbarBonus.deactivate();
-			self.stats.autofirespeed.deactivate();
-			self.stats.autofirepenalty.deactivate();
-			self.stats.burstshots.deactivate();
-			self.stats.burstpenalty.deactivate();
-			self.stats.burstAPcost.deactivate();
-			self.stats.reloadAP.deactivate();
-			self.stats.manualreloadAP.deactivate();
-			self.stats.readyAP.deactivate();
-			self.stats.shotsper4turns.deactivate();
-			self.stats.brRateOfFire.deactivate();
-			self.stats.reloadAnimDelay.deactivate();
-			self.stats.burstfireAnimDelay.deactivate();
-			self.stats.bulletspeed.deactivate();
-			self.properties.fullauto.deactivate();
-			self.properties.easyunjam.deactivate();
-			self.properties.heavyweapon.deactivate();
-			self.properties.magazinefed.deactivate();
-			self.ncth.NCTHaccuracy.deactivate();
-			self.ncth.recoilX.deactivate();
-			self.ncth.recoilY.deactivate();
-			self.ncth.recoilDelay.deactivate();
-			self.ncth.defaultAimLevels.deactivate();
-			self.ncth.weaponHandling.deactivate();
-			self.temp.jamThreshold.deactivate();
-			self.temp.dmgThreshold.deactivate();
-			self.temp.increasePerShot.deactivate();
-
-
-
-			self.general.class.set_value(-1);
-			self.general.guntype.set_value(-1);
-			self.general.caliber.set_value(-1);
-
-			self.properties.fullauto.set_value(false);
-			self.properties.easyunjam.set_value(false);
-			self.properties.heavyweapon.set_value(false);
-
-			self.general.magsize.set_value("");
-			self.stats.range.set_value( "" );
-			self.stats.accuracy.set_value( "" );
-			self.stats.damage.set_value( "" );
-			self.stats.deadliness.set_value( "" );
-			self.stats.messydeath.set_value( "" );
-			self.stats.meleeDamage.set_value( "" );
-			self.stats.crowbarBonus.set_value( "" );
-			self.stats.autofirespeed.set_value( "" );
-			self.stats.autofirepenalty.set_value( "" );
-			self.stats.burstshots.set_value( "" );
-			self.stats.burstpenalty.set_value( "" );
-			self.stats.burstAPcost.set_value( "" );
-			self.stats.reloadAP.set_value( "" );
-			self.stats.manualreloadAP.set_value( "" );
-			self.stats.readyAP.set_value( "" );
-			self.stats.shotsper4turns.set_value( "" );
-			self.stats.brRateOfFire.set_value( "" );
-			self.stats.reloadAnimDelay.set_value( "" );
-			self.stats.burstfireAnimDelay.set_value( "" );
-			self.stats.bulletspeed.set_value( "" );
-			self.ncth.NCTHaccuracy.set_value( "" );
-			self.ncth.recoilX.set_value( "" );
-			self.ncth.recoilY.set_value( "" );
-			self.ncth.recoilDelay.set_value( "" );
-			self.ncth.defaultAimLevels.set_value( "" );
-			self.ncth.weaponHandling.set_value( "" );
-			self.temp.jamThreshold.set_value( "" );
-			self.temp.dmgThreshold.set_value( "" );
-			self.temp.increasePerShot.set_value( "" );
-
-		}
-
-
-
-
-		self.properties.crowbar.set_value(item.crowbar);
-		self.properties.brassknuckles.set_value(item.brassknuckles);
-		self.properties.rocketrifle.set_value(item.rocketrifle);
-		self.properties.fingerprintid.set_value(item.fingerprintid);
-		self.properties.hidemuzzleflash.set_value(item.hidemuzzleflash);
-		self.properties.barrel.set_value(item.barrel);
-
-
-		for i in 0..3
-		{
-			self.ncth.flatbase[i].set_value( &format!("{}", item.flatbasemodifier[i]) );
-			self.ncth.flataim[i].set_value( &format!("{}", item.flataimmodifier[i]) );
-			self.ncth.base[i].set_value( &format!("{}", item.percentbasemodifier[i]) );
-			self.ncth.cap[i].set_value( &format!("{}", item.percentcapmodifier[i]) );
-			self.ncth.handling[i].set_value( &format!("{}", item.percenthandlingmodifier[i]) );
-			self.ncth.tracking[i].set_value( &format!("{}", item.targettrackingmodifier[i]) );
-			self.ncth.dropCompensation[i].set_value( &format!("{}", item.percentdropcompensationmodifier[i]) );
-			self.ncth.maxCounterforce[i].set_value( &format!("{}", item.maxcounterforcemodifier[i]) );
-			self.ncth.CFaccuracy[i].set_value( &format!("{}", item.counterforceaccuracymodifier[i]) );
-			self.ncth.CFfrequency[i].set_value( &format!("{}", item.counterforcefrequency[i]) );
-			self.ncth.aimlevel[i].set_value( &format!("{}", item.aimlevelsmodifier[i]) );
-		}
-
-		self.ncth.scopeMagFactor.set_value( &format!("{}", item.scopemagfactor) );
-		self.ncth.laserProjFactor.set_value( &format!("{}", item.bestlaserrange) );
-		self.ncth.recoilXmodifier.set_value( &format!("{}", item.RecoilModifierX) );
-		self.ncth.recoilYmodifier.set_value( &format!("{}", item.RecoilModifierY) );
-		self.ncth.recoilModifier.set_value( &format!("{}", item.PercentRecoilModifier) );
-		self.ncth.accuracyModifier.set_value( &format!("{}", item.percentaccuracymodifier) );
-
-
-		self.temp.cooldownFactor.set_value( &format!("{}", item.usOverheatingCooldownFactor) );
-		self.temp.cooldownModifier.set_value( &format!("{}", item.overheatCooldownModificator) );
-		self.temp.tempModifier.set_value( &format!("{}", item.overheatTemperatureModificator) );
-		self.temp.jamThresholdModifier.set_value( &format!("{}", item.overheatJamThresholdModificator) );
-		self.temp.damageThresholdModifier.set_value( &format!("{}", item.overheatDamageThresholdModificator) );
-
-
-		// ranged
-		self.modifiers.damage.set_value( &format!("{}", item.damagebonus) );
-		self.modifiers.range.set_value( &format!("{}", item.rangebonus) );
-		self.modifiers.magSize.set_value( &format!("{}", item.magsizebonus) );
-		self.modifiers.burstSize.set_value( &format!("{}", item.burstsizebonus) );
-		self.modifiers.shotsper4turns.set_value( &format!("{}", item.rateoffirebonus) );
-		self.modifiers.bulletspeed.set_value( &format!("{}", item.bulletspeedbonus) );
-		self.modifiers.noiseReduction.set_value( &format!("{}", item.stealthbonus) );
-		// to hit
-		self.modifiers.general.set_value( &format!("{}", item.tohitbonus) );
-		self.modifiers.aimedShot.set_value( &format!("{}", item.aimbonus) );
-		self.modifiers.bipodProne.set_value( &format!("{}", item.bipod) );
-		self.modifiers.burst.set_value( &format!("{}", item.bursttohitbonus) );
-		self.modifiers.autofire.set_value( &format!("{}", item.autofiretohitbonus) );
-		self.modifiers.laserRange.set_value( &format!("{}", item.bestlaserrange) );
-		self.modifiers.minRange.set_value( &format!("{}", item.minrangeforaimbonus) );
-		// AP reductions
-		self.modifiers.generalAP.set_value( &format!("{}", item.percentapreduction) );
-		self.modifiers.readyAP.set_value( &format!("{}", item.percentreadytimeapreduction) );
-		self.modifiers.reloadAP.set_value( &format!("{}", item.percentreloadtimeapreduction) );
-		self.modifiers.burstAP.set_value( &format!("{}", item.percentburstfireapreduction) );
-		self.modifiers.autofireAP.set_value( &format!("{}", item.percentautofireapreduction) );
-		// bonuses
-		self.modifiers.bonusAP.set_value( &format!("{}", item.APBonus) );
-		self.modifiers.bonusHearing.set_value( &format!("{}", item.hearingrangebonus) );
-		self.modifiers.bonusKitStatus.set_value( &format!("{}", item.percentstatusdrainreduction) );
-		self.modifiers.bonusSize.set_value( &format!("{}", item.ItemSizeBonus) );
-
-		self.dirtDamageChance.set_value( &format!("{}", item.usDamageChance) );
-		self.dirtIncreaseFactor.set_value( &format!("{}", item.dirtIncreaseFactor) );
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-
-		if let Some(weapon) = xmldata.getWeapon_mut(uiIndex as u32)
+		if let Some(weapon) = xmldata.getWeapon_mut(uiIndex)
 		{
 			let widget = &mut self.general.class;
 			if widget.triggered()
@@ -3172,132 +3168,133 @@ impl WeaponArea
 
 
 		// Items.xml related data
-		let item = &mut xmldata.items.items[uiIndex];
-		if let Some(value) = i16IntInput(&mut self.stats.meleeDamage, s) { item.meleedamagebonus = value; }
-		if let Some(value) = u8IntInput(&mut self.stats.crowbarBonus, s) { item.CrowbarModifier = value; }
-		if let Some(value) = i16IntInput(&mut self.stats.brRateOfFire, s) { item.BR_ROF = value; }
-
-		let widget = &mut self.properties.crowbar;
-		if widget.triggered() { item.crowbar = widget.value(); }
-		let widget = &mut self.properties.brassknuckles;
-		if widget.triggered() { item.brassknuckles = widget.value(); }
-		let widget = &mut self.properties.rocketrifle;
-		if widget.triggered() { item.rocketrifle = widget.value(); }
-		let widget = &mut self.properties.fingerprintid;
-		if widget.triggered() { item.fingerprintid = widget.value(); }
-		let widget = &mut self.properties.hidemuzzleflash;
-		if widget.triggered() { item.hidemuzzleflash = widget.value(); }
-		let widget = &mut self.properties.barrel;
-		if widget.triggered() { item.barrel = widget.value(); }
-
-
-		for i in 0..3
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
-			if let Some(value) = i16IntInput(&mut self.ncth.flatbase[i], s) {
-				item.flatbasemodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.flataim[i], s) {
-				item.flataimmodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.base[i], s) {
-				item.percentbasemodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.cap[i], s) {
-				item.percentcapmodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.handling[i], s) {
-				item.percenthandlingmodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.tracking[i], s) {
-				item.targettrackingmodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.dropCompensation[i], s) {
-				item.percentdropcompensationmodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.maxCounterforce[i], s) {
-				item.maxcounterforcemodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.CFaccuracy[i], s) {
-				item.counterforceaccuracymodifier[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.CFfrequency[i], s) {
-				item.counterforcefrequency[i] = value;
-			}
-			if let Some(value) = i16IntInput(&mut self.ncth.aimlevel[i], s) {
-				item.aimlevelsmodifier[i] = value;
-			}
-		}
+			if let Some(value) = i16IntInput(&mut self.stats.meleeDamage, s) { item.meleedamagebonus = value; }
+			if let Some(value) = u8IntInput(&mut self.stats.crowbarBonus, s) { item.CrowbarModifier = value; }
+			if let Some(value) = i16IntInput(&mut self.stats.brRateOfFire, s) { item.BR_ROF = value; }
+
+			let widget = &mut self.properties.crowbar;
+			if widget.triggered() { item.crowbar = widget.value(); }
+			let widget = &mut self.properties.brassknuckles;
+			if widget.triggered() { item.brassknuckles = widget.value(); }
+			let widget = &mut self.properties.rocketrifle;
+			if widget.triggered() { item.rocketrifle = widget.value(); }
+			let widget = &mut self.properties.fingerprintid;
+			if widget.triggered() { item.fingerprintid = widget.value(); }
+			let widget = &mut self.properties.hidemuzzleflash;
+			if widget.triggered() { item.hidemuzzleflash = widget.value(); }
+			let widget = &mut self.properties.barrel;
+			if widget.triggered() { item.barrel = widget.value(); }
 
 
-		if let Some(value) = f32FloatInput(&mut self.ncth.scopeMagFactor, s) {
-			item.scopemagfactor = value;
-		}
-		if let Some(value) = i16IntInput(&mut self.ncth.laserProjFactor, s) {
-			item.bestlaserrange = value;
-		}
-		if let Some(value) = f32FloatInput(&mut self.ncth.recoilXmodifier, s) {
-			item.RecoilModifierX = value;
-		}
-		if let Some(value) = f32FloatInput(&mut self.ncth.recoilYmodifier, s) {
-			item.RecoilModifierY = value;
-		}
-		if let Some(value) = i16IntInput(&mut self.ncth.recoilModifier, s) {
-			item.PercentRecoilModifier = value;
-		}
-		if let Some(value) = i16IntInput(&mut self.ncth.accuracyModifier, s) {
-			item.percentaccuracymodifier = value;
-		}
+			for i in 0..3
+			{
+				if let Some(value) = i16IntInput(&mut self.ncth.flatbase[i], s) {
+					item.flatbasemodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.flataim[i], s) {
+					item.flataimmodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.base[i], s) {
+					item.percentbasemodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.cap[i], s) {
+					item.percentcapmodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.handling[i], s) {
+					item.percenthandlingmodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.tracking[i], s) {
+					item.targettrackingmodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.dropCompensation[i], s) {
+					item.percentdropcompensationmodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.maxCounterforce[i], s) {
+					item.maxcounterforcemodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.CFaccuracy[i], s) {
+					item.counterforceaccuracymodifier[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.CFfrequency[i], s) {
+					item.counterforcefrequency[i] = value;
+				}
+				if let Some(value) = i16IntInput(&mut self.ncth.aimlevel[i], s) {
+					item.aimlevelsmodifier[i] = value;
+				}
+			}
 
 
-		if let Some(value) = f32FloatInput(&mut self.temp.cooldownFactor, s) {
-			item.usOverheatingCooldownFactor = value;
-		}
-		if let Some(value) = f32FloatInput(&mut self.temp.cooldownModifier, s) {
-			item.overheatCooldownModificator = value;
-		}
-		if let Some(value) = f32FloatInput(&mut self.temp.tempModifier, s) {
-			item.overheatTemperatureModificator = value;
-		}
-		if let Some(value) = f32FloatInput(&mut self.temp.jamThresholdModifier, s) {
-			item.overheatJamThresholdModificator = value;
-		}
-		if let Some(value) = f32FloatInput(&mut self.temp.damageThresholdModifier, s) {
-			item.overheatDamageThresholdModificator = value;
-		}
+			if let Some(value) = f32FloatInput(&mut self.ncth.scopeMagFactor, s) {
+				item.scopemagfactor = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.laserProjFactor, s) {
+				item.bestlaserrange = value;
+			}
+			if let Some(value) = f32FloatInput(&mut self.ncth.recoilXmodifier, s) {
+				item.RecoilModifierX = value;
+			}
+			if let Some(value) = f32FloatInput(&mut self.ncth.recoilYmodifier, s) {
+				item.RecoilModifierY = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.recoilModifier, s) {
+				item.PercentRecoilModifier = value;
+			}
+			if let Some(value) = i16IntInput(&mut self.ncth.accuracyModifier, s) {
+				item.percentaccuracymodifier = value;
+			}
 
 
-		// // ranged
-		if let Some(value) = i16IntInput(&mut self.modifiers.damage, s) { item.damagebonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.range, s) { item.rangebonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.magSize, s) { item.magsizebonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.burstSize, s) { item.burstsizebonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.shotsper4turns, s) { item.rateoffirebonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.bulletspeed, s) { item.bulletspeedbonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.noiseReduction, s) { item.stealthbonus = value; }
-		// // to hit
-		if let Some(value) = i16IntInput(&mut self.modifiers.general, s) { item.tohitbonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.aimedShot, s) { item.aimbonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.bipodProne, s) { item.bipod = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.burst, s) { item.bursttohitbonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.autofire, s) { item.autofiretohitbonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.laserRange, s) { item.bestlaserrange = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.minRange, s) { item.minrangeforaimbonus = value; }
-		// // AP reductions
-		if let Some(value) = i16IntInput(&mut self.modifiers.generalAP, s) { item.percentapreduction = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.readyAP, s) { item.percentreadytimeapreduction = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.reloadAP, s) { item.percentreloadtimeapreduction = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.burstAP, s) { item.percentburstfireapreduction = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.autofireAP, s) { item.percentautofireapreduction = value; }
-		// // bonuses
-		if let Some(value) = i16IntInput(&mut self.modifiers.bonusAP, s) { item.APBonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.bonusHearing, s) { item.hearingrangebonus = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.bonusKitStatus, s) { item.percentstatusdrainreduction = value; }
-		if let Some(value) = i16IntInput(&mut self.modifiers.bonusSize, s) { item.ItemSizeBonus = value; }
+			if let Some(value) = f32FloatInput(&mut self.temp.cooldownFactor, s) {
+				item.usOverheatingCooldownFactor = value;
+			}
+			if let Some(value) = f32FloatInput(&mut self.temp.cooldownModifier, s) {
+				item.overheatCooldownModificator = value;
+			}
+			if let Some(value) = f32FloatInput(&mut self.temp.tempModifier, s) {
+				item.overheatTemperatureModificator = value;
+			}
+			if let Some(value) = f32FloatInput(&mut self.temp.jamThresholdModifier, s) {
+				item.overheatJamThresholdModificator = value;
+			}
+			if let Some(value) = f32FloatInput(&mut self.temp.damageThresholdModifier, s) {
+				item.overheatDamageThresholdModificator = value;
+			}
 
 
-		if let Some(value) = u8IntInput(&mut self.dirtDamageChance, s) { item.usDamageChance = value; }
-		if let Some(value) = f32FloatInput(&mut self.dirtIncreaseFactor, s) { item.dirtIncreaseFactor = value; }
+			// // ranged
+			if let Some(value) = i16IntInput(&mut self.modifiers.damage, s) { item.damagebonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.range, s) { item.rangebonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.magSize, s) { item.magsizebonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.burstSize, s) { item.burstsizebonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.shotsper4turns, s) { item.rateoffirebonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.bulletspeed, s) { item.bulletspeedbonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.noiseReduction, s) { item.stealthbonus = value; }
+			// // to hit
+			if let Some(value) = i16IntInput(&mut self.modifiers.general, s) { item.tohitbonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.aimedShot, s) { item.aimbonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.bipodProne, s) { item.bipod = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.burst, s) { item.bursttohitbonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.autofire, s) { item.autofiretohitbonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.laserRange, s) { item.bestlaserrange = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.minRange, s) { item.minrangeforaimbonus = value; }
+			// // AP reductions
+			if let Some(value) = i16IntInput(&mut self.modifiers.generalAP, s) { item.percentapreduction = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.readyAP, s) { item.percentreadytimeapreduction = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.reloadAP, s) { item.percentreloadtimeapreduction = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.burstAP, s) { item.percentburstfireapreduction = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.autofireAP, s) { item.percentautofireapreduction = value; }
+			// // bonuses
+			if let Some(value) = i16IntInput(&mut self.modifiers.bonusAP, s) { item.APBonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.bonusHearing, s) { item.hearingrangebonus = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.bonusKitStatus, s) { item.percentstatusdrainreduction = value; }
+			if let Some(value) = i16IntInput(&mut self.modifiers.bonusSize, s) { item.ItemSizeBonus = value; }
 
+
+			if let Some(value) = u8IntInput(&mut self.dirtDamageChance, s) { item.usDamageChance = value; }
+			if let Some(value) = f32FloatInput(&mut self.dirtIncreaseFactor, s) { item.dirtIncreaseFactor = value; }
+		}
 	}
 }
 
@@ -3582,86 +3579,88 @@ impl MagazineArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		let item = &xmldata.items.items[uiIndex];
-		let itemclass = item.usItemClass;
-		let classIndex = item.ubClassIndex;
-
-		self.caliber.deactivate();
-		self.ammotype.deactivate();
-		self.magsize.deactivate();
-		self.magtype.deactivate();
-		self.color.deactivate();
-		self.colorbox.deactivate();
-		self.ammotypes.index.deactivate();
-		self.ammotypes.name.deactivate();
-		self.ammotypes.nbullets.deactivate();
-		self.ammotypes.explosionid.deactivate();
-		self.ammotypes.explosionsize.deactivate();
-		self.ammotypes.standardissue.deactivate();
-		self.ammotypes.dart.deactivate();
-		self.ammotypes.knife.deactivate();
-		self.ammotypes.acidic.deactivate();
-		self.ammotypes.ignorearmor.deactivate();
-		self.ammotypes.tracer.deactivate();
-		self.ammotypes.zeromindamage.deactivate();
-		self.ammotypes.monsterspit.deactivate();
-		self.ammotypes.structImpactMultiplier.deactivate();
-		self.ammotypes.armorImpactMultiplier.deactivate();
-		self.ammotypes.beforeArmorMultpilier.deactivate();
-		self.ammotypes.afterArmorMultiplier.deactivate();
-		self.ammotypes.bulletsMultiplier.deactivate();
-		self.ammotypes.structImpactDivisor.deactivate();
-		self.ammotypes.armorImpactDivisor.deactivate();
-		self.ammotypes.beforeArmorDivisor.deactivate();
-		self.ammotypes.afterArmorDivisor.deactivate();
-		self.ammotypes.bulletsDivisor.deactivate();
-		self.ammotypes.healthModifier.deactivate();
-		self.ammotypes.breathModifier.deactivate();
-		self.ammotypes.tankModifier.deactivate();
-		self.ammotypes.armoredVehicleModifier.deactivate();
-		self.ammotypes.civilianVehicleModifier.deactivate();
-		self.ammotypes.zombieModifier.deactivate();
-		self.ammotypes.lockModifier.deactivate();
-		self.ammotypes.pierceModifier.deactivate();
-		self.ammotypes.temperatureModifier.deactivate();
-		self.ammotypes.dirtModifier.deactivate();
-		self.ammotypes.freezingFlag.deactivate();
-		self.ammotypes.blindingFlag.deactivate();
-		self.ammotypes.antimaterialFlag.deactivate();
-		self.ammotypes.smoketrailFlag.deactivate();
-		self.ammotypes.firetrailFlag.deactivate();
-		self.ammotypes.shotAnimation.deactivate();
-		self.ammotypes.spreadpattern.deactivate();
-		self.ammostrings.index.deactivate();
-		self.ammostrings.caliber.deactivate();
-		self.ammostrings.brcaliber.deactivate();
-		self.ammostrings.nwsscaliber.deactivate();
-	
-		if itemclass == JAxml::ItemClass::Ammo as u32
+		if let Some(item) = xmldata.getItem(uiIndex)
 		{
-			self.caliber.activate();
-			self.ammotype.activate();
-			self.magsize.activate();
-			self.magtype.activate();
-			self.color.activate();
-			self.colorbox.activate();
-		
-			if let Some(mag) = xmldata.getMagazine(classIndex as u32)
-			{
-				self.caliber.set_value(mag.ubCalibre as i32);
-				self.ammotype.set_value(mag.ubAmmoType as i32);
-				self.magtype.set_value(mag.ubMagType as i32);
-				self.magsize.set_value(&format!("{}", mag.ubMagSize));
+			let itemclass = item.usItemClass;
+			let classIndex = item.ubClassIndex;
 
-				self.updateAmmoType(xmldata, mag.ubAmmoType as usize);
-				self.updateCaliber(xmldata, mag.ubCalibre as usize);
+			self.caliber.deactivate();
+			self.ammotype.deactivate();
+			self.magsize.deactivate();
+			self.magtype.deactivate();
+			self.color.deactivate();
+			self.colorbox.deactivate();
+			self.ammotypes.index.deactivate();
+			self.ammotypes.name.deactivate();
+			self.ammotypes.nbullets.deactivate();
+			self.ammotypes.explosionid.deactivate();
+			self.ammotypes.explosionsize.deactivate();
+			self.ammotypes.standardissue.deactivate();
+			self.ammotypes.dart.deactivate();
+			self.ammotypes.knife.deactivate();
+			self.ammotypes.acidic.deactivate();
+			self.ammotypes.ignorearmor.deactivate();
+			self.ammotypes.tracer.deactivate();
+			self.ammotypes.zeromindamage.deactivate();
+			self.ammotypes.monsterspit.deactivate();
+			self.ammotypes.structImpactMultiplier.deactivate();
+			self.ammotypes.armorImpactMultiplier.deactivate();
+			self.ammotypes.beforeArmorMultpilier.deactivate();
+			self.ammotypes.afterArmorMultiplier.deactivate();
+			self.ammotypes.bulletsMultiplier.deactivate();
+			self.ammotypes.structImpactDivisor.deactivate();
+			self.ammotypes.armorImpactDivisor.deactivate();
+			self.ammotypes.beforeArmorDivisor.deactivate();
+			self.ammotypes.afterArmorDivisor.deactivate();
+			self.ammotypes.bulletsDivisor.deactivate();
+			self.ammotypes.healthModifier.deactivate();
+			self.ammotypes.breathModifier.deactivate();
+			self.ammotypes.tankModifier.deactivate();
+			self.ammotypes.armoredVehicleModifier.deactivate();
+			self.ammotypes.civilianVehicleModifier.deactivate();
+			self.ammotypes.zombieModifier.deactivate();
+			self.ammotypes.lockModifier.deactivate();
+			self.ammotypes.pierceModifier.deactivate();
+			self.ammotypes.temperatureModifier.deactivate();
+			self.ammotypes.dirtModifier.deactivate();
+			self.ammotypes.freezingFlag.deactivate();
+			self.ammotypes.blindingFlag.deactivate();
+			self.ammotypes.antimaterialFlag.deactivate();
+			self.ammotypes.smoketrailFlag.deactivate();
+			self.ammotypes.firetrailFlag.deactivate();
+			self.ammotypes.shotAnimation.deactivate();
+			self.ammotypes.spreadpattern.deactivate();
+			self.ammostrings.index.deactivate();
+			self.ammostrings.caliber.deactivate();
+			self.ammostrings.brcaliber.deactivate();
+			self.ammostrings.nwsscaliber.deactivate();
+		
+			if itemclass == JAxml::ItemClass::Ammo as u32
+			{
+				self.caliber.activate();
+				self.ammotype.activate();
+				self.magsize.activate();
+				self.magtype.activate();
+				self.color.activate();
+				self.colorbox.activate();
+			
+				if let Some(mag) = xmldata.getMagazine(classIndex as u32)
+				{
+					self.caliber.set_value(mag.ubCalibre as i32);
+					self.ammotype.set_value(mag.ubAmmoType as i32);
+					self.magtype.set_value(mag.ubMagType as i32);
+					self.magsize.set_value(&format!("{}", mag.ubMagSize));
+
+					self.updateAmmoType(xmldata, mag.ubAmmoType as u32);
+					self.updateCaliber(xmldata, mag.ubCalibre as u32);
+				}
 			}
 		}
 	}
 
-	fn updateAmmoType(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn updateAmmoType(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
 		self.ammotypes.index.deactivate();
 		self.ammotypes.name.deactivate();
@@ -3704,7 +3703,7 @@ impl MagazineArea
 		self.ammotypes.shotAnimation.deactivate();
 		self.ammotypes.spreadpattern.deactivate();
 	
-		if let Some(item) = xmldata.getAmmoType(uiIndex as u32)
+		if let Some(item) = xmldata.getAmmoType(uiIndex)
 		{
 			self.ammotypes.index.activate();
 			self.ammotypes.name.activate();
@@ -3812,14 +3811,14 @@ impl MagazineArea
 		}
 	}
 
-	fn updateCaliber(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn updateCaliber(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
 		self.ammostrings.index.deactivate();
 		self.ammostrings.caliber.deactivate();
 		self.ammostrings.brcaliber.deactivate();
 		self.ammostrings.nwsscaliber.deactivate();
 
-		if let Some(item) = xmldata.getAmmoString(uiIndex as u32)
+		if let Some(item) = xmldata.getAmmoString(uiIndex)
 		{
 			self.ammostrings.index.activate();
 			self.ammostrings.caliber.activate();
@@ -3833,9 +3832,9 @@ impl MagazineArea
 		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		if let Some(item) = xmldata.getItem(uiIndex as u32)
+		if let Some(item) = xmldata.getItem(uiIndex)
 		{
 			let itemclass = item.usItemClass;
 			let classIndex = item.ubClassIndex;
@@ -3866,8 +3865,8 @@ impl MagazineArea
 					if let Some(value) = u16IntInput(&mut self.magsize, s) { mag.ubMagSize = value; }
 				
 					
-					let calibreIdx = mag.ubCalibre as usize;
-					let ammoTypeIdx = mag.ubAmmoType as usize;
+					let calibreIdx = mag.ubCalibre as u32;
+					let ammoTypeIdx = mag.ubAmmoType as u32;
 					
 					self.pollcaliber(xmldata, calibreIdx, s);
 					self.pollAmmoType(xmldata, ammoTypeIdx, s);
@@ -3876,25 +3875,26 @@ impl MagazineArea
 		}
 	}
 
-	fn pollcaliber(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn pollcaliber(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let item = &mut xmldata.calibers.items[uiIndex];
-
-		if let Some(value) = u32IntInput(&mut self.ammostrings.index, s) 
+		if let Some(item) = xmldata.getAmmoString_mut(uiIndex)
 		{
-			// TODO
-			// This requires special handling to keep references between ammotypes, magazines, items & calibers intact.
-			// item.uiIndex = value; 
-		}
+			if let Some(value) = u32IntInput(&mut self.ammostrings.index, s) 
+			{
+				// TODO
+				// This requires special handling to keep references between ammotypes, magazines, items & calibers intact.
+				// item.uiIndex = value; 
+			}
 
-		if let Some(text) = stringFromInput(&mut self.ammostrings.caliber, s, 20) { item.AmmoCaliber = text; }
-		if let Some(text) = stringFromInput(&mut self.ammostrings.brcaliber, s, 20) { item.BRCaliber = text; }
-		if let Some(text) = stringFromInput(&mut self.ammostrings.nwsscaliber, s, 20) { item.NWSSCaliber = text; }
+			if let Some(text) = stringFromInput(&mut self.ammostrings.caliber, s, 20) { item.AmmoCaliber = text; }
+			if let Some(text) = stringFromInput(&mut self.ammostrings.brcaliber, s, 20) { item.BRCaliber = text; }
+			if let Some(text) = stringFromInput(&mut self.ammostrings.nwsscaliber, s, 20) { item.NWSSCaliber = text; }
+		}
 	}
 
-	fn pollAmmoType(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn pollAmmoType(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		if let Some(item) = xmldata.getAmmoType_mut(uiIndex as u32)
+		if let Some(item) = xmldata.getAmmoType_mut(uiIndex)
 		{
 			if let Some(value) = u32IntInput(&mut self.ammotypes.index, s) 
 			{
@@ -4180,9 +4180,9 @@ impl ExplosivesArea
 		}
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
-		let item = &xmldata.items.items[uiIndex];
+		let item = &xmldata.items.items[uiIndex as usize];
 		let itemclass = item.usItemClass;
 		let classIndex = item.ubClassIndex;
 
@@ -4287,105 +4287,113 @@ impl ExplosivesArea
 		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		let itemclass = xmldata.items.items[uiIndex].usItemClass;
-
-		use JAxml::ItemClass::*;
-		match itemclass
+		if let Some(item) = xmldata.getItem(uiIndex)
 		{
-			x if x == Grenade as u32 || x == Bomb as u32 =>
+			let itemclass = item.usItemClass;
+			let classIndex = item.ubClassIndex as u32;
+
+			use JAxml::ItemClass::*;
+			match itemclass
 			{
-				let item = &xmldata.items.items[uiIndex];
-				let classIndex = item.ubClassIndex;
-				let explosive = &mut xmldata.explosives.items[classIndex as usize];
-
-				let widget = &mut self.explosionType;
-				if widget.triggered() { explosive.ubType = widget.value() as u32; }
-
-				let widget = &mut self.animID;
-				if widget.triggered() { explosive.ubAnimationID = widget.value() as u32; }
-
-				let widget = &mut self.fragmentType;
-				if widget.triggered() { explosive.ubFragType = widget.value() as u32; }
-
-				let widget = &mut self.explodeOnImpact;
-				if widget.triggered() { explosive.fExplodeOnImpact = widget.value(); }
-
-				if let Some(value) = u32IntInput(&mut self.damage, s) { explosive.ubDamage = value; }
-				if let Some(value) = u32IntInput(&mut self.startRadius, s) { explosive.ubStartRadius = value; }
-				if let Some(value) = u32IntInput(&mut self.endRadius, s) { explosive.ubRadius = value; }
-
-				if let Some(value) = u32IntInput(&mut self.duration, s) { explosive.ubDuration = value; }
-				if let Some(value) = u32IntInput(&mut self.volatility, s) { explosive.ubVolatility = value; }
-				if let Some(value) = u32IntInput(&mut self.stundamage, s) { explosive.ubStunDamage = value; }
-				if let Some(value) = u32IntInput(&mut self.volume, s) { explosive.ubVolume = value; }
-				if let Some(value) = u32IntInput(&mut self.magsize, s) { explosive.ubMagSize = value; }
-				if let Some(value) = u32IntInput(&mut self.fragments, s) { explosive.usNumFragments = value; }
-				if let Some(value) = u32IntInput(&mut self.fragrange, s) { explosive.ubFragRange = value; }
-				if let Some(value) = u32IntInput(&mut self.fragdamage, s) { explosive.ubFragDamage = value; }
-				if let Some(value) = f32FloatInput(&mut self.indoormodifier, s) { explosive.bIndoorModifier = value; }
-				if let Some(value) = u32IntInput(&mut self.horizontaldegrees, s) { explosive.ubHorizontalDegree = value; }
-				if let Some(value) = u32IntInput(&mut self.verticaldegrees, s) { explosive.ubVerticalDegree = value; }
-			}
-			x if x == Launcher as u32 =>
-			{
-				let widget = &mut self.launcherType;
-				if widget.triggered()
+				x if x == Grenade as u32 || x == Bomb as u32 =>
 				{
-					let item = &mut xmldata.items.items[uiIndex];
-
-					// This is working on the assumption that only one of these should be active
-					// If so, these really need to be an enum in the 1.13 source code instead of bunch bools
-					item.grenadelauncher = false;
-					item.rocketlauncher = false;
-					item.singleshotrocketlauncher = false;
-					item.mortar = false;
-					item.cannon = false;
-
-					let value = widget.value();
-					match value
+					if let Some(explosive) = xmldata.getExplosive_mut(classIndex)
 					{
-						0 =>
-						{
-							// N/A option
-							// for now leave all to false.
-							// Not sure if it's the correct approach. Might have to fix this in the future
-						}
-						1 => { item.grenadelauncher = true; }
-						2 => { item.rocketlauncher = true; }
-						3 => { item.singleshotrocketlauncher = true; }
-						4 => { item.mortar = true; }
-						5 => { item.cannon = true; }
-						_ => {}
+						let widget = &mut self.explosionType;
+						if widget.triggered() { explosive.ubType = widget.value() as u32; }
+
+						let widget = &mut self.animID;
+						if widget.triggered() { explosive.ubAnimationID = widget.value() as u32; }
+
+						let widget = &mut self.fragmentType;
+						if widget.triggered() { explosive.ubFragType = widget.value() as u32; }
+
+						let widget = &mut self.explodeOnImpact;
+						if widget.triggered() { explosive.fExplodeOnImpact = widget.value(); }
+
+						if let Some(value) = u32IntInput(&mut self.damage, s) { explosive.ubDamage = value; }
+						if let Some(value) = u32IntInput(&mut self.startRadius, s) { explosive.ubStartRadius = value; }
+						if let Some(value) = u32IntInput(&mut self.endRadius, s) { explosive.ubRadius = value; }
+
+						if let Some(value) = u32IntInput(&mut self.duration, s) { explosive.ubDuration = value; }
+						if let Some(value) = u32IntInput(&mut self.volatility, s) { explosive.ubVolatility = value; }
+						if let Some(value) = u32IntInput(&mut self.stundamage, s) { explosive.ubStunDamage = value; }
+						if let Some(value) = u32IntInput(&mut self.volume, s) { explosive.ubVolume = value; }
+						if let Some(value) = u32IntInput(&mut self.magsize, s) { explosive.ubMagSize = value; }
+						if let Some(value) = u32IntInput(&mut self.fragments, s) { explosive.usNumFragments = value; }
+						if let Some(value) = u32IntInput(&mut self.fragrange, s) { explosive.ubFragRange = value; }
+						if let Some(value) = u32IntInput(&mut self.fragdamage, s) { explosive.ubFragDamage = value; }
+						if let Some(value) = f32FloatInput(&mut self.indoormodifier, s) { explosive.bIndoorModifier = value; }
+						if let Some(value) = u32IntInput(&mut self.horizontaldegrees, s) { explosive.ubHorizontalDegree = value; }
+						if let Some(value) = u32IntInput(&mut self.verticaldegrees, s) { explosive.ubVerticalDegree = value; }
 					}
-					s.send(Message::Update);
 				}
-
-				let widget = &mut self.discardeditem;
-				if widget.triggered()
+				x if x == Launcher as u32 =>
 				{
-					let idx = widget.value();
-					if idx <= 0
+					let widget = &mut self.launcherType;
+					if widget.triggered()
 					{
-						let item = &mut xmldata.items.items[uiIndex];
-						item.discardedlauncheritem = 0;
-					}
-					else if let Some(menuitem) = widget.at( widget.value() )
-					{
-						let label = menuitem.label().unwrap();
-						if !label.is_empty()
+						// This is working on the assumption that only one of these should be active
+						// If so, these really need to be an enum in the 1.13 source code instead of bunch bools
+						if let Some(item) = xmldata.getItem_mut(uiIndex)
 						{
-							if let Some(itemIndex) = xmldata.findIndexbyName(&label)
+							item.grenadelauncher = false;
+							item.rocketlauncher = false;
+							item.singleshotrocketlauncher = false;
+							item.mortar = false;
+							item.cannon = false;
+
+							let value = widget.value();
+							match value
 							{
-								let item = &mut xmldata.items.items[uiIndex];
-								item.discardedlauncheritem = itemIndex as u16;
+								0 =>
+								{
+									// N/A option
+									// for now leave all to false.
+									// Not sure if it's the correct approach. Might have to fix this in the future
+								}
+								1 => { item.grenadelauncher = true; }
+								2 => { item.rocketlauncher = true; }
+								3 => { item.singleshotrocketlauncher = true; }
+								4 => { item.mortar = true; }
+								5 => { item.cannon = true; }
+								_ => {}
+							}
+							s.send(Message::Update);
+						}
+					}
+
+					let widget = &mut self.discardeditem;
+					if widget.triggered()
+					{
+						let idx = widget.value();
+						if idx <= 0
+						{
+							if let Some(item) = xmldata.getItem_mut(uiIndex)
+							{
+								item.discardedlauncheritem = 0;
+							}
+						}
+						else if let Some(menuitem) = widget.at( widget.value() )
+						{
+							let label = menuitem.label().unwrap();
+							if !label.is_empty()
+							{
+								if let Some(itemIndex) = xmldata.findIndexbyName(&label)
+								{
+									if let Some(item) = xmldata.getItem_mut(uiIndex)
+									{
+										item.discardedlauncheritem = itemIndex as u16;
+									}
+								}
 							}
 						}
 					}
 				}
+				_ => {}
 			}
-			_ => {}
 		}
 	}
 }
@@ -4487,7 +4495,7 @@ impl SoundsArea
 	}
 
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
 		self.attackVolume.deactivate();
 		self.hitVolume.deactivate();
@@ -4500,7 +4508,7 @@ impl SoundsArea
 		self.manualreload.deactivate();
 	
 
-		let item = &xmldata.items.items[uiIndex];
+		let item = &xmldata.items.items[uiIndex as usize];
 		let itemclass = item.usItemClass;
 
 		use JAxml::ItemClass::*;
@@ -4508,7 +4516,7 @@ impl SoundsArea
 		{
 			x if x == Gun as u32 || x == Launcher as u32 || x == Punch as u32 =>
 			{
-				if let Some(weapon) = &xmldata.getWeapon(uiIndex as u32)
+				if let Some(weapon) = &xmldata.getWeapon(uiIndex)
 				{
 					self.attackVolume.activate();
 					self.hitVolume.activate();
@@ -4539,9 +4547,9 @@ impl SoundsArea
 		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		if let Some(item) = xmldata.getItem_mut(uiIndex as u32)
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
 			let itemclass = item.usItemClass;
 			let classIndex = item.ubClassIndex;
@@ -4551,7 +4559,7 @@ impl SoundsArea
 			{
 				x if x == Gun as u32 || x == Launcher as u32 || x == Punch as u32 =>
 				{
-					if let Some(weapon) = xmldata.getWeapon_mut(uiIndex as u32)
+					if let Some(weapon) = xmldata.getWeapon_mut(uiIndex)
 					{
 						if let Some(value) = u8IntInput(&mut self.attackVolume, s) { weapon.ubAttackVolume = value; }
 						if let Some(value) = u8IntInput(&mut self.hitVolume, s) { weapon.ubHitVolume = value; }
@@ -4619,7 +4627,7 @@ impl ArmorArea
 		return ArmorArea{ class, coverage, degrade, index, protection, flakjacket, leatherjacket };
 	}
 
-	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
 		self.index.deactivate();
 		self.class.deactivate();
@@ -4627,7 +4635,7 @@ impl ArmorArea
 		self.coverage.deactivate();
 		self.degrade.deactivate();
 
-		let item = &xmldata.items.items[uiIndex];
+		let item = &xmldata.items.items[uiIndex as usize];
 		let itemclass = item.usItemClass;
 		let classIndex = item.ubClassIndex;
 
@@ -4658,7 +4666,7 @@ impl ArmorArea
 		}
 	}
 
-	fn updateFromArmorData(&mut self, xmldata: &JAxml::Data, uiIndex: usize)
+	fn updateFromArmorData(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
 	{
 		self.index.deactivate();
 		self.class.deactivate();
@@ -4666,7 +4674,7 @@ impl ArmorArea
 		self.coverage.deactivate();
 		self.degrade.deactivate();
 
-		if let Some(armor) =  &xmldata.getArmor(uiIndex as u32)
+		if let Some(armor) =  &xmldata.getArmor(uiIndex)
 		{
 			self.index.activate();
 			self.class.activate();
@@ -4682,9 +4690,9 @@ impl ArmorArea
 		}
 	}
 
-	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn poll(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		if let Some(item) = xmldata.getItem_mut(uiIndex as u32)
+		if let Some(item) = xmldata.getItem_mut(uiIndex)
 		{
 			let itemclass = item.usItemClass;
 			let classIndex = item.ubClassIndex;
@@ -4712,9 +4720,9 @@ impl ArmorArea
 		}
 	}
 
-	fn pollFromArmorData(&mut self, xmldata: &mut JAxml::Data, uiIndex: usize, s: &app::Sender<Message>)
+	fn pollFromArmorData(&mut self, xmldata: &mut JAxml::Data, uiIndex: u32, s: &app::Sender<Message>)
 	{
-		if let Some(armor) =  xmldata.getArmor_mut(uiIndex as u32)
+		if let Some(armor) =  xmldata.getArmor_mut(uiIndex)
 		{
 			// self.index.set_value(&format!("{}", armor.uiIndex));
 			if self.class.triggered() { armor.ubArmourClass = self.class.value() as u8; }

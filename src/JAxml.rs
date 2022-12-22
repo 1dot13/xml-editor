@@ -381,9 +381,9 @@ impl Data
 				return Some(item.szLongItemName.clone());
 			}
 		}
-		
 		return None;
 	}
+	
 	pub fn findIndexbyName(&self, name: &str) -> Option<u32>
 	{
 		for item in &self.items.items
@@ -393,7 +393,6 @@ impl Data
 				return Some(item.uiIndex);
 			}
 		}
-		
 		return None;
 	}
 
@@ -403,7 +402,6 @@ impl Data
 		{
 			if item.uiIndex == uiIndex { return Some(item); }
 		}
-		
 		return None;
 	}
 
@@ -413,7 +411,6 @@ impl Data
 		{
 			if item.uiIndex == uiIndex { return Some(item); }
 		}
-		
 		return None;
 	}
 
@@ -498,9 +495,27 @@ impl Data
 		return None;
 	}
 
+	pub fn getAmmoString_mut(&mut self, classIndex: u32) -> Option<&mut AMMOSTRING>
+	{
+		for item in &mut self.calibers.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
+		return None;
+	}
+
 	pub fn getExplosive(&self, classIndex: u32) -> Option<&EXPLOSIVE>
 	{
 		for item in &self.explosives.items
+		{
+			if item.uiIndex == classIndex { return Some(item); }
+		}
+		return None;
+	}
+
+	pub fn getExplosive_mut(&mut self, classIndex: u32) -> Option<&mut EXPLOSIVE>
+	{
+		for item in &mut self.explosives.items
 		{
 			if item.uiIndex == classIndex { return Some(item); }
 		}
