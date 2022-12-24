@@ -1251,7 +1251,15 @@ impl ItemGraphicsArea
     		println!("Defaulting to guns");
 			i = 0;
 		}
-		let max = sti.big[i].len() - self.images.len();
+		let max: usize;
+		if sti.big[i].len() > self.images.len()
+		{
+			max = sti.big[i].len() - self.images.len();
+		}
+		else
+		{
+			max = sti.big[i].len();
+		}
 
 		// HACK
 		// Scrollbar step is 16 by default and I can't find a function in fltk-rs documentation that could actually change it
