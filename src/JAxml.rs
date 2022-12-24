@@ -37,7 +37,12 @@ macro_rules! write_tag_s {
 
 		if empty == false || $forcewrite == true
 		{
-			match write!($file, "\t\t<{}>{}</{}>\n", $tag, $value, $tag)
+			let s: String;
+			if $value.contains("&")
+			{ s = $value.replace("&", "&amp;"); }
+			else { s = $value.clone(); }
+
+			match write!($file, "\t\t<{}>{}</{}>\n", $tag, s, $tag)
 			{
 				Ok(_) => {}
 				Err(e) => {panic!("Error writing value {} for xml tag {}\n {:?}", $value, $tag, e)}

@@ -46,6 +46,8 @@ mod STI;
 fn main() 
 {
 	let dataPath = PathBuf::from("H:\\JA2 Dev\\Data-1.13"); // <-- Temporary start path while developing
+	// let mut dataPath = current_dir().unwrap();
+	// dataPath.push("Data-1.13");
 	let mut xmldata = JAxml::Data::new();
 	let mut images = STI::Images::new();
 	loadData(&mut xmldata, &mut images, &dataPath);
