@@ -1496,6 +1496,7 @@ struct ItemStatsArea
 	size: IntInput,
 	reliability: IntInput,
 	repairease: IntInput,
+	coolness: IntInput,
 	cursor: Listener<Choice>,
 }
 impl ItemStatsArea
@@ -1522,6 +1523,7 @@ impl ItemStatsArea
 		let _ = Frame::default().with_size(60, 20).with_label("Size");
 		let _ = Frame::default().with_size(60, 20).with_label("Reliability");
 		let _ = Frame::default().with_size(60, 20).with_label("Repair Ease");
+		let _ = Frame::default().with_size(60, 20).with_label("Coolness");
 		let _ = Frame::default().with_size(60, 20).with_label("Cursor");
 		flex.end();
 
@@ -1545,6 +1547,9 @@ impl ItemStatsArea
 
 		let mut repairease = IntInput::default();
 		flex.set_size(&mut repairease, 20);
+
+		let mut coolness = IntInput::default();
+		flex.set_size(&mut coolness, 20);
 
 		let mut cursor = Choice::default();
 		flex.set_size(&mut cursor, 20);
@@ -1583,7 +1588,7 @@ impl ItemStatsArea
 
 		let cursor = cursor.into();
 
-		return ItemStatsArea { price, nperpocket, reliability, repairease, size, weight, cursor }
+		return ItemStatsArea { price, nperpocket, reliability, repairease, size, weight, coolness, cursor }
 	}
 
 	fn update(&mut self, xmldata: &JAxml::Data, uiIndex: u32)
@@ -1596,6 +1601,7 @@ impl ItemStatsArea
 			self.size.set_value(&format!("{}", item.ItemSize));
 			self.reliability.set_value(&format!("{}", item.bReliability));
 			self.repairease.set_value(&format!("{}", item.bRepairEase));
+			self.coolness.set_value(&format!("{}", item.ubCoolness));
 			self.cursor.set_value(item.ubCursor as i32);
 		}
 	}
@@ -1632,6 +1638,11 @@ impl ItemStatsArea
 			if let Some(value) = i8IntInput(&mut self.repairease, s)
 			{
 				item.bRepairEase = value;
+			}
+
+			if let Some(value) = u8IntInput(&mut self.coolness, s)
+			{
+				item.ubCoolness = value;
 			}
 			// cursor
 			if self.cursor.triggered()
