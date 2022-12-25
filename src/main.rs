@@ -41,6 +41,7 @@ mod STI;
 // Bloody item selection
 // Attachments
 // bloodbag & splint flags
+// Filtering for armor items
 
 
 fn main() 
@@ -1307,25 +1308,35 @@ impl ItemGraphicsArea
 	{
 		let margin = 4;
 		
-		let mut image = images.big[stiType][stiIndex].clone();
+		if let Some(mut image) = images.getbig(stiType, stiIndex)
+		{
+			let width = self.big.w() - margin;
+			let height = self.big.h() - margin;
+			image.scale(width, height, true, true);
+			self.big.set_image(Some(image));
+		} else {
+			self.big.set_image(None::<RgbImage>);
+		}
 		
-		let width = self.big.w() - margin;
-		let height = self.big.h() - margin;
-		image.scale(width, height, true, true);
-		self.big.set_image(Some(image));
+		if let Some(mut image) = images.getmed(stiType, stiIndex)
+		{
+			let width = self.med.w() - margin;
+			let height = self.med.h() - margin;
+			image.scale(width, height, true, true);
+			self.med.set_image(Some(image));
+		} else {
+			self.med.set_image(None::<RgbImage>);
+		}
 		
-		let mut image = images.med[stiType][stiIndex].clone();
-		let width = self.med.w() - margin;
-		let height = self.med.h() - margin;
-		image.scale(width, height, true, true);
-		self.med.set_image(Some(image));
-		
-		let mut image = images.small[stiType][stiIndex].clone();
-		let width = self.small.w() - margin;
-		let height = self.small.h() - margin;
-		image.scale(width, height, true, true);
-		self.small.set_image(Some(image));
-
+		if let Some(mut image) = images.getsmall(stiType, stiIndex)
+		{
+			let width = self.small.w() - margin;
+			let height = self.small.h() - margin;
+			image.scale(width, height, true, true);
+			self.small.set_image(Some(image));
+		} else {
+			self.small.set_image(None::<RgbImage>);
+		}
 	}
 	
 	fn addGraphTypeChoices(&mut self, images: &STI::Images)

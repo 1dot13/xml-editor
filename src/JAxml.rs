@@ -486,28 +486,40 @@ impl SOUNDLIST
 	{
 		let mut il = SOUNDLIST::new();
 
-		let mut reader = Reader::from_file(filepath).unwrap();
-		reader.trim_text(true);
-		let mut buf = Vec::new();
-		loop 
+		let reader = Reader::from_file(filepath);
+		match reader
 		{
-			match reader.read_event_into(&mut buf) 
+			Ok(mut reader) =>
 			{
-				Err(element) => panic!("Error at position {}: {:?}", reader.buffer_position(), element),
-				Ok(Event::Eof) => break,
-
-				Ok(Event::Start(e)) => 
+				// let mut reader = Reader::from_file(filepath).unwrap();
+				reader.trim_text(true);
+				let mut buf = Vec::new();
+				loop 
 				{
-					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
-					match e.name().as_ref()
+					match reader.read_event_into(&mut buf) 
 					{
-						b"SOUND" => {il.sounds.push( parseString(&mut reader, &mut buf) );}
-						_ => {}
+						Err(element) => panic!("Error at position {}: {:?}", reader.buffer_position(), element),
+						Ok(Event::Eof) => break,
+
+						Ok(Event::Start(e)) => 
+						{
+							let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
+							match e.name().as_ref()
+							{
+								b"SOUND" => {il.sounds.push( parseString(&mut reader, &mut buf, b"SOUND") );}
+								_ => {}
+							}
+						}
+						_ => ()
 					}
+					buf.clear();
 				}
-				_ => ()
 			}
-			buf.clear();
+			Err(e) =>
+			{
+				println!("Error {}", e);
+				println!("Could not open file {}", filepath.display());
+			}
 		}
 		return il;
 	}
@@ -544,7 +556,7 @@ impl SPREADPATTERN
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-                        b"NAME" => {self.name = parseString(reader, buf);}
+                        b"NAME" => {self.name = parseString(reader, buf, b"NAME");}
                         _ => {}
 					}
 				}
@@ -596,8 +608,8 @@ impl STRUCTUREMOVE {
 					let name = str::from_utf8(e.name().as_ref()).unwrap().to_string();
 					match e.name().as_ref()
 					{
-                        b"szTileSetDisplayName" => {self.szTileSetDisplayName = parseString(reader, buf);}
-                        b"szTileSetName" => {self.szTileSetName = parseString(reader, buf);}
+                        b"szTileSetDisplayName" => {self.szTileSetDisplayName = parseString(reader, buf, b"szTileSetDisplayName");}
+                        b"szTileSetName" => {self.szTileSetName = parseString(reader, buf, b"szTileSetName");}
                         b"allowedtiles" => {self.allowedtiles.push(parseu32(reader, buf, &name));}
                         _ => {}
 					}
@@ -667,8 +679,8 @@ impl STRUCTUREDECONSTRUCT {
 					{
                         b"usDeconstructItem" => {self.usDeconstructItem = parseu32(reader, buf, &name);}
                         b"usCreatedItemStatus" => {self.usCreatedItemStatus = parseu32(reader, buf, &name);}
-                        b"szTileSetDisplayName" => {self.szTileSetDisplayName = parseString(reader, buf);}
-                        b"szTileSetName" => {self.szTileSetName = parseString(reader, buf);}
+                        b"szTileSetDisplayName" => {self.szTileSetDisplayName = parseString(reader, buf, b"szTileSetDisplayName");}
+                        b"szTileSetName" => {self.szTileSetName = parseString(reader, buf, b"szTileSetName");}
                         b"usItemToCreate" => {self.usItemToCreate = parseu32(reader, buf, &name);}
                         b"dCreationCost" => {self.dCreationCost = parsef32(reader, buf, &name);}
                         b"allowedtiles" => {self.allowedtiles.push(parseu32(reader, buf, &name));}
@@ -750,8 +762,8 @@ impl STRUCTURECONSTRUCT {
 					match e.name().as_ref()
 					{
                         b"usCreationItem" => {self.usCreationItem = parseu32(reader, buf, &name);}
-                        b"szTileSetDisplayName" => {self.szTileSetDisplayName = parseString(reader, buf);}
-                        b"szTileSetName" => {self.szTileSetName = parseString(reader, buf);}
+                        b"szTileSetDisplayName" => {self.szTileSetDisplayName = parseString(reader, buf, b"szTileSetDisplayName");}
+                        b"szTileSetName" => {self.szTileSetName = parseString(reader, buf, b"szTileSetName");}
                         b"usItemStatusLoss" => {self.usItemStatusLoss = parseu32(reader, buf, &name);}
                         b"dCreationCost" => {self.dCreationCost = parsef32(reader, buf, &name);}
                         b"fFortifyAdjacentAdjustment" => {self.fFortifyAdjacentAdjustment = parsebool(reader, buf, &name);}
@@ -862,7 +874,7 @@ impl RANDOMITEM {
 					match e.name().as_ref()
 					{
                         b"uiIndex" => {self.uiIndex = parseu32(reader, buf, &name);}
-                        b"szName" => {self.szName = parseString(reader, buf);}
+                        b"szName" => {self.szName = parseString(reader, buf, b"szName");}
                         b"randomitem1" => {self.randomitem1 = parseu32(reader, buf, &name);}
                         b"randomitem2" => {self.randomitem2 = parseu32(reader, buf, &name);}
                         b"randomitem3" => {self.randomitem3 = parseu32(reader, buf, &name);}
@@ -1024,7 +1036,7 @@ impl POCKET {
 					match e.name().as_ref()
 					{
                         b"pIndex" => {self.pIndex = parseu32(reader, buf, &name);}
-                        b"pName" => {self.pName = parseString(reader, buf);}
+                        b"pName" => {self.pName = parseString(reader, buf, b"pName");}
                         b"pSilhouette" => {self.pSilhouette = parseu32(reader, buf, &name);}
                         b"pType" => {self.pType = parseu32(reader, buf, &name);}
                         b"pRestriction" => {self.pRestriction = parseu32(reader, buf, &name);}
@@ -1472,8 +1484,8 @@ impl TRANSFORM {
                         b"usResult10" => {self.usResult10 = parseu32(reader, buf, &name);}
                         b"usAPCost" => {self.usAPCost = parseu32(reader, buf, &name);}
                         b"iBPCost" => {self.iBPCost = parseu32(reader, buf, &name);}
-                        b"szMenuRowText" => {self.szMenuRowText = parseString(reader, buf);}
-                        b"szTooltipText" => {self.szTooltipText = parseString(reader, buf);}
+                        b"szMenuRowText" => {self.szMenuRowText = parseString(reader, buf, b"szMenuRowText");}
+                        b"szTooltipText" => {self.szTooltipText = parseString(reader, buf, b"szTooltipText");}
                         _ => {}
 					}
 				}
@@ -1742,7 +1754,7 @@ impl FOOD {
 					match e.name().as_ref()
 					{
                         b"uiIndex" => {self.uiIndex = parseu32(reader, buf, &name);}
-                        b"szName" => {self.szName = parseString(reader, buf);}
+                        b"szName" => {self.szName = parseString(reader, buf, b"szName");}
                         b"bFoodPoints" => {self.bFoodPoints = parseu32(reader, buf, &name);}
                         b"bDrinkPoints" => {self.bDrinkPoints = parseu32(reader, buf, &name);}
                         b"usDecayRate" => {self.usDecayRate = parsef32(reader, buf, &name);}
@@ -1937,12 +1949,12 @@ impl EXPDATA {
 					match e.name().as_ref()
 					{
 						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
-                        b"name" => { self.name = parseString(reader, buf); }
+                        b"name" => { self.name = parseString(reader, buf, b"name"); }
                         b"TransKeyFrame" => { self.TransKeyFrame = parseu32(reader, buf, &name); }
                         b"DamageKeyFrame" => { self.DamageKeyFrame = parseu32(reader, buf, &name); }
                         b"ExplosionSoundID" => { self.ExplosionSoundID = parseu32(reader, buf, &name); }
                         b"AltExplosionSoundID" => { self.AltExplosionSoundID = parsei32(reader, buf, &name); }
-                        b"BlastFilename" => { self.BlastFilename = parseString(reader, buf); }
+                        b"BlastFilename" => { self.BlastFilename = parseString(reader, buf, b"BlastFilename"); }
                         b"BlastSpeed" => { self.BlastSpeed = parseu32(reader, buf, &name); }
 						_ => {}
 					}
@@ -2017,7 +2029,7 @@ impl DRUG {
 					match e.name().as_ref()
 					{
 						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
-                        b"szName" => { self.szName = parseString(reader, buf); }
+                        b"szName" => { self.szName = parseString(reader, buf, b"szName"); }
 						b"opinionevent" => { self.opinionevent = parsebool(reader, buf, &name); }
                         b"DRUG_EFFECT" => {
                             self.drugEffects.push(DRUGEFFECT::new());
@@ -2476,9 +2488,9 @@ impl CLOTHES {
 					match e.name().as_ref()
 					{
 						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
-                        b"szName" => { self.szName = parseString(reader, buf); }
-                        b"Vest" => { self.Vest = parseString(reader, buf); }
-                        b"Pants" => { self.Pants = parseString(reader, buf); }
+                        b"szName" => { self.szName = parseString(reader, buf, b"szName"); }
+                        b"Vest" => { self.Vest = parseString(reader, buf, b"Vest"); }
+                        b"Pants" => { self.Pants = parseString(reader, buf, b"Pants"); }
 						_ => {}
 					}
 				}
@@ -2546,7 +2558,7 @@ impl ATTACHMENTSLOT {
 					match e.name().as_ref()
 					{
 						b"uiSlotIndex" => { self.uiSlotIndex = parseu32(reader, buf, &name); }
-                        b"szSlotName" => { self.szSlotName = parseString(reader, buf); }
+                        b"szSlotName" => { self.szSlotName = parseString(reader, buf, b"szSlotName"); }
                         b"nasAttachmentClass" => { self.nasAttachmentClass = parseu32(reader, buf, &name); }
                         b"nasLayoutClass" => { self.nasLayoutClass = parseu32(reader, buf, &name); }
                         b"usDescPanelPosX" => { self.usDescPanelPosX = parseu32(reader, buf, &name); }
@@ -3037,7 +3049,7 @@ impl WEAPON
 					        match e.name().as_ref()
 					        {
 			            		b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
-						        b"szWeaponName" => { self.szWeaponName = parseString(reader, buf); }
+						        b"szWeaponName" => { self.szWeaponName = parseString(reader, buf, b"szWeaponName"); }
 			            		b"ubWeaponClass" => { self.ubWeaponClass = parseu8(reader, buf, &name); }
 								b"ubWeaponType" => { self.ubWeaponType = parseu8(reader, buf, &name); }
 								b"ubCalibre" => { self.ubCalibre = parseu8(reader, buf, &name); }
@@ -3089,7 +3101,7 @@ impl WEAPON
 			    				}
 								b"ubNWSSCase" => { self.ubNWSSCase = parseu8(reader, buf, &name); }
 								b"ubNWSSLast" => { self.ubNWSSLast = parseu8(reader, buf, &name); }
-								b"szNWSSSound" => { self.szNWSSSound = parseString(reader, buf); }
+								b"szNWSSSound" => { self.szNWSSSound = parseString(reader, buf, b"szNWSSSound"); }
 								_ => {}
 						        }
 				    }
@@ -3319,9 +3331,9 @@ impl AMMOSTRING {
 					match e.name().as_ref()
 					{
 						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
-						b"AmmoCaliber" => { self.AmmoCaliber = parseString(reader, buf); }
-						b"BRCaliber" => { self.BRCaliber = parseString(reader, buf); }
-						b"NWSSCaliber" => { self.NWSSCaliber = parseString(reader, buf); }
+						b"AmmoCaliber" => { self.AmmoCaliber = parseString(reader, buf, b"AmmoCaliber"); }
+						b"BRCaliber" => { self.BRCaliber = parseString(reader, buf, b"BRCaliber"); }
+						b"NWSSCaliber" => { self.NWSSCaliber = parseString(reader, buf, b"NWSSCaliber"); }
 						_ => {}
 					}
 				}
@@ -3423,7 +3435,7 @@ impl AMMOTYPE {
 					match e.name().as_ref()
 					{
 						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
-						b"name" => { self.name = parseString(reader, buf); }
+						b"name" => { self.name = parseString(reader, buf, b"name"); }
 						b"red" => { self.red = parseu8(reader, buf, &name); }
 						b"green" => { self.green = parseu8(reader, buf, &name); }
 						b"blue" => { self.blue = parseu8(reader, buf, &name); }
@@ -3450,7 +3462,7 @@ impl AMMOTYPE {
 						b"ignoreArmour" => { self.ignoreArmour = parsebool(reader, buf, &name); }
 						b"lockBustingPower" => { self.lockBustingPower = parseu16(reader, buf, &name); }
 						b"tracerEffect" => {self.tracerEffect = parsebool(reader, buf, &name); }
-						b"spreadPattern" => {self.spreadPattern = parseString(reader, buf); }
+						b"spreadPattern" => {self.spreadPattern = parseString(reader, buf, b"spreadPattern"); }
 						b"temperatureModificator" => {self.temperatureModificator = parsef32(reader, buf, &name); }
 						b"dirtModificator" => {self.dirtModificator = parsef32(reader, buf, &name); }
 						b"ammoflag" => {self.ammoflag = parseu32(reader, buf, &name); }
@@ -3460,7 +3472,7 @@ impl AMMOTYPE {
 						b"dDamageModifierArmouredVehicle" => {self.dDamageModifierArmouredVehicle = parsef32(reader, buf, &name); }
 						b"dDamageModifierCivilianVehicle" => {self.dDamageModifierCivilianVehicle = parsef32(reader, buf, &name); }
 						b"dDamageModifierZombie" => {self.dDamageModifierZombie = parsef32(reader, buf, &name); }
-						b"shotAnimation" => {self.shotAnimation = parseString(reader, buf); }
+						b"shotAnimation" => {self.shotAnimation = parseString(reader, buf, b"shotAnimation"); }
 						_ => {}
 					}
 				}
@@ -3577,6 +3589,7 @@ pub struct ITEM {
 	pub szBRName: String,
 	pub szBRDesc: String,
 	pub usItemClass: u32,
+	pub ubClassIndex: u16,
 	pub AttachmentClass: u32,
     pub nasAttachmentClass: u64,
 	pub nasLayoutClass: u64,
@@ -3584,7 +3597,6 @@ pub struct ITEM {
 	pub AvailableAttachmentPoint: AttachmentPoints, 
 	pub ulAttachmentPoint: u64, 
 	pub ubAttachToPointAPCost: u8,
-	pub ubClassIndex: u16,
 	pub usItemFlag: u64,
 	pub ubCursor: u8,
 	pub bSoundType: i8,
@@ -3988,11 +4000,11 @@ impl ITEM
 					match e.name().as_ref()
 					{
 						b"uiIndex" => { self.uiIndex = parseu32(reader, buf, &name); }
-						b"szItemName" => { self.szItemName = parseString(reader, buf); }
-						b"szLongItemName" => { self.szLongItemName = parseString(reader, buf); }
-						b"szItemDesc" => { self.szItemDesc = parseString(reader, buf); }
-						b"szBRName" => { self.szBRName = parseString(reader, buf); }
-						b"szBRDesc" => { self.szBRDesc = parseString(reader, buf); }
+						b"szItemName" => { self.szItemName = parseString(reader, buf, b"szItemName"); }
+						b"szLongItemName" => { self.szLongItemName = parseString(reader, buf, b"szLongItemName"); }
+						b"szItemDesc" => { self.szItemDesc = parseString(reader, buf, b"szItemDesc"); }
+						b"szBRName" => { self.szBRName = parseString(reader, buf, b"szBRName"); }
+						b"szBRDesc" => { self.szBRDesc = parseString(reader, buf, b"szBRDesc"); }
 						b"usItemClass" => { self.usItemClass = parseu32(reader, buf, &name); }
 						b"AttachmentClass" => { self.AttachmentClass = parseu32(reader, buf, &name); }
 						b"nasAttachmentClass" => { self.nasAttachmentClass = parseu64(reader, buf, &name); }
@@ -4884,7 +4896,7 @@ impl fmt::Debug for AttachmentPoints
 //-----------------------------------------------------------------------------
 // Functions
 //-----------------------------------------------------------------------------
-fn parseString(reader: &mut Reader<BufReader<File>>, buf: &mut Vec<u8>) -> String
+fn parseString(reader: &mut Reader<BufReader<File>>, buf: &mut Vec<u8>, tag: &[u8]) -> String
 {
 	loop {
 		match reader.read_event_into(buf) 
@@ -4893,10 +4905,20 @@ fn parseString(reader: &mut Reader<BufReader<File>>, buf: &mut Vec<u8>) -> Strin
 				let value = e.unescape().unwrap().into_owned();
 				return value;
 			}
+			Ok(Event::End(ref element)) => 
+			{
+					match element.name().as_ref()
+					{
+							tag => break,
+							_ => ()
+					}
+			}
 			Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
 			_ => {}
 		}
 	}
+
+	return "".to_string();
 }
 
 fn parsebool(reader: &mut Reader<BufReader<File>>, buf: &mut Vec<u8>, name: &str) -> bool
@@ -5100,4 +5122,43 @@ pub enum ArmorClass
 	Plate,
 	Monster,
 	Vehicle,
+}
+
+
+pub enum ItemFlags
+{
+	BLOOD_BAG = 0,				// 0x00000001	//1			// this item is a blood bag can can be used to boost surgery
+	MANPAD, 					// 0x00000002	//2			// this item is a MAn-Portable Air-Defense System
+	BEARTRAP, 					// 0x00000004	//4			// a mechanical trap that does no explosion, but causes leg damage to whoever activates it
+	CAMERA, 					// 0x00000008	//8
+	WATER_DRUM, 				// 0x00000010	//16		// water drums allow to refill canteens in the sector they are in
+	MEAT_BLOODCAT, 				// 0x00000020	//32		// retrieve this by gutting a bloodcat
+	MEAT_COW, 					// 0x00000040	//64		// retrieve this by gutting a cow
+	BELT_FED, 					// 0x00000080	//128		// item can be fed externally
+	AMMO_BELT, 					// 0x00000100	//256		// this item can be used to feed externally
+	AMMO_BELT_VEST, 			// 0x00000200	//512		// this is a vest that can contain AMMO_BELT items in its medium slots
+	CAMO_REMOVAL, 				// 0x00000400	//1024		// item can be used to remove camo
+	CLEANING_KIT, 				// 0x00000800	//2048		// weapon cleaning kit
+	ATTENTION_ITEM, 			// 0x00001000	//4096		// this item is 'interesting' to the AI. Dumb soldiers may try to pick it up
+	GAROTTE, 					// 0x00002000	//8192		// this item is a garotte
+	COVERT, 					// 0x00004000	//16384		// if LBE, any gun inside will be covert. On a gun, it will be covert in any LBE, even if the LBE does not have that tag itself
+	CORPSE, 					// 0x00008000	//32768		// a dead body
+	SKIN_BLOODCAT, 				// 0x00010000	//65536		// retrieve this by skinning (=decapitating) a bloodcat
+	NO_METAL_DETECTION, 		// 0x00020000	//131072	// a planted bomb with this flag can NOT be detected via metal detector. Use sparingly!
+	JUMP_GRENADE, 				// 0x00040000	//262144	// add +25 heigth to explosion, used for bouncing grenades and jumping mines
+	HANDCUFFS, 					// 0x00080000	//524288	// item can be used to capture soldiers
+	TASER, 						// 0x00100000	//1048576	// item is a taser, melee hits with this will drain breath (if batteries are supplied)
+	SCUBA_BOTTLE, 				// 0x00200000	//2097152	// item is a scuba gear air bottle
+	SCUBA_MASK, 				// 0x00400000	//4194304	// item is a scuba gear breathing mask
+	SCUBA_FINS, 				// 0x00800000	//8388608	// this item speed up swimming, but slows walking and running
+	TRIPWIREROLL, 				// 0x01000000	//16777216	// this item is a tripwire roll
+	RADIO_SET, 					// 0x02000000	//33554432	// item can be used to radio militia/squads in other sectors
+	SIGNAL_SHELL, 				// 0x04000000	//67108864	// this is a signal shell that precedes artillery barrages
+	SODA, 						// 0x08000000	//134217728	// item is a can of soda, sold in vending machines
+	ROOF_COLLAPSE_ITEM,			// 0x10000000	//268435456	// this item is required in the collapsing of roof tiles. It is used internally and should never be seen by the player
+	DISEASEPROTECTION_1,		// 0x20000000	//536870912		// this item protects us from getting diseases by human contact if kept in inventory
+	DISEASEPROTECTION_2,		// 0x40000000	//1073741824	// this item protects us from getting diseases by human contact if kept in inventory
+	LBE_EXPLOSIONPROOF,			// 0x80000000	//2147483648	// any gear in LBE with this flag is protected from explosions
+	EMPTY_BLOOD_BAG,			// 0x0000000100000000		// this item is a empty blood bag
+	MEDICAL_SPLINT,				// 0x0000000200000000		// this item is a medical splint that can be applied to some diseases
 }

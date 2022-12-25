@@ -342,9 +342,6 @@ impl Images
     
     pub fn loadImages(&mut self, dataPath: &PathBuf)
     {
-        // let mut big: Vec<Vec<RgbImage>> = Vec::new();
-        // let mut med: Vec<Vec<RgbImage>> = Vec::new();
-        // let mut small: Vec<Vec<RgbImage>> = Vec::new();
         self.big.clear();
         self.med.clear();
         self.small.clear();
@@ -382,7 +379,7 @@ impl Images
         for i in 1..self.med.len()
         {
             let mut bigitems: Vec<RgbImage> = Vec::new();
-            
+
             for j in 0..self.med[i].len()
             {
                 let mut f = dataPath.clone();
@@ -406,6 +403,44 @@ impl Images
             self.big.push(bigitems);
         } 
         
-        // Images { big, med, small }
+        // println!("Big/med/small images lengths");
+        // for i in 0..self.big.len()
+        // {
+        //     println!("index = {}", i);
+        //     println!("{}", self.big[i].len());
+        //     println!("{}", self.med[i].len());
+        //     println!("{}", self.small[i].len());
+        // }
+    }
+
+    pub fn getbig(&self, stiType: usize, stiIndex: usize) -> Option<RgbImage>
+    {
+        if stiType < self.big.len() && stiIndex < self.big[stiType].len()
+        {
+            return Some(self.big[stiType][stiIndex].clone());
+        }
+        println!("!!! Graphic index out of graphic vector bounds !!!");
+        println!("Tried to access big image [{}][{}]", stiType, stiIndex);
+        return None;
+    }
+    pub fn getmed(&self, stiType: usize, stiIndex: usize) -> Option<RgbImage>
+    {
+        if stiType < self.med.len() && stiIndex < self.med[stiType].len()
+        {
+            return Some(self.med[stiType][stiIndex].clone());
+        }
+        println!("!!! Graphic index out of graphic vector bounds !!!");
+        println!("Tried to access medium image [{}][{}]", stiType, stiIndex);
+        return None;
+    }
+    pub fn getsmall(&self, stiType: usize, stiIndex: usize) -> Option<RgbImage>
+    {
+        if stiType < self.small.len() && stiIndex < self.small[stiType].len()
+        {
+            return Some(self.small[stiType][stiIndex].clone());
+        }
+        println!("!!! Graphic index out of graphic vector bounds !!!");
+        println!("Tried to access small image [{}][{}]", stiType, stiIndex);
+        return None;
     }
 }
