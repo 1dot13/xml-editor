@@ -2,7 +2,7 @@
 #![allow(non_camel_case_types)]
 use std::io::{BufReader, Write};
 use std::fs::{File};
-use std::fmt;
+use std::fmt::{self, format};
 use std::str;
 use std::path::PathBuf;
 use quick_xml::events::{Event};
@@ -968,6 +968,11 @@ impl RANDOMITEM {
 	}
 }
 
+pub struct PocketItemCapacityPerSize
+{
+	capacity: u32,
+	size: u32,
+}
 
 pub struct POCKET
 {
@@ -977,52 +982,13 @@ pub struct POCKET
     pType: u32,
     pRestriction: u32,
     pVolume: u32,
-    ItemCapacityPerSize0: u32,
-    ItemCapacityPerSize1: u32,
-    ItemCapacityPerSize2: u32,
-    ItemCapacityPerSize3: u32,
-    ItemCapacityPerSize4: u32,
-    ItemCapacityPerSize5: u32,
-    ItemCapacityPerSize6: u32,
-    ItemCapacityPerSize7: u32,
-    ItemCapacityPerSize8: u32,
-    ItemCapacityPerSize9: u32,
-    ItemCapacityPerSize10: u32,
-    ItemCapacityPerSize11: u32,
-    ItemCapacityPerSize12: u32,
-    ItemCapacityPerSize13: u32,
-    ItemCapacityPerSize14: u32,
-    ItemCapacityPerSize15: u32,
-    ItemCapacityPerSize16: u32,
-    ItemCapacityPerSize17: u32,
-    ItemCapacityPerSize18: u32,
-    ItemCapacityPerSize19: u32,
-    ItemCapacityPerSize20: u32,
-    ItemCapacityPerSize21: u32,
-    ItemCapacityPerSize22: u32,
-    ItemCapacityPerSize23: u32,
-    ItemCapacityPerSize24: u32,
-    ItemCapacityPerSize25: u32,
-    ItemCapacityPerSize26: u32,
-    ItemCapacityPerSize27: u32,
-    ItemCapacityPerSize28: u32,
-    ItemCapacityPerSize29: u32,
-    ItemCapacityPerSize30: u32,
-    ItemCapacityPerSize31: u32,
-    ItemCapacityPerSize32: u32,
-    ItemCapacityPerSize33: u32,
-    ItemCapacityPerSize34: u32
+    itemCapacityPerSize: Vec<PocketItemCapacityPerSize>,
 }
 impl POCKET {
     pub fn new() -> POCKET
     {
-        POCKET { pIndex: 0, pName: "".to_string(), pSilhouette: 0, pType: 0, pRestriction: 0, pVolume: 0,
-        ItemCapacityPerSize0: 0, ItemCapacityPerSize1: 0, ItemCapacityPerSize2: 0, ItemCapacityPerSize3: 0, ItemCapacityPerSize4: 0, ItemCapacityPerSize5: 0,
-        ItemCapacityPerSize6: 0, ItemCapacityPerSize7: 0, ItemCapacityPerSize8: 0, ItemCapacityPerSize9: 0, ItemCapacityPerSize10: 0, ItemCapacityPerSize11: 0,
-        ItemCapacityPerSize12: 0, ItemCapacityPerSize13: 0, ItemCapacityPerSize14: 0, ItemCapacityPerSize15: 0, ItemCapacityPerSize16: 0, ItemCapacityPerSize17: 0,
-        ItemCapacityPerSize18: 0, ItemCapacityPerSize19: 0, ItemCapacityPerSize20: 0, ItemCapacityPerSize21: 0, ItemCapacityPerSize22: 0, ItemCapacityPerSize23: 0,
-        ItemCapacityPerSize24: 0, ItemCapacityPerSize25: 0, ItemCapacityPerSize26: 0, ItemCapacityPerSize27: 0, ItemCapacityPerSize28: 0, ItemCapacityPerSize29: 0,
-        ItemCapacityPerSize30: 0, ItemCapacityPerSize31: 0, ItemCapacityPerSize32: 0, ItemCapacityPerSize33: 0, ItemCapacityPerSize34: 0 }
+        POCKET { pIndex: 0, pName: "".to_string(), pSilhouette: 0, pType: 0, pRestriction: 0, pVolume: 0, itemCapacityPerSize: Vec::new()
+		}
     }
 
     pub fn readItem(&mut self, reader: &mut Reader<BufReader<std::fs::File>>, buf: &mut Vec<u8>)
@@ -1041,42 +1007,22 @@ impl POCKET {
                         b"pType" => {self.pType = parseu32(reader, buf, &name);}
                         b"pRestriction" => {self.pRestriction = parseu32(reader, buf, &name);}
                         b"pVolume" => {self.pVolume = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize0" => {self.ItemCapacityPerSize0 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize1" => {self.ItemCapacityPerSize1 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize2" => {self.ItemCapacityPerSize2 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize3" => {self.ItemCapacityPerSize3 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize4" => {self.ItemCapacityPerSize4 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize5" => {self.ItemCapacityPerSize5 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize6" => {self.ItemCapacityPerSize6 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize7" => {self.ItemCapacityPerSize7 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize8" => {self.ItemCapacityPerSize8 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize9" => {self.ItemCapacityPerSize9 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize10" => {self.ItemCapacityPerSize10 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize11" => {self.ItemCapacityPerSize11 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize12" => {self.ItemCapacityPerSize12 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize13" => {self.ItemCapacityPerSize13 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize14" => {self.ItemCapacityPerSize14 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize15" => {self.ItemCapacityPerSize15 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize16" => {self.ItemCapacityPerSize16 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize17" => {self.ItemCapacityPerSize17 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize18" => {self.ItemCapacityPerSize18 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize19" => {self.ItemCapacityPerSize19 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize20" => {self.ItemCapacityPerSize20 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize21" => {self.ItemCapacityPerSize21 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize22" => {self.ItemCapacityPerSize22 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize23" => {self.ItemCapacityPerSize23 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize24" => {self.ItemCapacityPerSize24 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize25" => {self.ItemCapacityPerSize25 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize26" => {self.ItemCapacityPerSize26 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize27" => {self.ItemCapacityPerSize27 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize28" => {self.ItemCapacityPerSize28 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize29" => {self.ItemCapacityPerSize29 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize30" => {self.ItemCapacityPerSize30 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize31" => {self.ItemCapacityPerSize31 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize32" => {self.ItemCapacityPerSize32 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize33" => {self.ItemCapacityPerSize33 = parseu32(reader, buf, &name);}
-                        b"ItemCapacityPerSize34" => {self.ItemCapacityPerSize34 = parseu32(reader, buf, &name);}
-                        _ => {}
+                        _ => {
+							let tag: &str;
+							let s = match str::from_utf8(e.name().as_ref()) {
+								Ok(tag) => 
+								{
+									if tag.contains("ItemCapacityPerSize")
+									{
+										let size = tag.replace("ItemCapacityPerSize", "").parse::<u32>().unwrap();
+										let capacity = parseu32(reader, buf, &name);
+		
+										self.itemCapacityPerSize.push(PocketItemCapacityPerSize{ capacity, size });
+									}
+								}
+								Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+							};							
+						}
 					}
 				}
 
@@ -1111,76 +1057,12 @@ impl POCKET {
         write_tag_i!(file, value, "pRestriction", forcewrite);
         let value = self.pVolume;
         write_tag_i!(file, value, "pVolume", forcewrite);
-        let value = self.ItemCapacityPerSize0;
-        write_tag_i!(file, value, "ItemCapacityPerSize0", forcewrite);
-        let value = self.ItemCapacityPerSize1;
-        write_tag_i!(file, value, "ItemCapacityPerSize1", forcewrite);
-        let value = self.ItemCapacityPerSize2;
-        write_tag_i!(file, value, "ItemCapacityPerSize2", forcewrite);
-        let value = self.ItemCapacityPerSize3;
-        write_tag_i!(file, value, "ItemCapacityPerSize3", forcewrite);
-        let value = self.ItemCapacityPerSize4;
-        write_tag_i!(file, value, "ItemCapacityPerSize4", forcewrite);
-        let value = self.ItemCapacityPerSize5;
-        write_tag_i!(file, value, "ItemCapacityPerSize5", forcewrite);
-        let value = self.ItemCapacityPerSize6;
-        write_tag_i!(file, value, "ItemCapacityPerSize6", forcewrite);
-        let value = self.ItemCapacityPerSize7;
-        write_tag_i!(file, value, "ItemCapacityPerSize7", forcewrite);
-        let value = self.ItemCapacityPerSize8;
-        write_tag_i!(file, value, "ItemCapacityPerSize8", forcewrite);
-        let value = self.ItemCapacityPerSize9;
-        write_tag_i!(file, value, "ItemCapacityPerSize9", forcewrite);
-        let value = self.ItemCapacityPerSize10;
-        write_tag_i!(file, value, "ItemCapacityPerSize10", forcewrite);
-        let value = self.ItemCapacityPerSize11;
-        write_tag_i!(file, value, "ItemCapacityPerSize11", forcewrite);
-        let value = self.ItemCapacityPerSize12;
-        write_tag_i!(file, value, "ItemCapacityPerSize12", forcewrite);
-        let value = self.ItemCapacityPerSize13;
-        write_tag_i!(file, value, "ItemCapacityPerSize13", forcewrite);
-        let value = self.ItemCapacityPerSize14;
-        write_tag_i!(file, value, "ItemCapacityPerSize14", forcewrite);
-        let value = self.ItemCapacityPerSize15;
-        write_tag_i!(file, value, "ItemCapacityPerSize15", forcewrite);
-        let value = self.ItemCapacityPerSize16;
-        write_tag_i!(file, value, "ItemCapacityPerSize16", forcewrite);
-        let value = self.ItemCapacityPerSize17;
-        write_tag_i!(file, value, "ItemCapacityPerSize17", forcewrite);
-        let value = self.ItemCapacityPerSize18;
-        write_tag_i!(file, value, "ItemCapacityPerSize18", forcewrite);
-        let value = self.ItemCapacityPerSize19;
-        write_tag_i!(file, value, "ItemCapacityPerSize19", forcewrite);
-        let value = self.ItemCapacityPerSize20;
-        write_tag_i!(file, value, "ItemCapacityPerSize20", forcewrite);
-        let value = self.ItemCapacityPerSize21;
-        write_tag_i!(file, value, "ItemCapacityPerSize21", forcewrite);
-        let value = self.ItemCapacityPerSize22;
-        write_tag_i!(file, value, "ItemCapacityPerSize22", forcewrite);
-        let value = self.ItemCapacityPerSize23;
-        write_tag_i!(file, value, "ItemCapacityPerSize23", forcewrite);
-        let value = self.ItemCapacityPerSize24;
-        write_tag_i!(file, value, "ItemCapacityPerSize24", forcewrite);
-        let value = self.ItemCapacityPerSize25;
-        write_tag_i!(file, value, "ItemCapacityPerSize25", forcewrite);
-        let value = self.ItemCapacityPerSize26;
-        write_tag_i!(file, value, "ItemCapacityPerSize26", forcewrite);
-        write_tag_i!(file, value, "ItemCapacityPerSize27", forcewrite);
-        let value = self.ItemCapacityPerSize27;
-        write_tag_i!(file, value, "ItemCapacityPerSize28", forcewrite);
-        let value = self.ItemCapacityPerSize28;
-        write_tag_i!(file, value, "ItemCapacityPerSize29", forcewrite);
-        let value = self.ItemCapacityPerSize29;
-        write_tag_i!(file, value, "ItemCapacityPerSize30", forcewrite);
-        let value = self.ItemCapacityPerSize30;
-        write_tag_i!(file, value, "ItemCapacityPerSize31", forcewrite);
-        let value = self.ItemCapacityPerSize31;
-        write_tag_i!(file, value, "ItemCapacityPerSize32", forcewrite);
-        let value = self.ItemCapacityPerSize32;
-        write_tag_i!(file, value, "ItemCapacityPerSize33", forcewrite);
-        let value = self.ItemCapacityPerSize33;
-        write_tag_i!(file, value, "ItemCapacityPerSize34", forcewrite);
-        let value = self.ItemCapacityPerSize34;
+		for pair in &self.itemCapacityPerSize
+		{
+			let tag = format!("ItemCapacityPerSize{}", pair.size);
+			let value = pair.capacity;
+	        write_tag_i!(file, value, tag, forcewrite);
+		}
 
         write!(file, "\t</POCKET>\n").unwrap();
 	}
