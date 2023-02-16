@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 #![allow(unused)]
 use std::env::current_dir;
+use std::fmt::format;
 // use std::io::{BufReader, Write, Read};
 // use std::fs::{File, read};
 // use std::fmt;
@@ -38,7 +39,6 @@ mod STI;
 // Only allow saving of valid data
 // Compatible launchers list for explosives
 // Launchables list for launchers
-// Bloody item selection
 // Attachments
 // bloodbag & splint flags
 // Filtering for armor items
@@ -46,7 +46,7 @@ mod STI;
 
 fn main() 
 {
-	let dataPath = PathBuf::from("H:\\JA2 Dev\\Data-1.13"); // <-- Temporary start path while developing
+	let dataPath = PathBuf::from("H:\\JA2 Dev EN\\Data-1.13"); // <-- Temporary start path while developing
 	// let mut dataPath = current_dir().unwrap();
 	// dataPath.push("Data-1.13");
 	let mut xmldata = JAxml::Data::new();
@@ -2886,6 +2886,7 @@ impl WeaponArea
 		self.general.class.clear();
 		self.general.guntype.clear();
 		self.general.caliber.clear();
+		self.bloodyItem.clear();
 
 
 		self.general.class.add_choice("None|Handgun|Submachinegun|Rifle|Machinegun|Shotgun|Knife|Monster");
@@ -2893,6 +2894,15 @@ impl WeaponArea
 		for caliber in &xmldata.calibers.items
 		{
 			self.general.caliber.add_choice(&caliber.AmmoCaliber);
+		}
+
+		self.bloodyItem.add_choice("-");
+		for item in &xmldata.items.items
+		{
+			if item.usItemClass == JAxml::ItemClass::ThrowingKnife as u32
+			{
+				self.bloodyItem.add_choice(&format!("[{}] {}", item.uiIndex, &item.szLongItemName));
+			}
 		}
 	}
 
@@ -3131,6 +3141,25 @@ impl WeaponArea
 
 			self.dirtDamageChance.set_value( &format!("{}", item.usDamageChance) );
 			self.dirtIncreaseFactor.set_value( &format!("{}", item.dirtIncreaseFactor) );
+
+			if item.usItemClass == JAxml::ItemClass::ThrowingKnife as u32 && item.bloodieditem != 0
+			{
+				if let Some(bloodyitem) = xmldata.getItem(item.bloodieditem as u32)
+				{
+					if let Some(choice) = self.bloodyItem.find_item(&format!("[{}] {}", bloodyitem.uiIndex, &bloodyitem.szLongItemName))
+					{
+						self.bloodyItem.set_item(&choice);
+					}
+					else 
+					{
+						self.bloodyItem.set_value(0);
+					}
+				}
+			}
+			else
+			{
+				self.bloodyItem.set_value(0);
+			}
 		}
 	}
 
@@ -3326,6 +3355,33 @@ impl WeaponArea
 
 			if let Some(value) = u8IntInput(&mut self.dirtDamageChance, s) { item.usDamageChance = value; }
 			if let Some(value) = f32FloatInput(&mut self.dirtIncreaseFactor, s) { item.dirtIncreaseFactor = value; }
+
+			let widget = &mut self.bloodyItem;
+			if widget.triggered()
+			{
+				if let Some(bloodyitemName) = widget.text(widget.value())
+				{
+					if bloodyitemName == "-"
+					{
+						item.bloodieditem = 0;
+					}
+					else 
+					{
+						let mut iter = bloodyitemName.split_whitespace();
+						if let Some(text) = iter.next()
+						{
+							let index = text.trim_matches(|c| c == '[' || c == ']').parse::<u32>();
+							match index
+							{
+								Ok(value) => { item.bloodieditem = value as i16; }
+								_ => {println!("Unable to parse bloody item index value from text: {}", text);}
+							}
+						}
+					}
+				}
+				
+				s.send(Message::Update);
+			}
 		}
 	}
 }
