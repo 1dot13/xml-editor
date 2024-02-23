@@ -318,10 +318,15 @@ pub fn loadBigGunImages(dataPath: &PathBuf, size: usize) -> Vec<RgbImage>
         }
         
         let sti = loadSTI(f);
-        for s in sti
-        {
-            rgbImages.push(s);
-        }
+        // Only use the very first image for big items.
+        // Several mods have incorrect sti files where bigitems contain several subimages, 
+        // even though the game only ever loads the first one.
+        rgbImages.push(sti[0].clone());
+        
+        // for s in sti
+        // {
+            // rgbImages.push(s);
+        // }
     }
     
     return rgbImages;
