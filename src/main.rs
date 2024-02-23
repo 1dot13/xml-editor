@@ -30,8 +30,9 @@ mod STI;
 
 
 // TODO
-// Add/Delete/Duplicate items
+// Delete/Duplicate items
 // Change item class & uiIndex
+// Display class index
 // Prompt to save work upon quitting if needed
 // Inventories
 // Merchants?
@@ -73,6 +74,8 @@ fn main()
 	tree.set_connector_style(tree::TreeConnectorStyle::None);
 	tree.set_connector_width(0);
 	tree.set_margin_left(0);
+	tree.set_label("Tree");
+	tree.set_label_type(fltk::enums::LabelType::None);
 	fillTree(&mut tree, &xmldata, Message::ShowAll);
 	
 	// Item info
@@ -137,9 +140,15 @@ fn main()
 	g.hide();
 	tabGroups.push( g );
 	//-----------------------------------------------------------------------------
-
-	
 	itemWindow.end();
+
+	// Tree view right click context menu 
+	let treeMenu = menu::MenuItem::new(&["Add item\t", "Duplicate item\t", "Delete item\t"]);
+	if let Some(mut item) = treeMenu.at(2) {
+		item.set_label_color(Color::Red);
+	}
+	//-----------------------------------------------------------------------------
+
 	mainWindow.end();
 	// mainWindow.make_resizable(true);
 	mainWindow.show();
@@ -180,7 +189,39 @@ fn main()
 				uidata.itemGraphics.clearImages();
 			}
 		}
-    	
+
+        // For right click context menus
+        if fltk::app::event_mouse_button() == app::MouseButton::Right && fltk::app::event() == fltk::enums::Event::Released
+        {
+			if let Some(w) = app::belowmouse::<widget::Widget>() 
+			{
+				//tree view
+				if w.label() == "Tree"
+				{
+					if let Some(item) = tree.first_selected_item() 
+					{
+						println!("{} selected", item.label().unwrap());
+		
+						let coords = app::event_coords();
+						match treeMenu.popup(coords.0, coords.1) {
+							None => {}
+							Some(val) => 
+							{
+								match val
+								{
+									x if x == treeMenu.at(0).unwrap() => { s.send(Message::AddItem); }
+									x if x == treeMenu.at(1).unwrap() => { s.send(Message::DuplicateItem); }
+									x if x == treeMenu.at(2).unwrap() => { s.send(Message::DeleteItem); }
+									_ => {}
+								}
+							}
+						}
+					}
+				}
+			}
+        }
+
+
         if let Some(msg) = r.recv() 
         {
 			use Message::*;
@@ -243,6 +284,32 @@ fn main()
 					}
 
 					itemWindow.redraw();
+				}
+				AddItem =>
+				{
+					match uidata.state
+					{
+						State::Item => 
+						{ 
+							println!("Add item!");
+							xmldata.addItem(); 
+							fillTree(&mut tree, &xmldata, ShowAll);
+							uidata.changeState(ShowAll);
+						}
+						State::AmmoTypes => { println!("1"); }
+						State::AmmoCalibers => { println!("2"); }
+						State::Sounds => { println!("3"); }
+						State::Clothes => { println!("4"); }
+						State::Armors => { println!("5"); }
+					}
+				}
+				DuplicateItem =>
+				{
+					println!("Duplicate item!");
+				}
+				DeleteItem =>
+				{
+					println!("Delete item!");
 				}
 				_ => {}
 	        }
@@ -2548,7 +2615,7 @@ impl WeaponArea
 			(frame.w()-w)/2, 100, "Properties"
 		);
 
-		let mut flex = Pack::new(frame.x() + 10, frame.y() + 10, 45, frame.h() - 10, None);
+		let mut flex = Pack::new(frame.x() + 10, frame.y() + 10, 120, frame.h() - 10, None);
 		flex.set_spacing(5);
 		let rocketrifle = CheckButton::default().with_size(width, height).with_label("Rocket Rifle").into();
 		let fingerprintid = CheckButton::default().with_size(width, height).with_label("Fingerprint ID").into();
@@ -2557,7 +2624,7 @@ impl WeaponArea
 		let hidemuzzleflash = CheckButton::default().with_size(width, height).with_label("Hide Muzzleflash").into();
 		let barrel = CheckButton::default().with_size(width, height).with_label("Barrel").into();
 		flex.end();
-		let mut flex = Pack::new(flex.x() + flex.w() + 80, frame.y() + 10, 45, frame.h() - 10, None);
+		let mut flex = Pack::new(flex.x() + flex.w() + 10, frame.y() + 10, 120, frame.h() - 10, None);
 		flex.set_spacing(5);
 		let magazinefed = CheckButton::default().with_size(width, height).with_label("Magazine Fed").into();
 		let _ = CheckButton::default().with_size(width, height).with_label("").deactivate();//.into();
@@ -4967,6 +5034,9 @@ pub enum Message {
 	ItemClass,
 	Tabs,
 	AmmoTypeFontColor,
+	AddItem,
+	DuplicateItem,
+	DeleteItem,
 }
 
     

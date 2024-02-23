@@ -434,6 +434,14 @@ impl Data
 		weapons, WEAPON, getWeapon, getWeapon_mut
 		items, ITEM, getItem, getItem_mut
 	}
+
+	pub fn addItem(&mut self)
+	{
+		let mut newItem = ITEM::new();
+		newItem.uiIndex = self.items.items.len() as u32;
+		newItem.usItemClass = ItemClass::None as u32;
+		self.items.items.push(newItem);
+	}
 }
 
 
@@ -3674,11 +3682,11 @@ impl ITEM
 	{
 		return ITEM{
 			uiIndex: 0,
-			szItemName: "".to_string(),
-			szLongItemName: "".to_string(),
-			szItemDesc: "".to_string(),
-			szBRName: "".to_string(),
-			szBRDesc: "".to_string(),
+			szItemName: "Nada".to_string(),
+			szLongItemName: "Nothing".to_string(),
+			szItemDesc: "JA 2 programmers are the best there are... oh.. well maybe not since this message should never come up...".to_string(),
+			szBRName: "Nothing".to_string(),
+			szBRDesc: "JA 2 programmers are the best there are... oh.. well maybe not since this message should never come up...".to_string(),
 			usItemClass: 0,
 			AttachmentClass: 0,
 			nasAttachmentClass: 0,
