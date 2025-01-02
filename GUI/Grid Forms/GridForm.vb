@@ -1,5 +1,6 @@
 Imports System.Data
 Imports GUI.GUI
+Imports System.ComponentModel
 
 Public Class GridForm
     Protected _view As DataView
@@ -50,6 +51,7 @@ Public Class GridForm
         EnableContextMenuItems()
     End Sub
 
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property Filter() As String
         Get
             Return _customFilter
@@ -199,7 +201,7 @@ Public Class GridForm
     Private Sub FilterToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles FilterToolStripMenuItem.Click
         Dim frm As New CustomFilterForm(_dm)
         frm.Filter = Me.Filter
-        If frm.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then Me.Filter = frm.Filter
+        If frm.ShowDialog(Me) = System.Windows.Forms.DialogResult.OK Then Me.Filter = frm.Filter
     End Sub
 
     Protected Sub UpdateStatusBar()

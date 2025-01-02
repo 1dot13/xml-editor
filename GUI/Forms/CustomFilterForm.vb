@@ -1,3 +1,5 @@
+Imports System.ComponentModel
+
 Public Class CustomFilterForm
     Inherits SimpleFormBase
     Public Sub New(manager As DataManager)
@@ -18,6 +20,7 @@ Public Class CustomFilterForm
         Return True
     End Function
 
+    <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Property Filter() As String
         Get
             Return FilterTextBox.Text
