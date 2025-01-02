@@ -21,7 +21,7 @@ Public Class ItemTransformationTable
     End Sub
 
     Protected Sub LoadTransformData(ByVal fileName As String, ByVal filePath As String)
-        Dim xmldoc As New XmlDataDocument()
+        Dim xmldoc As New XmlDocument()
         Dim xmlnode As XmlNode
         Dim xmlnode2 As XmlNodeList
         Dim i As Integer
