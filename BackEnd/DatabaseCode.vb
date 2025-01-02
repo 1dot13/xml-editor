@@ -1469,7 +1469,6 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("PercentDropCompensation1", "Standing Drop Compensation Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("PercentMaxCounterForce1", "Standing CounterForce Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("PercentCounterForceAccuracy1", "Standing CF Accuracy Bonus", GetType(Integer), -101, , , , , , True))
-        t.Columns.Add(MakeColumn("PercentCounterForceFrequency1", "Standing CF Frequency Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("AimLevels1", "Standing Aim Bonus", GetType(Integer), -101, , , , , , True))
         'Start CROUCH_MODIFIERS section
         t.Columns.Add(MakeColumn("FlatBase2", "Crouching Flat Base Bonus", GetType(Integer), -101, , , , , , True))
@@ -1481,7 +1480,6 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("PercentDropCompensation2", "Crouching Drop Compensation Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("PercentMaxCounterForce2", "Crouching CounterForce Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("PercentCounterForceAccuracy2", "Crouching CF Accuracy Bonus", GetType(Integer), -101, , , , , , True))
-        t.Columns.Add(MakeColumn("PercentCounterForceFrequency2", "Crouching CF Frequency Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("AimLevels2", "Crouching Aim Bonus", GetType(Integer), -101, , , , , , True))
         'Start PRONE_MODIFIERS section
         t.Columns.Add(MakeColumn("FlatBase3", "Prone Flat Base Bonus", GetType(Integer), -101, , , , , , True))
@@ -1493,7 +1491,6 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("PercentDropCompensation3", "Prone Drop Compensation Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("PercentMaxCounterForce3", "Prone CounterForce Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("PercentCounterForceAccuracy3", "Prone CF Accuracy Bonus", GetType(Integer), -101, , , , , , True))
-        t.Columns.Add(MakeColumn("PercentCounterForceFrequency3", "Prone CF Frequency Bonus", GetType(Integer), -101, , , , , , True))
         t.Columns.Add(MakeColumn("AimLevels3", "Prone Aim Bonus", GetType(Integer), -101, , , , , , True))
 
 
