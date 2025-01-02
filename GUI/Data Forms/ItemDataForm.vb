@@ -281,7 +281,7 @@ Public Class ItemDataForm
             _view(0)(Tables.Items.Fields.GraphicType) = GraphicTypeComboBox.SelectedIndex
 
             If otherItem IsNot Nothing AndAlso otherItem IsNot _view(0).Row Then
-                If MessageBox.Show("The Item ID you have entered is already being used by """ & otherItem(Tables.Items.Fields.Name) & """.  Do you want to swap IDs?", "Swap IDs", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) = Windows.Forms.DialogResult.Yes Then
+                If MessageBox.Show("The Item ID you have entered is already being used by """ & otherItem(Tables.Items.Fields.Name) & """.  Do you want to swap IDs?", "Swap IDs", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) = System.Windows.Forms.DialogResult.Yes Then
                     'swap ids
                     otherItem(Tables.Items.Fields.ID) = -1
                     _view(0).EndEdit()

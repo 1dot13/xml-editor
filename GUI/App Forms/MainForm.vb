@@ -118,7 +118,7 @@ Public Class MainForm
     End Sub
 
     Private Sub OpenFile(ByVal sender As Object, ByVal e As EventArgs) Handles OpenToolStripMenuItem.Click, OpenToolStripButton.Click
-        Windows.Forms.Cursor.Current = Cursors.WaitCursor
+        System.Windows.Forms.Cursor.Current = Cursors.WaitCursor
         Splash.Show()
         Splash.UpdateLoadingText(DisplayText.ReloadingData)
         Me.Hide()
@@ -127,7 +127,7 @@ Public Class MainForm
             Splash.UpdateCurrentDirectory(GameData(i).Name)
             GameData(i).LoadData()
         Next
-        Windows.Forms.Cursor.Current = Cursors.Arrow
+        System.Windows.Forms.Cursor.Current = Cursors.Arrow
         Splash.Hide()
         Me.Show()
     End Sub
@@ -695,7 +695,7 @@ Public Class MainForm
     End Sub
 
     Protected Sub Save(saveAll As Boolean)
-        Windows.Forms.Cursor.Current = Cursors.WaitCursor
+        System.Windows.Forms.Cursor.Current = Cursors.WaitCursor
         LoadingForm.Show(True)
         Application.DoEvents()
         If saveAll Then
@@ -717,7 +717,7 @@ Public Class MainForm
             End With
         End If
 
-        Windows.Forms.Cursor.Current = Cursors.Arrow
+        System.Windows.Forms.Cursor.Current = Cursors.Arrow
         LoadingForm.Close()
     End Sub
 

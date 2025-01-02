@@ -142,7 +142,7 @@ Public Class BaseDataForm
     End Sub
 
     Private Sub DataForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
-        If e.CloseReason = CloseReason.UserClosing AndAlso Me.DialogResult <> Windows.Forms.DialogResult.OK Then
+        If e.CloseReason = CloseReason.UserClosing AndAlso Me.DialogResult <> System.Windows.Forms.DialogResult.OK Then
             CancelButtonClicked()
             CancelData()
         End If
