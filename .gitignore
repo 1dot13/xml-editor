@@ -1,5 +1,6 @@
 /GUI/bin/*
 /GUI/obj/*
+/GUI/GUI.vbproj.user
 /BackEnd/bin/*
 /BackEnd/obj/*
 /.vs/*
