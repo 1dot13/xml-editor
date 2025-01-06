@@ -11,6 +11,7 @@ Public Module Utility
         Public Const Trim As String = "Trim"
         Public Const ComparisonField As String = "ComparisonField"
         Public Const NoRowDuplicate As String = "NoRowDuplicate"
+        Public Const Comment As String = "Comment"
     End Class
 
     Public Class ColumnProperty

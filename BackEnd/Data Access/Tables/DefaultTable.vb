@@ -171,6 +171,11 @@ Public Class DefaultTable
         Dim xw As New Xml.XmlTextWriter(fileName, Text.Encoding.UTF8)
         xw.WriteStartDocument()
         xw.WriteWhitespace(vbLf)
+        Dim comment = table.GetStringProperty(TableProperty.Comment)
+        If comment IsNot Nothing Then
+            xw.WriteComment(comment)
+            xw.WriteWhitespace(vbLf)
+        End If
         xw.WriteStartElement(sourceDSName)
         xw.WriteWhitespace(vbLf)
 
@@ -230,6 +235,11 @@ Public Class DefaultTable
 
         Dim xw = Xml.XmlWriter.Create(memStream)
         xw.WriteStartDocument()
+        xw.WriteWhitespace(vbLf)
+        Dim comment = table.GetStringProperty(TableProperty.Comment)
+        If comment IsNot Nothing Then
+            xw.WriteComment(comment)
+        End If
         xw.WriteWhitespace(vbLf)
         xw.WriteStartElement(sourceDSName)
         xw.WriteWhitespace(vbLf)

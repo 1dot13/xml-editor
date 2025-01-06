@@ -1107,6 +1107,7 @@ Public Module DatabaseCode
         t.ExtendedProperties.Add(TableProperty.DataSetName, t.TableName & "LIST")
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\AmmoTypes.xml")
         t.ExtendedProperties.Add(TableProperty.ComparisonField, "name")
+        t.ExtendedProperties.Add(TableProperty.Comment, Comments(TableComments.AmmoTypes))
 
         t.Columns.Add(MakeColumn("uiIndex", "ID", GetType(Integer)))
         t.Columns.Add(MakeColumn("name", "Name", GetType(String)))
@@ -2403,6 +2404,7 @@ Public Module DatabaseCode
         t.ExtendedProperties.Add(TableProperty.DataSetName, "CLOTHESLIST")
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\Clothes.xml")
         t.ExtendedProperties.Add(TableProperty.Trim, True)
+        t.ExtendedProperties.Add(TableProperty.Comment, Comments(TableComments.Clothes))
 
         t.Columns.Add(MakeColumn("uiIndex", "Index", GetType(Integer)))
         t.Columns.Add(MakeColumn("szName", "Name", GetType(String)))
