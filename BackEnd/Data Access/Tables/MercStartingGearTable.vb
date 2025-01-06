@@ -31,43 +31,54 @@ Public Class MercStartingGearTable
         Dim a As Integer
         Dim uiComments As Integer = 0
         Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+
         xmldoc.Load(fs)
         xmlnode = xmldoc.GetElementsByTagName("MERCGEARLIST").Item(0)
+
         For i = 0 To xmlnode.ChildNodes.Count - 1
             If xmlnode.ChildNodes.Item(i).Name = "#comment" Then
                 uiComments = uiComments + 1
                 Continue For
             End If
+
             _table.Rows.Add()
+            Dim rowIndex As Integer = i - uiComments
+            _table.Rows(rowIndex).BeginEdit()
+
             a = 0
             xmlnode2 = xmlnode.ChildNodes.Item(i).ChildNodes
             For x = 0 To xmlnode2.Count - 1
-                If xmlnode2.Item(x).Name = "#comment" Then Continue For
-                If xmlnode2.Item(x).Name = "GEARKIT" Then
+                Dim xmlElement As XmlNode = xmlnode2.Item(x)
+                Dim xmlElementName As String = xmlElement.Name
+
+                If xmlElementName = "#comment" Then Continue For
+                If xmlElementName = "GEARKIT" Then
                     a = a + 1
-                    xmlnode3 = xmlnode2.Item(x).ChildNodes
+                    xmlnode3 = xmlElement.ChildNodes
                     For y = 0 To xmlnode3.Count - 1
                         If xmlnode3.Item(y).Name = "#comment" Then Continue For
 
                         If _table.Columns.Contains(xmlnode3.Item(y).Name & a) Then
                             If _table.Columns(xmlnode3.Item(y).Name & a).DataType.Name = "Boolean" Then
-                                _table.Rows(i - uiComments).Item(xmlnode3.Item(y).Name & a) = IIf(xmlnode3.Item(y).InnerText.Trim = 1, True, False)
+                                _table.Rows(rowIndex).Item(xmlnode3.Item(y).Name & a) = IIf(xmlnode3.Item(y).InnerText.Trim = 1, True, False)
                             Else
-                                _table.Rows(i - uiComments).Item(xmlnode3.Item(y).Name & a) = xmlnode3.Item(y).InnerText.Trim
+                                _table.Rows(rowIndex).Item(xmlnode3.Item(y).Name & a) = xmlnode3.Item(y).InnerText.Trim
                             End If
                         End If
                     Next
                 Else
-                    If _table.Columns.Contains(xmlnode2.Item(x).Name) Then
-                        If _table.Columns(xmlnode2.Item(x).Name).DataType.Name = "Boolean" Then
-                            _table.Rows(i - uiComments).Item(xmlnode2.Item(x).Name) = IIf(xmlnode2.Item(x).InnerText.Trim = 1, True, False)
+                    If _table.Columns.Contains(xmlElementName) Then
+                        If _table.Columns(xmlElementName).DataType.Name = "Boolean" Then
+                            _table.Rows(rowIndex).Item(xmlElementName) = IIf(xmlElement.InnerText.Trim = 1, True, False)
                         Else
-                            _table.Rows(i - uiComments).Item(xmlnode2.Item(x).Name) = xmlnode2.Item(x).InnerText.Trim
+                            _table.Rows(rowIndex).Item(xmlElementName) = xmlElement.InnerText.Trim
                         End If
                     End If
                 End If
             Next
+            _table.Rows(rowIndex).EndEdit()
         Next
+
         fs.Close()
         fs.Dispose()
     End Sub
