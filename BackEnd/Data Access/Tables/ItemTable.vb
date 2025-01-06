@@ -333,6 +333,7 @@ Public Class ItemTable
         Dim da, aap As Integer
         Dim uicomments As Integer = 0
         Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+
         xmldoc.Load(fs)
         xmlnode = xmldoc.GetElementsByTagName("ITEMLIST").Item(0)
         For i = 0 To xmlnode.ChildNodes.Count - 1
@@ -341,54 +342,62 @@ Public Class ItemTable
                 Continue For
             End If
             _table.Rows.Add()
+            Dim rowIndex As Integer = i - uicomments
+            _table.Rows(rowIndex).BeginEdit()
+
             a = 0
             da = 0
             aap = 0
             xmlnode2 = xmlnode.ChildNodes.Item(i).ChildNodes
             For x = 0 To xmlnode2.Count - 1
-                If xmlnode2.Item(x).Name = "#comment" Then Continue For
-                If xmlnode2.Item(x).Name = "STAND_MODIFIERS" OrElse xmlnode2.Item(x).Name = "CROUCH_MODIFIERS" OrElse xmlnode2.Item(x).Name = "PRONE_MODIFIERS" Then
-                    If xmlnode2.Item(x).Name = "STAND_MODIFIERS" Then a = 1
-                    If xmlnode2.Item(x).Name = "CROUCH_MODIFIERS" Then a = 2
-                    If xmlnode2.Item(x).Name = "PRONE_MODIFIERS" Then a = 3
-                    xmlnode3 = xmlnode2.Item(x).ChildNodes
+                Dim xmlElement As XmlNode = xmlnode2.Item(x)
+                Dim xmlElementName As String = xmlElement.Name
+
+                If xmlElementName = "#comment" Then Continue For
+                If xmlElementName = "STAND_MODIFIERS" OrElse xmlElementName = "CROUCH_MODIFIERS" OrElse xmlElementName = "PRONE_MODIFIERS" Then
+                    If xmlElementName = "STAND_MODIFIERS" Then a = 1
+                    If xmlElementName = "CROUCH_MODIFIERS" Then a = 2
+                    If xmlElementName = "PRONE_MODIFIERS" Then a = 3
+
+                    xmlnode3 = xmlElement.ChildNodes
                     For y = 0 To xmlnode3.Count - 1
                         If xmlnode3.Item(y).Name = "#comment" Then Continue For
 
                         If _table.Columns.Contains(xmlnode3.Item(y).Name & a) Then
                             If _table.Columns(xmlnode3.Item(y).Name & a).DataType.Name = "Boolean" Then
-                                _table.Rows(i - uicomments).Item(xmlnode3.Item(y).Name & a) = IIf(xmlnode3.Item(y).InnerText.Trim = 1, True, False)
+                                _table.Rows(rowIndex).Item(xmlnode3.Item(y).Name & a) = IIf(xmlnode3.Item(y).InnerText.Trim = 1, True, False)
                             Else
-                                _table.Rows(i - uicomments).Item(xmlnode3.Item(y).Name & a) = xmlnode3.Item(y).InnerText.Trim
+                                _table.Rows(rowIndex).Item(xmlnode3.Item(y).Name & a) = xmlnode3.Item(y).InnerText.Trim
                             End If
                         End If
                     Next
                 Else
-                    If xmlnode2.Item(x).Name = "DefaultAttachment" Then
+                    If xmlElementName = "DefaultAttachment" Then
                         If da < 10 Then
-                            If _table.Columns.Contains(xmlnode2.Item(x).Name & da) Then
-                                _table.Rows(i - uicomments).Item(xmlnode2.Item(x).Name & da) = xmlnode2.Item(x).InnerText.Trim
+                            If _table.Columns.Contains(xmlElementName & da) Then
+                                _table.Rows(rowIndex).Item(xmlElementName & da) = xmlElement.InnerText.Trim
                                 da = da + 1
                             End If
                         End If
-                    ElseIf xmlnode2.Item(x).Name = "AvailableAttachmentPoint" Then
+                    ElseIf xmlElementName = "AvailableAttachmentPoint" Then
                         If aap < 10 Then
-                            If _table.Columns.Contains(xmlnode2.Item(x).Name & aap) Then
-                                _table.Rows(i - uicomments).Item(xmlnode2.Item(x).Name & aap) = xmlnode2.Item(x).InnerText.Trim
+                            If _table.Columns.Contains(xmlElementName & aap) Then
+                                _table.Rows(rowIndex).Item(xmlElementName & aap) = xmlElement.InnerText.Trim
                                 aap = aap + 1
                             End If
                         End If
                     Else
-                        If _table.Columns.Contains(xmlnode2.Item(x).Name) Then
-                            If _table.Columns(xmlnode2.Item(x).Name).DataType.Name = "Boolean" Then
-                                _table.Rows(i - uicomments).Item(xmlnode2.Item(x).Name) = IIf(xmlnode2.Item(x).InnerText.Trim = 1, True, False)
+                        If _table.Columns.Contains(xmlElementName) Then
+                            If _table.Columns(xmlElementName).DataType.Name = "Boolean" Then
+                                _table.Rows(rowIndex).Item(xmlElementName) = IIf(xmlElement.InnerText.Trim = 1, True, False)
                             Else
-                                _table.Rows(i - uicomments).Item(xmlnode2.Item(x).Name) = xmlnode2.Item(x).InnerText.Trim
+                                _table.Rows(rowIndex).Item(xmlElementName) = xmlElement.InnerText.Trim
                             End If
                         End If
                     End If
                 End If
             Next
+            _table.Rows(rowIndex).EndEdit()
         Next
         fs.Close()
         fs.Dispose()
