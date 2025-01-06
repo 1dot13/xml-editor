@@ -414,6 +414,11 @@ Public Class ItemTable
 
         xw.WriteStartDocument()
         xw.WriteWhitespace(vbLf)
+        Dim comment = table.GetStringProperty(TableProperty.Comment)
+        If comment IsNot Nothing Then
+            xw.WriteComment(comment)
+            xw.WriteWhitespace(vbLf)
+        End If
         xw.WriteStartElement(table.ExtendedProperties("DataSetName").ToString)
         xw.WriteWhitespace(vbLf)
         For i = 0 To view.Count - 1
