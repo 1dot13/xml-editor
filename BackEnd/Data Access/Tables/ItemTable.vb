@@ -376,14 +376,14 @@ Public Class ItemTable
                         If da < 10 Then
                             If _table.Columns.Contains(xmlElementName & da) Then
                                 _table.Rows(rowIndex).Item(xmlElementName & da) = xmlElement.InnerText.Trim
-                                da = da + 1
+                                da += 1
                             End If
                         End If
                     ElseIf xmlElementName = "AvailableAttachmentPoint" Then
                         If aap < 10 Then
                             If _table.Columns.Contains(xmlElementName & aap) Then
                                 _table.Rows(rowIndex).Item(xmlElementName & aap) = xmlElement.InnerText.Trim
-                                aap = aap + 1
+                                aap += 1
                             End If
                         End If
                     Else

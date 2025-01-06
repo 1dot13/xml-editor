@@ -53,7 +53,7 @@ Public Class MercStartingGearTable
 
                 If xmlElementName = "#comment" Then Continue For
                 If xmlElementName = "GEARKIT" Then
-                    a = a + 1
+                    a += 1
                     xmlnode3 = xmlElement.ChildNodes
                     For y = 0 To xmlnode3.Count - 1
                         If xmlnode3.Item(y).Name = "#comment" Then Continue For

@@ -52,7 +52,7 @@ Public Class ItemTransformationTable
                 If xmlElementName = "usResult" Then
                     If da < 11 Then
                         _table.Rows(rowIndex).Item(xmlElementName & da) = xmlElement.InnerText.Trim
-                        da = da + 1
+                        da += 1
                     End If
                 Else
                     _table.Rows(rowIndex).Item(xmlElementName) = xmlElement.InnerText.Trim
