@@ -240,8 +240,8 @@ Public Class DefaultTable
         Dim comment = table.GetStringProperty(TableProperty.Comment)
         If comment IsNot Nothing Then
             xw.WriteComment(comment)
+            xw.WriteWhitespace(vbLf)
         End If
-        xw.WriteWhitespace(vbLf)
         xw.WriteStartElement(sourceDSName)
         xw.WriteWhitespace(vbLf)
 
