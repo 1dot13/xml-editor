@@ -362,9 +362,9 @@ Partial Class ItemDataForm
         Me.CrouchPercentCounterForceAccuracyUpDown = New System.Windows.Forms.NumericUpDown()
         Me.PronePercentCounterForceAccuracyUpDown = New System.Windows.Forms.NumericUpDown()
         Me.Label224 = New System.Windows.Forms.Label()
-        Me.StandPercentCounterForceFrequencyUpDown = New System.Windows.Forms.NumericUpDown()
-        Me.CrouchPercentCounterForceFrequencyUpDown = New System.Windows.Forms.NumericUpDown()
-        Me.PronePercentCounterForceFrequencyUpDown = New System.Windows.Forms.NumericUpDown()
+        Me.StandPercentAimUpDown = New System.Windows.Forms.NumericUpDown()
+        Me.CrouchPercentAimUpDown = New System.Windows.Forms.NumericUpDown()
+        Me.PronePercentAimUpDown = New System.Windows.Forms.NumericUpDown()
         Me.Label225 = New System.Windows.Forms.Label()
         Me.StandAimLevelsUpDown = New System.Windows.Forms.NumericUpDown()
         Me.CrouchAimLevelsUpDown = New System.Windows.Forms.NumericUpDown()
@@ -993,9 +993,9 @@ Partial Class ItemDataForm
         CType(Me.StandPercentCounterForceAccuracyUpDown, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.CrouchPercentCounterForceAccuracyUpDown, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PronePercentCounterForceAccuracyUpDown, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.StandPercentCounterForceFrequencyUpDown, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.CrouchPercentCounterForceFrequencyUpDown, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.PronePercentCounterForceFrequencyUpDown, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.StandPercentAimUpDown, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.CrouchPercentAimUpDown, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.PronePercentAimUpDown, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.StandAimLevelsUpDown, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.CrouchAimLevelsUpDown, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.ProneAimLevelsUpDown, System.ComponentModel.ISupportInitialize).BeginInit
@@ -4965,9 +4965,9 @@ Partial Class ItemDataForm
         Me.tlpNCTHStanceBonus.Controls.Add(Me.CrouchPercentCounterForceAccuracyUpDown, 2, 9)
         Me.tlpNCTHStanceBonus.Controls.Add(Me.PronePercentCounterForceAccuracyUpDown, 3, 9)
         Me.tlpNCTHStanceBonus.Controls.Add(Me.Label224, 0, 10)
-        Me.tlpNCTHStanceBonus.Controls.Add(Me.StandPercentCounterForceFrequencyUpDown, 1, 10)
-        Me.tlpNCTHStanceBonus.Controls.Add(Me.CrouchPercentCounterForceFrequencyUpDown, 2, 10)
-        Me.tlpNCTHStanceBonus.Controls.Add(Me.PronePercentCounterForceFrequencyUpDown, 3, 10)
+        Me.tlpNCTHStanceBonus.Controls.Add(Me.StandPercentAimUpDown, 1, 10)
+        Me.tlpNCTHStanceBonus.Controls.Add(Me.CrouchPercentAimUpDown, 2, 10)
+        Me.tlpNCTHStanceBonus.Controls.Add(Me.PronePercentAimUpDown, 3, 10)
         Me.tlpNCTHStanceBonus.Controls.Add(Me.Label225, 0, 11)
         Me.tlpNCTHStanceBonus.Controls.Add(Me.StandAimLevelsUpDown, 1, 11)
         Me.tlpNCTHStanceBonus.Controls.Add(Me.CrouchAimLevelsUpDown, 2, 11)
@@ -5421,35 +5421,35 @@ Partial Class ItemDataForm
         Me.Label224.Text = "Percent CF Frequency"
         Me.Label224.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'StandPercentCounterForceFrequencyUpDown
+        'StandPercentAimUpDown
         '
-        Me.StandPercentCounterForceFrequencyUpDown.Location = New System.Drawing.Point(351, 345)
-        Me.StandPercentCounterForceFrequencyUpDown.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.StandPercentCounterForceFrequencyUpDown.Minimum = New Decimal(New Integer() {101, 0, 0, -2147483648})
-        Me.StandPercentCounterForceFrequencyUpDown.Name = "StandPercentCounterForceFrequencyUpDown"
-        Me.StandPercentCounterForceFrequencyUpDown.Size = New System.Drawing.Size(141, 26)
-        Me.StandPercentCounterForceFrequencyUpDown.TabIndex = 0
-        Me.StandPercentCounterForceFrequencyUpDown.Tag = "PercentCounterForceFrequency1"
+        Me.StandPercentAimUpDown.Location = New System.Drawing.Point(351, 345)
+        Me.StandPercentAimUpDown.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.StandPercentAimUpDown.Minimum = New Decimal(New Integer() {101, 0, 0, -2147483648})
+        Me.StandPercentAimUpDown.Name = "StandPercentAimUpDown"
+        Me.StandPercentAimUpDown.Size = New System.Drawing.Size(141, 26)
+        Me.StandPercentAimUpDown.TabIndex = 0
+        Me.StandPercentAimUpDown.Tag = "PercentAim1"
         '
-        'CrouchPercentCounterForceFrequencyUpDown
+        'CrouchPercentAimUpDown
         '
-        Me.CrouchPercentCounterForceFrequencyUpDown.Location = New System.Drawing.Point(509, 345)
-        Me.CrouchPercentCounterForceFrequencyUpDown.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.CrouchPercentCounterForceFrequencyUpDown.Minimum = New Decimal(New Integer() {101, 0, 0, -2147483648})
-        Me.CrouchPercentCounterForceFrequencyUpDown.Name = "CrouchPercentCounterForceFrequencyUpDown"
-        Me.CrouchPercentCounterForceFrequencyUpDown.Size = New System.Drawing.Size(141, 26)
-        Me.CrouchPercentCounterForceFrequencyUpDown.TabIndex = 0
-        Me.CrouchPercentCounterForceFrequencyUpDown.Tag = "PercentCounterForceFrequency2"
+        Me.CrouchPercentAimUpDown.Location = New System.Drawing.Point(509, 345)
+        Me.CrouchPercentAimUpDown.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.CrouchPercentAimUpDown.Minimum = New Decimal(New Integer() {101, 0, 0, -2147483648})
+        Me.CrouchPercentAimUpDown.Name = "CrouchPercentAimUpDown"
+        Me.CrouchPercentAimUpDown.Size = New System.Drawing.Size(141, 26)
+        Me.CrouchPercentAimUpDown.TabIndex = 0
+        Me.CrouchPercentAimUpDown.Tag = "PercentAim2"
         '
-        'PronePercentCounterForceFrequencyUpDown
+        'PronePercentAimUpDown
         '
-        Me.PronePercentCounterForceFrequencyUpDown.Location = New System.Drawing.Point(667, 345)
-        Me.PronePercentCounterForceFrequencyUpDown.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.PronePercentCounterForceFrequencyUpDown.Minimum = New Decimal(New Integer() {101, 0, 0, -2147483648})
-        Me.PronePercentCounterForceFrequencyUpDown.Name = "PronePercentCounterForceFrequencyUpDown"
-        Me.PronePercentCounterForceFrequencyUpDown.Size = New System.Drawing.Size(141, 26)
-        Me.PronePercentCounterForceFrequencyUpDown.TabIndex = 0
-        Me.PronePercentCounterForceFrequencyUpDown.Tag = "PercentCounterForceFrequency3"
+        Me.PronePercentAimUpDown.Location = New System.Drawing.Point(667, 345)
+        Me.PronePercentAimUpDown.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.PronePercentAimUpDown.Minimum = New Decimal(New Integer() {101, 0, 0, -2147483648})
+        Me.PronePercentAimUpDown.Name = "PronePercentAimUpDown"
+        Me.PronePercentAimUpDown.Size = New System.Drawing.Size(141, 26)
+        Me.PronePercentAimUpDown.TabIndex = 0
+        Me.PronePercentAimUpDown.Tag = "PercentAim3"
         '
         'Label225
         '
@@ -12258,318 +12258,318 @@ Partial Class ItemDataForm
         Me.tlpAbilitiesBonuses.ResumeLayout(False)
         Me.tlpAbilitiesBonuses.PerformLayout
         CType(Me.PercentStatusDrainReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.APBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.HearingRangeBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ItemSizeBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox4.ResumeLayout(false)
-        Me.tlpAbilitiesCamouflage.ResumeLayout(false)
+        CType(Me.APBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.HearingRangeBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ItemSizeBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox4.ResumeLayout(False)
+        Me.tlpAbilitiesCamouflage.ResumeLayout(False)
         Me.tlpAbilitiesCamouflage.PerformLayout
-        CType(Me.SnowCamoBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.DesertCamoBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.UrbanCamoBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CamoBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StealthBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.NCTHPage.ResumeLayout(false)
-        Me.GroupBox58.ResumeLayout(false)
-        Me.tlpNCTHStanceBonus.ResumeLayout(false)
+        CType(Me.SnowCamoBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.DesertCamoBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.UrbanCamoBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CamoBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StealthBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.NCTHPage.ResumeLayout(False)
+        Me.GroupBox58.ResumeLayout(False)
+        Me.tlpNCTHStanceBonus.ResumeLayout(False)
         Me.tlpNCTHStanceBonus.PerformLayout
-        CType(Me.StandFlatBaseUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchFlatBaseUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ProneFlatBaseUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentBaseUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentBaseUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentBaseUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandFlatAimUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchFlatAimUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ProneFlatAimUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentCapUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentCapUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentCapUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentHandlingUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentHandlingUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentHandlingUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentTargetTrackingSpeedUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentTargetTrackingSpeedUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentTargetTrackingSpeedUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentDropCompensationUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentDropCompensationUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentDropCompensationUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentMaxCounterForceUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentMaxCounterForceUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentMaxCounterForceUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentCounterForceAccuracyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentCounterForceAccuracyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentCounterForceAccuracyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandPercentCounterForceFrequencyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchPercentCounterForceFrequencyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PronePercentCounterForceFrequencyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.StandAimLevelsUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrouchAimLevelsUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ProneAimLevelsUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox59.ResumeLayout(false)
-        Me.tlpNCTHItemBonus.ResumeLayout(false)
+        CType(Me.StandFlatBaseUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchFlatBaseUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ProneFlatBaseUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentBaseUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentBaseUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentBaseUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandFlatAimUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchFlatAimUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ProneFlatAimUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentCapUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentCapUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentCapUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentHandlingUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentHandlingUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentHandlingUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentTargetTrackingSpeedUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentTargetTrackingSpeedUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentTargetTrackingSpeedUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentDropCompensationUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentDropCompensationUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentDropCompensationUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentMaxCounterForceUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentMaxCounterForceUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentMaxCounterForceUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentCounterForceAccuracyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentCounterForceAccuracyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentCounterForceAccuracyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandPercentAimUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchPercentAimUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PronePercentAimUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.StandAimLevelsUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrouchAimLevelsUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ProneAimLevelsUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox59.ResumeLayout(False)
+        Me.tlpNCTHItemBonus.ResumeLayout(False)
         Me.tlpNCTHItemBonus.PerformLayout
-        CType(Me.ScopeMagFactorUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ProjectionFactorUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.RecoilModifierXUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.RecoilModifierYUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PercentRecoilModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PercentAccuracyModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox60.ResumeLayout(false)
-        Me.tlpNCTHWeaponBonus.ResumeLayout(false)
+        CType(Me.ScopeMagFactorUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ProjectionFactorUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.RecoilModifierXUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.RecoilModifierYUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PercentRecoilModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PercentAccuracyModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox60.ResumeLayout(False)
+        Me.tlpNCTHWeaponBonus.ResumeLayout(False)
         Me.tlpNCTHWeaponBonus.PerformLayout
-        CType(Me.nAccuracyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.bRecoilXUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.bRecoilYUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubAimLevelsUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubRecoilDelayUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.HandlingUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.BonusesPage.ResumeLayout(false)
-        Me.GroupBox51.ResumeLayout(false)
-        Me.tlpBonusesMeleeWeapons.ResumeLayout(false)
+        CType(Me.nAccuracyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.bRecoilXUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.bRecoilYUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubAimLevelsUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubRecoilDelayUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.HandlingUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.BonusesPage.ResumeLayout(False)
+        Me.GroupBox51.ResumeLayout(False)
+        Me.tlpBonusesMeleeWeapons.ResumeLayout(False)
         Me.tlpBonusesMeleeWeapons.PerformLayout
-        CType(Me.MeleeDamageBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CrowbarBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox52.ResumeLayout(false)
-        Me.tlpBonusesSilencing.ResumeLayout(false)
+        CType(Me.MeleeDamageBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CrowbarBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox52.ResumeLayout(False)
+        Me.tlpBonusesSilencing.ResumeLayout(False)
         Me.tlpBonusesSilencing.PerformLayout
-        CType(Me.PercentNoiseReductionUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox53.ResumeLayout(false)
-        Me.tlpRangedWeapons.ResumeLayout(false)
+        CType(Me.PercentNoiseReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox53.ResumeLayout(False)
+        Me.tlpRangedWeapons.ResumeLayout(False)
         Me.tlpRangedWeapons.PerformLayout
-        CType(Me.BurstSizeBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.MagSizeBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.RangeBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.DamageBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.RateOfFireBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BulletSpeedBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox54.ResumeLayout(false)
-        Me.tlpBonusesToHit.ResumeLayout(false)
+        CType(Me.BurstSizeBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.MagSizeBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.RangeBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.DamageBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.RateOfFireBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BulletSpeedBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox54.ResumeLayout(False)
+        Me.tlpBonusesToHit.ResumeLayout(False)
         Me.tlpBonusesToHit.PerformLayout
-        CType(Me.AutoFireToHitBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BurstToHitBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.AimBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BestLaserRangeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ToHitBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.MinRangeForAimBonusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BipodUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox55.ResumeLayout(false)
-        Me.tlpBonusesAPReductions.ResumeLayout(false)
+        CType(Me.AutoFireToHitBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BurstToHitBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.AimBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BestLaserRangeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ToHitBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.MinRangeForAimBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BipodUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox55.ResumeLayout(False)
+        Me.tlpBonusesAPReductions.ResumeLayout(False)
         Me.tlpBonusesAPReductions.PerformLayout
-        CType(Me.PercentAutofireAPReductionUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PercentBurstFireAPReductionUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PercentReloadTimeAPReductionUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PercentReadyTimeAPReductionUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PercentAPReductionUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.WeaponPage.ResumeLayout(false)
-        Me.WeaponTab.ResumeLayout(false)
-        Me.GeneralWeaponPage.ResumeLayout(false)
-        Me.DirtGroupBox.ResumeLayout(false)
-        Me.TableLayoutPanel8.ResumeLayout(false)
+        CType(Me.PercentAutofireAPReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PercentBurstFireAPReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PercentReloadTimeAPReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PercentReadyTimeAPReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PercentAPReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.WeaponPage.ResumeLayout(False)
+        Me.WeaponTab.ResumeLayout(False)
+        Me.GeneralWeaponPage.ResumeLayout(False)
+        Me.DirtGroupBox.ResumeLayout(False)
+        Me.TableLayoutPanel8.ResumeLayout(False)
         Me.TableLayoutPanel8.PerformLayout
-        CType(Me.DirtDamageChanceUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.DirtIncreaseFactorUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox40.ResumeLayout(false)
-        Me.tlpWeaponGeneralThrowingKnives.ResumeLayout(false)
+        CType(Me.DirtDamageChanceUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.DirtIncreaseFactorUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox40.ResumeLayout(False)
+        Me.tlpWeaponGeneralThrowingKnives.ResumeLayout(False)
         Me.tlpWeaponGeneralThrowingKnives.PerformLayout
-        Me.GroupBox18.ResumeLayout(false)
-        Me.tlpWeaponGeneralWeaponFlags.ResumeLayout(false)
+        Me.GroupBox18.ResumeLayout(False)
+        Me.tlpWeaponGeneralWeaponFlags.ResumeLayout(False)
         Me.tlpWeaponGeneralWeaponFlags.PerformLayout
-        Me.GroupBox24.ResumeLayout(false)
-        Me.tlpWeaponGeneralEffectiveness.ResumeLayout(false)
+        Me.GroupBox24.ResumeLayout(False)
+        Me.tlpWeaponGeneralEffectiveness.ResumeLayout(False)
         Me.tlpWeaponGeneralEffectiveness.PerformLayout
-        CType(Me.bAccuracyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubImpactUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubDeadlinessUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox26.ResumeLayout(false)
-        Me.tlpWeaponGeneralSpeed.ResumeLayout(false)
+        CType(Me.bAccuracyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubImpactUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubDeadlinessUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox26.ResumeLayout(False)
+        Me.tlpWeaponGeneralSpeed.ResumeLayout(False)
         Me.tlpWeaponGeneralSpeed.PerformLayout
-        CType(Me.ubReadyTimeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubShotsPer4TurnsUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BR_ROFUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox25.ResumeLayout(false)
-        Me.tlpWeaponGeneralRange.ResumeLayout(false)
+        CType(Me.ubReadyTimeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubShotsPer4TurnsUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BR_ROFUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox25.ResumeLayout(False)
+        Me.tlpWeaponGeneralRange.ResumeLayout(False)
         Me.tlpWeaponGeneralRange.PerformLayout
-        CType(Me.usRangeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.MaxDistForMessyDeathUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox22.ResumeLayout(false)
-        Me.tlpWeaponGeneralGeneral.ResumeLayout(false)
+        CType(Me.usRangeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.MaxDistForMessyDeathUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox22.ResumeLayout(False)
+        Me.tlpWeaponGeneralGeneral.ResumeLayout(False)
         Me.tlpWeaponGeneralGeneral.PerformLayout
-        Me.GunPage.ResumeLayout(false)
-        Me.GroupBox30.ResumeLayout(false)
-        Me.tlpWeaponGunsReloading.ResumeLayout(false)
+        Me.GunPage.ResumeLayout(False)
+        Me.GroupBox30.ResumeLayout(False)
+        Me.tlpWeaponGunsReloading.ResumeLayout(False)
         Me.tlpWeaponGunsReloading.PerformLayout
-        CType(Me.APsToReloadUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.APsToReloadManuallyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox29.ResumeLayout(false)
-        Me.tlpWeaponGunsAutomaticFire.ResumeLayout(false)
+        CType(Me.APsToReloadUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.APsToReloadManuallyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox29.ResumeLayout(False)
+        Me.tlpWeaponGunsAutomaticFire.ResumeLayout(False)
         Me.tlpWeaponGunsAutomaticFire.PerformLayout
-        CType(Me.bAutofireShotsPerFiveAPUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.AutoPenaltyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox28.ResumeLayout(false)
-        Me.tlpWeaponGunsBurstFire.ResumeLayout(false)
+        CType(Me.bAutofireShotsPerFiveAPUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.AutoPenaltyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox28.ResumeLayout(False)
+        Me.tlpWeaponGunsBurstFire.ResumeLayout(False)
         Me.tlpWeaponGunsBurstFire.PerformLayout
-        CType(Me.ubShotsPerBurstUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubBurstPenaltyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.bBurstAPUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox27.ResumeLayout(false)
-        Me.tlpWeaponGunsAnimation.ResumeLayout(false)
+        CType(Me.ubShotsPerBurstUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubBurstPenaltyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.bBurstAPUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox27.ResumeLayout(False)
+        Me.tlpWeaponGunsAnimation.ResumeLayout(False)
         Me.tlpWeaponGunsAnimation.PerformLayout
-        CType(Me.usReloadDelayUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BurstAniDelayUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubBulletSpeedUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox23.ResumeLayout(false)
-        Me.tlpWeaponGunsAmmunition.ResumeLayout(false)
+        CType(Me.usReloadDelayUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BurstAniDelayUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubBulletSpeedUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox23.ResumeLayout(False)
+        Me.tlpWeaponGunsAmmunition.ResumeLayout(False)
         Me.tlpWeaponGunsAmmunition.PerformLayout
-        CType(Me.WeaponubMagSizeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.LauncherPage.ResumeLayout(false)
-        Me.GroupBox45.ResumeLayout(false)
-        CType(Me.LaunchableGrid,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox20.ResumeLayout(false)
-        Me.tlpWeaponLaunchersLauncherType.ResumeLayout(false)
+        CType(Me.WeaponubMagSizeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.LauncherPage.ResumeLayout(False)
+        Me.GroupBox45.ResumeLayout(False)
+        CType(Me.LaunchableGrid, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox20.ResumeLayout(False)
+        Me.tlpWeaponLaunchersLauncherType.ResumeLayout(False)
         Me.tlpWeaponLaunchersLauncherType.PerformLayout
-        Me.GroupBox19.ResumeLayout(false)
-        Me.tlpWeaponLaunchersRocketLauncherOptions.ResumeLayout(false)
+        Me.GroupBox19.ResumeLayout(False)
+        Me.tlpWeaponLaunchersRocketLauncherOptions.ResumeLayout(False)
         Me.tlpWeaponLaunchersRocketLauncherOptions.PerformLayout
-        Me.SoundPage.ResumeLayout(false)
-        Me.GroupBox21.ResumeLayout(false)
-        Me.tlpWeaponSoundsSounds.ResumeLayout(false)
+        Me.SoundPage.ResumeLayout(False)
+        Me.GroupBox21.ResumeLayout(False)
+        Me.tlpWeaponSoundsSounds.ResumeLayout(False)
         Me.tlpWeaponSoundsSounds.PerformLayout
-        CType(Me.ubAttackVolumeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubHitVolumeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.AttachmentPage.ResumeLayout(false)
-        Me.GroupBox63.ResumeLayout(false)
-        Me.TableLayoutPanel6.ResumeLayout(false)
-        Me.GroupBox61.ResumeLayout(false)
-        Me.TableLayoutPanel3.ResumeLayout(false)
+        CType(Me.ubAttackVolumeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubHitVolumeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.AttachmentPage.ResumeLayout(False)
+        Me.GroupBox63.ResumeLayout(False)
+        Me.TableLayoutPanel6.ResumeLayout(False)
+        Me.GroupBox61.ResumeLayout(False)
+        Me.TableLayoutPanel3.ResumeLayout(False)
         Me.TableLayoutPanel3.PerformLayout
-        CType(Me.LCUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox43.ResumeLayout(false)
-        CType(Me.AttachmentGrid,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox34.ResumeLayout(false)
-        Me.tlpAttachmentsDefaults.ResumeLayout(false)
-        Me.AttachmentDataPage.ResumeLayout(false)
-        Me.AttDataSubTab.ResumeLayout(false)
-        Me.TabPage1.ResumeLayout(false)
-        Me.GroupBox62.ResumeLayout(false)
-        Me.TableLayoutPanel4.ResumeLayout(false)
+        CType(Me.LCUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox43.ResumeLayout(False)
+        CType(Me.AttachmentGrid, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox34.ResumeLayout(False)
+        Me.tlpAttachmentsDefaults.ResumeLayout(False)
+        Me.AttachmentDataPage.ResumeLayout(False)
+        Me.AttDataSubTab.ResumeLayout(False)
+        Me.TabPage1.ResumeLayout(False)
+        Me.GroupBox62.ResumeLayout(False)
+        Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout
-        CType(Me.AttachToPointAPCostUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox48.ResumeLayout(false)
-        CType(Me.AttachmentInfoGrid,System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabPage2.ResumeLayout(false)
-        Me.GroupBox46.ResumeLayout(false)
-        CType(Me.AttachToGrid,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox44.ResumeLayout(false)
-        CType(Me.IncompatibleAttachmentGrid,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ExplosivePage.ResumeLayout(false)
-        Me.GroupBox47.ResumeLayout(false)
-        CType(Me.LauncherGrid,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox16.ResumeLayout(false)
-        Me.tlpExplosivesStats.ResumeLayout(false)
+        CType(Me.AttachToPointAPCostUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox48.ResumeLayout(False)
+        CType(Me.AttachmentInfoGrid, System.ComponentModel.ISupportInitialize).EndInit
+        Me.TabPage2.ResumeLayout(False)
+        Me.GroupBox46.ResumeLayout(False)
+        CType(Me.AttachToGrid, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox44.ResumeLayout(False)
+        CType(Me.IncompatibleAttachmentGrid, System.ComponentModel.ISupportInitialize).EndInit
+        Me.ExplosivePage.ResumeLayout(False)
+        Me.GroupBox47.ResumeLayout(False)
+        CType(Me.LauncherGrid, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox16.ResumeLayout(False)
+        Me.tlpExplosivesStats.ResumeLayout(False)
         Me.tlpExplosivesStats.PerformLayout
-        CType(Me.NumericUpDown2,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubDamageUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubStunDamageUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubStartRadiusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubRadiusUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubDurationUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ExplosiveubVolumeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubVolatilityUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubMagSizeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.usNumFragmentsUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubFragDamageUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubFragRangeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.NumericUpDown1,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.IndoorModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox15.ResumeLayout(false)
-        Me.tlpExplosivesFlags.ResumeLayout(false)
+        CType(Me.NumericUpDown2, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubDamageUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubStunDamageUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubStartRadiusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubRadiusUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubDurationUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ExplosiveubVolumeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubVolatilityUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubMagSizeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.usNumFragmentsUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubFragDamageUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubFragRangeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.IndoorModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox15.ResumeLayout(False)
+        Me.tlpExplosivesFlags.ResumeLayout(False)
         Me.tlpExplosivesFlags.PerformLayout
-        Me.AmmoPage.ResumeLayout(false)
-        Me.GroupBox14.ResumeLayout(false)
-        Me.tlpAmmoStats.ResumeLayout(false)
+        Me.AmmoPage.ResumeLayout(False)
+        Me.GroupBox14.ResumeLayout(False)
+        Me.tlpAmmoStats.ResumeLayout(False)
         Me.tlpAmmoStats.PerformLayout
-        CType(Me.MagazineubMagSizeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ArmourPage.ResumeLayout(false)
-        Me.GroupBox13.ResumeLayout(false)
-        Me.tlpArmorStats.ResumeLayout(false)
+        CType(Me.MagazineubMagSizeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.ArmourPage.ResumeLayout(False)
+        Me.GroupBox13.ResumeLayout(False)
+        Me.tlpArmorStats.ResumeLayout(False)
         Me.tlpArmorStats.PerformLayout
-        CType(Me.ubProtectionUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubCoverageUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ubDegradePercentUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox12.ResumeLayout(false)
-        Me.tlpArmourFlags.ResumeLayout(false)
+        CType(Me.ubProtectionUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubCoverageUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ubDegradePercentUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox12.ResumeLayout(False)
+        Me.tlpArmourFlags.ResumeLayout(False)
         Me.tlpArmourFlags.PerformLayout
-        Me.FacePage.ResumeLayout(false)
-        Me.GroupBox56.ResumeLayout(false)
-        CType(Me.CompatibleFaceItemGrid,System.ComponentModel.ISupportInitialize).EndInit
-        Me.InventoryPage.ResumeLayout(false)
-        Me.ShopkeepersGroupBox.ResumeLayout(false)
-        Me.ShopkeepersPanel.ResumeLayout(false)
+        Me.FacePage.ResumeLayout(False)
+        Me.GroupBox56.ResumeLayout(False)
+        CType(Me.CompatibleFaceItemGrid, System.ComponentModel.ISupportInitialize).EndInit
+        Me.InventoryPage.ResumeLayout(False)
+        Me.ShopkeepersGroupBox.ResumeLayout(False)
+        Me.ShopkeepersPanel.ResumeLayout(False)
         Me.ShopkeepersPanel.PerformLayout
-        CType(Me.HowardUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.JakeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.KeithUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.MannyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.MickeyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PerkoUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PeterUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.SamUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.TonyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.AlbertoUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CarloUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ArnieUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.DevinUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ElginUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.FrankUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.FranzUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.FredoUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.GabbyUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.HerveUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox41.ResumeLayout(false)
-        Me.tlpInventoriesBobbyRays.ResumeLayout(false)
+        CType(Me.HowardUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.JakeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.KeithUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.MannyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.MickeyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PerkoUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PeterUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.SamUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.TonyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.AlbertoUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CarloUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ArnieUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.DevinUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ElginUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.FrankUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.FranzUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.FredoUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.GabbyUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.HerveUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox41.ResumeLayout(False)
+        Me.tlpInventoriesBobbyRays.ResumeLayout(False)
         Me.tlpInventoriesBobbyRays.PerformLayout
-        CType(Me.BR_NewInventoryUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BR_UsedInventoryUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.LBEPage.ResumeLayout(false)
-        Me.LBEGroupBox.ResumeLayout(false)
-        Me.tlpPocketsLoadBearingEquipment.ResumeLayout(false)
+        CType(Me.BR_NewInventoryUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BR_UsedInventoryUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.LBEPage.ResumeLayout(False)
+        Me.LBEGroupBox.ResumeLayout(False)
+        Me.tlpPocketsLoadBearingEquipment.ResumeLayout(False)
         Me.tlpPocketsLoadBearingEquipment.PerformLayout
-        CType(Me.lbeComboUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.lbeFilledSizeUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.lbeAvailableVolumeUpdown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.lbePocketsAvailableUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BackpackWeightModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.PocketsGroupBox.ResumeLayout(false)
-        Me.tlpPocketsPocketDetails.ResumeLayout(false)
+        CType(Me.lbeComboUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.lbeFilledSizeUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.lbeAvailableVolumeUpdown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.lbePocketsAvailableUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.BackpackWeightModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.PocketsGroupBox.ResumeLayout(False)
+        Me.tlpPocketsPocketDetails.ResumeLayout(False)
         Me.tlpPocketsPocketDetails.PerformLayout
-        Me.OverheatingTabPage.ResumeLayout(false)
+        Me.OverheatingTabPage.ResumeLayout(False)
         Me.OverheatingTabPage.PerformLayout
-        Me.WeaponTemperatureGroupBox.ResumeLayout(false)
-        Me.TableLayoutPanel2.ResumeLayout(false)
+        Me.WeaponTemperatureGroupBox.ResumeLayout(False)
+        Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout
-        CType(Me.JamThresholdUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.DamageThresholdUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PerShotTemperatureIncreaseUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ItemTemperatureGroupBox.ResumeLayout(false)
-        Me.TableLayoutPanel1.ResumeLayout(false)
+        CType(Me.JamThresholdUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.DamageThresholdUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.PerShotTemperatureIncreaseUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.ItemTemperatureGroupBox.ResumeLayout(False)
+        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout
-        CType(Me.CooldownFactorUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.TemperatureModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CooldownModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.JamThresholdModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.DamageThresholdModifierUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.FlagsTab.ResumeLayout(false)
-        Me.GroupBox65.ResumeLayout(false)
-        Me.GroupBox64.ResumeLayout(false)
-        CType(Me.HeaderImage,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.uiIndexUpDown,System.ComponentModel.ISupportInitialize).EndInit
-        Me.GroupBox36.ResumeLayout(false)
+        CType(Me.CooldownFactorUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.TemperatureModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CooldownModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.JamThresholdModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.DamageThresholdModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.FlagsTab.ResumeLayout(False)
+        Me.GroupBox65.ResumeLayout(False)
+        Me.GroupBox64.ResumeLayout(False)
+        CType(Me.HeaderImage, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.uiIndexUpDown, System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox36.ResumeLayout(False)
         Me.GroupBox36.PerformLayout
-        Me.ResumeLayout(false)
+        Me.ResumeLayout(False)
         Me.PerformLayout
 
-End Sub
+    End Sub
     Friend WithEvents ItemTab As System.Windows.Forms.TabControl
     Friend WithEvents GeneralPage As System.Windows.Forms.TabPage
     Friend WithEvents DescriptionPage As System.Windows.Forms.TabPage
@@ -12681,9 +12681,9 @@ End Sub
     Friend WithEvents StandPercentCounterForceAccuracyUpDown As System.Windows.Forms.NumericUpDown
     Friend WithEvents CrouchPercentCounterForceAccuracyUpDown As System.Windows.Forms.NumericUpDown
     Friend WithEvents PronePercentCounterForceAccuracyUpDown As System.Windows.Forms.NumericUpDown
-    Friend WithEvents StandPercentCounterForceFrequencyUpDown As System.Windows.Forms.NumericUpDown
-    Friend WithEvents CrouchPercentCounterForceFrequencyUpDown As System.Windows.Forms.NumericUpDown
-    Friend WithEvents PronePercentCounterForceFrequencyUpDown As System.Windows.Forms.NumericUpDown
+    Friend WithEvents StandPercentAimUpDown As System.Windows.Forms.NumericUpDown
+    Friend WithEvents CrouchPercentAimUpDown As System.Windows.Forms.NumericUpDown
+    Friend WithEvents PronePercentAimUpDown As System.Windows.Forms.NumericUpDown
     Friend WithEvents StandAimLevelsUpDown As System.Windows.Forms.NumericUpDown
     Friend WithEvents CrouchAimLevelsUpDown As System.Windows.Forms.NumericUpDown
     Friend WithEvents ProneAimLevelsUpDown As System.Windows.Forms.NumericUpDown
