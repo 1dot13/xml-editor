@@ -29,6 +29,7 @@ Public Class ItemTransformationTable
         Dim da As Integer
         Dim uiComments As Integer = 0
         Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+
         xmldoc.Load(fs)
         xmlnode = xmldoc.GetElementsByTagName("TRANSFORMATIONS_LIST").Item(0)
         For i = 0 To xmlnode.ChildNodes.Count - 1
@@ -36,20 +37,28 @@ Public Class ItemTransformationTable
                 uiComments = uiComments + 1
                 Continue For
             End If
+
             _table.Rows.Add()
+            Dim rowIndex As Integer = i - uiComments
+            _table.Rows(rowIndex).BeginEdit()
+
             da = 1
             xmlnode2 = xmlnode.ChildNodes.Item(i).ChildNodes
             For x = 0 To xmlnode2.Count - 1
-                If xmlnode2.Item(x).Name = "#comment" Then Continue For
-                If xmlnode2.Item(x).Name = "usResult" Then
+                Dim xmlElement As XmlNode = xmlnode2.Item(x)
+                Dim xmlElementName As String = xmlElement.Name
+
+                If xmlElementName = "#comment" Then Continue For
+                If xmlElementName = "usResult" Then
                     If da < 11 Then
-                        _table.Rows(i - uiComments).Item(xmlnode2.Item(x).Name & da) = xmlnode2.Item(x).InnerText.Trim
+                        _table.Rows(rowIndex).Item(xmlElementName & da) = xmlElement.InnerText.Trim
                         da = da + 1
                     End If
                 Else
-                    _table.Rows(i - uiComments).Item(xmlnode2.Item(x).Name) = xmlnode2.Item(x).InnerText.Trim
+                    _table.Rows(rowIndex).Item(xmlElementName) = xmlElement.InnerText.Trim
                 End If
             Next
+            _table.Rows(rowIndex).EndEdit()
         Next
     End Sub
 
