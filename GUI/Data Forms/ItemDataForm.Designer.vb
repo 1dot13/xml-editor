@@ -11061,7 +11061,7 @@ Partial Class ItemDataForm
         Me.AllowClimbingCheckbox.Name = "AllowClimbingCheckbox"
         Me.AllowClimbingCheckbox.Size = New System.Drawing.Size(409, 26)
         Me.AllowClimbingCheckbox.TabIndex = 20
-        Me.AllowClimbingCheckbox.Tag = "fAllowClimbing"
+        Me.AllowClimbingCheckbox.Tag = "AllowClimbing"
         Me.AllowClimbingCheckbox.Text = "Allow Climbing?"
         Me.AllowClimbingCheckbox.UseVisualStyleBackColor = True
         '
