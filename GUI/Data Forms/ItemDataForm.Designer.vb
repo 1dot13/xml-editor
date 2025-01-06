@@ -5418,7 +5418,7 @@ Partial Class ItemDataForm
         Me.Label224.Name = "Label224"
         Me.Label224.Size = New System.Drawing.Size(309, 34)
         Me.Label224.TabIndex = 0
-        Me.Label224.Text = "Percent CF Frequency"
+        Me.Label224.Text = "Percent Aim"
         Me.Label224.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'StandPercentAimUpDown
