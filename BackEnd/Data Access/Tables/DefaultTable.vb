@@ -215,6 +215,7 @@ Public Class DefaultTable
             xw.WriteString(vbLf)
         Next
         xw.WriteEndElement()
+        xw.WriteWhitespace(vbLf)
         xw.Close()
         view.Dispose()
 
@@ -280,6 +281,7 @@ Public Class DefaultTable
             xw.WriteString(vbLf)
         Next
         xw.WriteEndElement()
+        xw.WriteWhitespace(vbLf)
         xw.Close()
         view.Dispose()
 
