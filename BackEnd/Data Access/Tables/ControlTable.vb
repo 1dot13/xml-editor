@@ -49,49 +49,67 @@ Public Class ControlTable
         Dim xmlParentNode As XmlNodeList
         Dim xmlChildNode As XmlNodeList
         Dim xmlChild2Node As XmlNodeList
+
         For i As Integer = 0 To xmlnode.ChildNodes.Count - 1
             If xmlnode.ChildNodes.Item(i).Name = "INVENTORY" Then Continue For
+
             _table.Rows.Add()
+            Dim rowIndex As Integer = _table.Rows.Count - 1
+            _table.Rows(rowIndex).BeginEdit()
+
             xmlParentNode = xmlnode.ChildNodes.Item(i).ChildNodes
             For x As Integer = 0 To xmlParentNode.Count - 1
-                If xmlParentNode.Item(x).Name = "#comment" Then Continue For
-                If xmlParentNode.Item(x).Name = "REORDERDAYSDELAY" OrElse xmlParentNode.Item(x).Name = "CASH" OrElse xmlParentNode.Item(x).Name = "COOLNESS" OrElse xmlParentNode.Item(x).Name = "BASICDEALERFLAGS" Then
-                    xmlChildNode = xmlParentNode.Item(x).ChildNodes
+                Dim xmlElement As XmlNode = xmlParentNode.Item(x)
+                Dim xmlElementName As String = xmlElement.Name
+
+                If xmlElementName = "#comment" Then Continue For
+                If xmlElementName = "REORDERDAYSDELAY" OrElse xmlElementName = "CASH" OrElse xmlElementName = "COOLNESS" OrElse xmlElementName = "BASICDEALERFLAGS" Then
+                    xmlChildNode = xmlElement.ChildNodes
+
                     For y As Integer = 0 To xmlChildNode.Count - 1
-                        If xmlChildNode.Item(y).Name = "#comment" Then Continue For
-                        If xmlChildNode.Item(y).Name = "DAILY" Then
-                            xmlChild2Node = xmlChildNode.Item(y).ChildNodes
+                        Dim xmlChildElement As XmlNode = xmlChildNode.Item(y)
+                        Dim xmlChildName As String = xmlChildElement.Name
+
+                        If xmlChildName = "#comment" Then Continue For
+                        If xmlChildName = "DAILY" Then
+                            xmlChild2Node = xmlChildElement.ChildNodes
+
                             For z As Integer = 0 To xmlChild2Node.Count - 1
-                                If _table.Columns.Contains(xmlChild2Node.Item(z).Name) Then
-                                    If xmlChild2Node.Item(z).Name = "#comment" Then Continue For
-                                    If _table.Columns(xmlChild2Node.Item(z).Name).DataType.Name = "Boolean" Then
-                                        _table.Rows(_table.Rows.Count - 1).Item(xmlChild2Node.Item(z).Name) = IIf(xmlChild2Node.Item(z).InnerText.Trim = 1, True, False)
+                                Dim xmlChild2Element As XmlNode = xmlChild2Node.Item(z)
+                                Dim xmlChild2Name As String = xmlChild2Element.Name
+
+                                If _table.Columns.Contains(xmlChild2Name) Then
+                                    If xmlChild2Name = "#comment" Then Continue For
+                                    If _table.Columns(xmlChild2Name).DataType.Name = "Boolean" Then
+                                        _table.Rows(rowIndex).Item(xmlChild2Name) = IIf(xmlChild2Element.InnerText.Trim = 1, True, False)
                                     Else
-                                        _table.Rows(_table.Rows.Count - 1).Item(xmlChild2Node.Item(z).Name) = xmlChild2Node.Item(z).InnerText.Trim
+                                        _table.Rows(rowIndex).Item(xmlChild2Name) = xmlChild2Element.InnerText.Trim
                                     End If
                                 End If
                             Next
                         Else
-                            If _table.Columns.Contains(xmlChildNode.Item(y).Name) Then
-                                If _table.Columns(xmlChildNode.Item(y).Name).DataType.Name = "Boolean" Then
-                                    _table.Rows(_table.Rows.Count - 1).Item(xmlChildNode.Item(y).Name) = IIf(xmlChildNode.Item(y).InnerText.Trim = 1, True, False)
+                            If _table.Columns.Contains(xmlChildName) Then
+                                If _table.Columns(xmlChildName).DataType.Name = "Boolean" Then
+                                    _table.Rows(rowIndex).Item(xmlChildName) = IIf(xmlChildElement.InnerText.Trim = 1, True, False)
                                 Else
-                                    _table.Rows(_table.Rows.Count - 1).Item(xmlChildNode.Item(y).Name) = xmlChildNode.Item(y).InnerText.Trim
+                                    _table.Rows(rowIndex).Item(xmlChildName) = xmlChildElement.InnerText.Trim
                                 End If
                             End If
                         End If
                     Next
                 Else
-                    If _table.Columns.Contains(xmlParentNode.Item(x).Name) Then
-                        If _table.Columns(xmlParentNode.Item(x).Name).DataType.Name = "Boolean" Then
-                            _table.Rows(_table.Rows.Count - 1).Item(xmlParentNode.Item(x).Name) = IIf(xmlParentNode.Item(x).InnerText.Trim = 1, True, False)
+                    If _table.Columns.Contains(xmlElementName) Then
+                        If _table.Columns(xmlElementName).DataType.Name = "Boolean" Then
+                            _table.Rows(rowIndex).Item(xmlElementName) = IIf(xmlElement.InnerText.Trim = 1, True, False)
                         Else
-                            _table.Rows(_table.Rows.Count - 1).Item(xmlParentNode.Item(x).Name) = xmlParentNode.Item(x).InnerText.Trim
+                            _table.Rows(rowIndex).Item(xmlElementName) = xmlElement.InnerText.Trim
                         End If
                     End If
                 End If
             Next
+            _table.Rows(rowIndex).EndEdit()
         Next
+
         fs.Close()
         fs.Dispose()
     End Sub
