@@ -89,7 +89,7 @@ Public Class ItemDataForm
             ItemFlags.AmmobeltVest,
             ItemFlags.CamoRemoval,
             ItemFlags.Cleaningkit,
-            ItemFlags.AttentionItem,
+            AttentionItemCheckBox,
             ItemFlags.Garotte,
             ItemFlags.Covert,
             ItemFlags.Corpse,
@@ -183,7 +183,7 @@ Public Class ItemDataForm
             DirectionalCheckBox,
             BlockIronSightCheckBox,
             AllowClimbingCheckbox,
-            ItemFlags2.Cigarette,
+            CigaretteCheckBox,
             ItemFlags2.ProvidesRobotCamo,
             ItemFlags2.ProvidesRobotNightVision,
             ItemFlags2.ProvidesRobotLaserBonus
@@ -339,6 +339,11 @@ Public Class ItemDataForm
     End Sub
 
     'Create links between Flags tab checkboxes and same flags distributed to other tabs
+    Private Sub AttentionItem_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AttentionItemCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.AttentionItem, AttentionItemCheckBox.Checked)
+    End Sub
+
     Private Sub Damageable_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DamageableCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
         checklist.SetItemChecked(ItemFlags.Damageable, DamageableCheckBox.Checked)
@@ -494,7 +499,6 @@ Public Class ItemDataForm
             Case ItemFlags.AmmobeltVest
             Case ItemFlags.CamoRemoval
             Case ItemFlags.Cleaningkit
-            Case ItemFlags.AttentionItem
             Case ItemFlags.Garotte
             Case ItemFlags.Covert
             Case ItemFlags.Corpse
@@ -604,7 +608,7 @@ Public Class ItemDataForm
         checklist.SetItemChecked(ItemFlags2.CanAndString, CanAndStringCheckBox.Checked)
     End Sub
 
-    Private Sub Marbles_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MarblesCheckBox.CheckedChanged
+    Private Sub Marbles_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles MarblesCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
         checklist.SetItemChecked(ItemFlags2.Marbles, MarblesCheckBox.Checked)
     End Sub
@@ -709,12 +713,16 @@ Public Class ItemDataForm
         checklist.SetItemChecked(ItemFlags2.AllowClimbing, AllowClimbingCheckbox.Checked)
     End Sub
 
+    Private Sub Cigarette_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CigaretteCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Cigarette, CigaretteCheckBox.Checked)
+    End Sub
+
     Private Sub ItemFlag2_ValueChanged(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ItemCheckEventArgs) Handles ItemFlags2CheckedList.ItemCheck
         Select Case e.Index
             ' No checkboxes yet
             Case ItemFlags2.AntitankMine
             Case ItemFlags2.DiseaseSystemExclusive
-            Case ItemFlags2.Cigarette
             Case ItemFlags2.ProvidesRobotCamo
             Case ItemFlags2.ProvidesRobotNightVision
             Case ItemFlags2.ProvidesRobotLaserBonus
