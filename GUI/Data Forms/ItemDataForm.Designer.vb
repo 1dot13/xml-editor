@@ -164,6 +164,11 @@ Partial Class ItemDataForm
         GeneralPage = New TabPage()
         GroupBox31 = New GroupBox()
         tlpGeneralStats = New TableLayoutPanel()
+        Label268 = New Label()
+        TransportGroupMaxProgressUpDown = New NumericUpDown()
+        TransportGroupMinProgressUpDown = New NumericUpDown()
+        Label267 = New Label()
+        Label266 = New Label()
         Label19 = New Label()
         PriceUpDown = New NumericUpDown()
         Label23 = New Label()
@@ -848,6 +853,8 @@ Partial Class ItemDataForm
         RobotTab = New TabPage()
         RobotBonusGroupBox = New GroupBox()
         TableLayoutPanel11 = New TableLayoutPanel()
+        RobotDamageReductionUpDown = New NumericUpDown()
+        Label265 = New Label()
         RobotUtilitySkillGrantComboBox = New ComboBox()
         Label264 = New Label()
         RobotChassisSkillGrantComboBox = New ComboBox()
@@ -899,8 +906,6 @@ Partial Class ItemDataForm
         Label176 = New Label()
         TextBox7 = New TextBox()
         Label177 = New Label()
-        Label265 = New Label()
-        RobotDamageReductionUpDown = New NumericUpDown()
         ItemTab.SuspendLayout()
         DescriptionPage.SuspendLayout()
         TabControl2.SuspendLayout()
@@ -923,6 +928,8 @@ Partial Class ItemDataForm
         GeneralPage.SuspendLayout()
         GroupBox31.SuspendLayout()
         tlpGeneralStats.SuspendLayout()
+        CType(TransportGroupMaxProgressUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(TransportGroupMinProgressUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(PriceUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(WeightUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(PerPocketUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1249,6 +1256,7 @@ Partial Class ItemDataForm
         RobotTab.SuspendLayout()
         RobotBonusGroupBox.SuspendLayout()
         TableLayoutPanel11.SuspendLayout()
+        CType(RobotDamageReductionUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(RobotAgiBonusUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(RobotStrBonusUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(RobotDexBonusUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1257,7 +1265,6 @@ Partial Class ItemDataForm
         CType(HeaderImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(uiIndexUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         GroupBox36.SuspendLayout()
-        CType(RobotDamageReductionUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' ItemTab
@@ -2793,6 +2800,11 @@ Partial Class ItemDataForm
         tlpGeneralStats.ColumnStyles.Add(New ColumnStyle())
         tlpGeneralStats.ColumnStyles.Add(New ColumnStyle())
         tlpGeneralStats.ColumnStyles.Add(New ColumnStyle())
+        tlpGeneralStats.Controls.Add(Label268, 0, 7)
+        tlpGeneralStats.Controls.Add(TransportGroupMaxProgressUpDown, 2, 9)
+        tlpGeneralStats.Controls.Add(TransportGroupMinProgressUpDown, 2, 8)
+        tlpGeneralStats.Controls.Add(Label267, 0, 9)
+        tlpGeneralStats.Controls.Add(Label266, 0, 8)
         tlpGeneralStats.Controls.Add(Label19, 0, 0)
         tlpGeneralStats.Controls.Add(PriceUpDown, 1, 0)
         tlpGeneralStats.Controls.Add(Label23, 0, 1)
@@ -2829,6 +2841,66 @@ Partial Class ItemDataForm
         tlpGeneralStats.RowStyles.Add(New RowStyle())
         tlpGeneralStats.Size = New Size(278, 560)
         tlpGeneralStats.TabIndex = 0
+        ' 
+        ' Label268
+        ' 
+        Label268.AutoSize = True
+        Label268.Dock = DockStyle.Fill
+        Label268.Location = New Point(4, 231)
+        Label268.Margin = New Padding(4, 0, 4, 0)
+        Label268.Name = "Label268"
+        Label268.Size = New Size(94, 33)
+        Label268.TabIndex = 38
+        Label268.Text = "Cursor:"
+        Label268.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' TransportGroupMaxProgressUpDown
+        ' 
+        TransportGroupMaxProgressUpDown.Dock = DockStyle.Fill
+        TransportGroupMaxProgressUpDown.Location = New Point(222, 301)
+        TransportGroupMaxProgressUpDown.Margin = New Padding(4)
+        TransportGroupMaxProgressUpDown.MaximumSize = New Size(55, 0)
+        TransportGroupMaxProgressUpDown.Name = "TransportGroupMaxProgressUpDown"
+        TransportGroupMaxProgressUpDown.Size = New Size(55, 25)
+        TransportGroupMaxProgressUpDown.TabIndex = 37
+        TransportGroupMaxProgressUpDown.Tag = "TransportGroupMaxProgress"
+        ' 
+        ' TransportGroupMinProgressUpDown
+        ' 
+        TransportGroupMinProgressUpDown.Dock = DockStyle.Fill
+        TransportGroupMinProgressUpDown.Location = New Point(222, 268)
+        TransportGroupMinProgressUpDown.Margin = New Padding(4)
+        TransportGroupMinProgressUpDown.MaximumSize = New Size(55, 0)
+        TransportGroupMinProgressUpDown.Name = "TransportGroupMinProgressUpDown"
+        TransportGroupMinProgressUpDown.Size = New Size(55, 25)
+        TransportGroupMinProgressUpDown.TabIndex = 36
+        TransportGroupMinProgressUpDown.Tag = "TransportGroupMinProgress"
+        ' 
+        ' Label267
+        ' 
+        Label267.AutoSize = True
+        tlpGeneralStats.SetColumnSpan(Label267, 2)
+        Label267.Dock = DockStyle.Fill
+        Label267.Location = New Point(4, 297)
+        Label267.Margin = New Padding(4, 0, 4, 0)
+        Label267.Name = "Label267"
+        Label267.Size = New Size(210, 33)
+        Label267.TabIndex = 35
+        Label267.Text = "Transport Group Max Progress:"
+        Label267.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Label266
+        ' 
+        Label266.AutoSize = True
+        tlpGeneralStats.SetColumnSpan(Label266, 2)
+        Label266.Dock = DockStyle.Fill
+        Label266.Location = New Point(4, 264)
+        Label266.Margin = New Padding(4, 0, 4, 0)
+        Label266.Name = "Label266"
+        Label266.Size = New Size(210, 33)
+        Label266.TabIndex = 34
+        Label266.Text = "Transport Group Min Progress:"
+        Label266.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Label19
         ' 
@@ -2884,7 +2956,7 @@ Partial Class ItemDataForm
         HectoGramLabel.Location = New Point(222, 33)
         HectoGramLabel.Margin = New Padding(4, 0, 4, 0)
         HectoGramLabel.Name = "HectoGramLabel"
-        HectoGramLabel.Size = New Size(77, 33)
+        HectoGramLabel.Size = New Size(55, 33)
         HectoGramLabel.TabIndex = 32
         HectoGramLabel.Text = "hg"
         HectoGramLabel.TextAlign = ContentAlignment.MiddleLeft
@@ -3016,8 +3088,9 @@ Partial Class ItemDataForm
         CursorComboBox.FormattingEnabled = True
         CursorComboBox.Location = New Point(106, 235)
         CursorComboBox.Margin = New Padding(4)
+        CursorComboBox.MaximumSize = New Size(170, 0)
         CursorComboBox.Name = "CursorComboBox"
-        CursorComboBox.Size = New Size(193, 25)
+        CursorComboBox.Size = New Size(170, 25)
         CursorComboBox.TabIndex = 7
         CursorComboBox.Tag = "ubCursor"
         ' 
@@ -11949,6 +12022,30 @@ Partial Class ItemDataForm
         TableLayoutPanel11.Size = New Size(342, 357)
         TableLayoutPanel11.TabIndex = 0
         ' 
+        ' RobotDamageReductionUpDown
+        ' 
+        RobotDamageReductionUpDown.DecimalPlaces = 2
+        RobotDamageReductionUpDown.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
+        RobotDamageReductionUpDown.Location = New Point(212, 202)
+        RobotDamageReductionUpDown.Margin = New Padding(4)
+        RobotDamageReductionUpDown.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
+        RobotDamageReductionUpDown.Name = "RobotDamageReductionUpDown"
+        RobotDamageReductionUpDown.Size = New Size(126, 25)
+        RobotDamageReductionUpDown.TabIndex = 10
+        RobotDamageReductionUpDown.Tag = "RobotDamageReduction"
+        ' 
+        ' Label265
+        ' 
+        Label265.AutoSize = True
+        Label265.Dock = DockStyle.Fill
+        Label265.Location = New Point(4, 198)
+        Label265.Margin = New Padding(4, 0, 4, 0)
+        Label265.Name = "Label265"
+        Label265.Size = New Size(200, 33)
+        Label265.TabIndex = 9
+        Label265.Text = "Robot Damage Reduction:"
+        Label265.TextAlign = ContentAlignment.MiddleLeft
+        ' 
         ' RobotUtilitySkillGrantComboBox
         ' 
         RobotUtilitySkillGrantComboBox.Dock = DockStyle.Fill
@@ -12480,30 +12577,6 @@ Partial Class ItemDataForm
         Label177.TabIndex = 27
         Label177.Text = "Description:"
         ' 
-        ' Label265
-        ' 
-        Label265.AutoSize = True
-        Label265.Dock = DockStyle.Fill
-        Label265.Location = New Point(4, 198)
-        Label265.Margin = New Padding(4, 0, 4, 0)
-        Label265.Name = "Label265"
-        Label265.Size = New Size(200, 33)
-        Label265.TabIndex = 9
-        Label265.Text = "Robot Damage Reduction:"
-        Label265.TextAlign = ContentAlignment.MiddleLeft
-        ' 
-        ' RobotDamageReductionUpDown
-        ' 
-        RobotDamageReductionUpDown.DecimalPlaces = 2
-        RobotDamageReductionUpDown.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
-        RobotDamageReductionUpDown.Location = New Point(212, 202)
-        RobotDamageReductionUpDown.Margin = New Padding(4)
-        RobotDamageReductionUpDown.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
-        RobotDamageReductionUpDown.Name = "RobotDamageReductionUpDown"
-        RobotDamageReductionUpDown.Size = New Size(126, 25)
-        RobotDamageReductionUpDown.TabIndex = 10
-        RobotDamageReductionUpDown.Tag = "RobotDamageReduction"
-        ' 
         ' ItemDataForm
         ' 
         Me.AutoScaleDimensions = New SizeF(7.0F, 17.0F)
@@ -12566,6 +12639,8 @@ Partial Class ItemDataForm
         GroupBox31.ResumeLayout(False)
         tlpGeneralStats.ResumeLayout(False)
         tlpGeneralStats.PerformLayout()
+        CType(TransportGroupMaxProgressUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(TransportGroupMinProgressUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(PriceUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(WeightUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(PerPocketUpDown, System.ComponentModel.ISupportInitialize).EndInit()
@@ -12945,6 +13020,7 @@ Partial Class ItemDataForm
         RobotBonusGroupBox.ResumeLayout(False)
         TableLayoutPanel11.ResumeLayout(False)
         TableLayoutPanel11.PerformLayout()
+        CType(RobotDamageReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(RobotAgiBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(RobotStrBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(RobotDexBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit()
@@ -12955,7 +13031,6 @@ Partial Class ItemDataForm
         CType(uiIndexUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         GroupBox36.ResumeLayout(False)
         GroupBox36.PerformLayout()
-        CType(RobotDamageReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -13831,4 +13906,9 @@ Partial Class ItemDataForm
     Friend WithEvents Label263 As Label
     Friend WithEvents RobotDamageReductionUpDown As NumericUpDown
     Friend WithEvents Label265 As Label
+    Friend WithEvents Label266 As Label
+    Friend WithEvents TransportGroupMaxProgressUpDown As NumericUpDown
+    Friend WithEvents TransportGroupMinProgressUpDown As NumericUpDown
+    Friend WithEvents Label267 As Label
+    Friend WithEvents Label268 As Label
 End Class
