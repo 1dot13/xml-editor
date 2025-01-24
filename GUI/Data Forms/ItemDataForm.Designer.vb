@@ -899,6 +899,8 @@ Partial Class ItemDataForm
         Label176 = New Label()
         TextBox7 = New TextBox()
         Label177 = New Label()
+        Label265 = New Label()
+        RobotDamageReductionUpDown = New NumericUpDown()
         ItemTab.SuspendLayout()
         DescriptionPage.SuspendLayout()
         TabControl2.SuspendLayout()
@@ -1255,6 +1257,7 @@ Partial Class ItemDataForm
         CType(HeaderImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(uiIndexUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         GroupBox36.SuspendLayout()
+        CType(RobotDamageReductionUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' ItemTab
@@ -11916,6 +11919,8 @@ Partial Class ItemDataForm
         TableLayoutPanel11.ColumnCount = 2
         TableLayoutPanel11.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanel11.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanel11.Controls.Add(RobotDamageReductionUpDown, 1, 6)
+        TableLayoutPanel11.Controls.Add(Label265, 0, 6)
         TableLayoutPanel11.Controls.Add(RobotUtilitySkillGrantComboBox, 1, 5)
         TableLayoutPanel11.Controls.Add(Label264, 0, 5)
         TableLayoutPanel11.Controls.Add(RobotChassisSkillGrantComboBox, 1, 4)
@@ -11932,7 +11937,8 @@ Partial Class ItemDataForm
         TableLayoutPanel11.Location = New Point(4, 22)
         TableLayoutPanel11.Margin = New Padding(4)
         TableLayoutPanel11.Name = "TableLayoutPanel11"
-        TableLayoutPanel11.RowCount = 7
+        TableLayoutPanel11.RowCount = 8
+        TableLayoutPanel11.RowStyles.Add(New RowStyle())
         TableLayoutPanel11.RowStyles.Add(New RowStyle())
         TableLayoutPanel11.RowStyles.Add(New RowStyle())
         TableLayoutPanel11.RowStyles.Add(New RowStyle())
@@ -12474,6 +12480,30 @@ Partial Class ItemDataForm
         Label177.TabIndex = 27
         Label177.Text = "Description:"
         ' 
+        ' Label265
+        ' 
+        Label265.AutoSize = True
+        Label265.Dock = DockStyle.Fill
+        Label265.Location = New Point(4, 198)
+        Label265.Margin = New Padding(4, 0, 4, 0)
+        Label265.Name = "Label265"
+        Label265.Size = New Size(200, 33)
+        Label265.TabIndex = 9
+        Label265.Text = "Robot Damage Reduction:"
+        Label265.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' RobotDamageReductionUpDown
+        ' 
+        RobotDamageReductionUpDown.DecimalPlaces = 2
+        RobotDamageReductionUpDown.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
+        RobotDamageReductionUpDown.Location = New Point(212, 202)
+        RobotDamageReductionUpDown.Margin = New Padding(4)
+        RobotDamageReductionUpDown.Maximum = New Decimal(New Integer() {1, 0, 0, 0})
+        RobotDamageReductionUpDown.Name = "RobotDamageReductionUpDown"
+        RobotDamageReductionUpDown.Size = New Size(126, 25)
+        RobotDamageReductionUpDown.TabIndex = 10
+        RobotDamageReductionUpDown.Tag = "RobotDamageReduction"
+        ' 
         ' ItemDataForm
         ' 
         Me.AutoScaleDimensions = New SizeF(7.0F, 17.0F)
@@ -12925,6 +12955,7 @@ Partial Class ItemDataForm
         CType(uiIndexUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         GroupBox36.ResumeLayout(False)
         GroupBox36.PerformLayout()
+        CType(RobotDamageReductionUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -13798,4 +13829,6 @@ Partial Class ItemDataForm
     Friend WithEvents Label264 As Label
     Friend WithEvents RobotChassisSkillGrantComboBox As ComboBox
     Friend WithEvents Label263 As Label
+    Friend WithEvents RobotDamageReductionUpDown As NumericUpDown
+    Friend WithEvents Label265 As Label
 End Class
