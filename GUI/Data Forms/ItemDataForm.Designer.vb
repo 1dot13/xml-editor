@@ -845,6 +845,26 @@ Partial Class ItemDataForm
         DrugsCheckedList = New CheckedListBox()
         GroupBox64 = New GroupBox()
         ItemFlagsCheckedList = New CheckedListBox()
+        RobotTab = New TabPage()
+        RobotBonusGroupBox = New GroupBox()
+        TableLayoutPanel11 = New TableLayoutPanel()
+        RobotUtilitySkillGrantComboBox = New ComboBox()
+        Label264 = New Label()
+        RobotChassisSkillGrantComboBox = New ComboBox()
+        Label263 = New Label()
+        RobotTargetingSkillGrantComboBox = New ComboBox()
+        Label262 = New Label()
+        RobotAgiBonusUpDown = New NumericUpDown()
+        Label250 = New Label()
+        RobotStrBonusUpDown = New NumericUpDown()
+        Label251 = New Label()
+        Label260 = New Label()
+        RobotDexBonusUpDown = New NumericUpDown()
+        RobotFlagsGroupBox = New GroupBox()
+        TableLayoutPanel10 = New TableLayoutPanel()
+        ProvidesRobotCamoCheckBox = New CheckBox()
+        ProvidesRobotNightVisionCheckBox = New CheckBox()
+        ProvidesRobotLaserBonusCheckBox = New CheckBox()
         Label15 = New Label()
         Label16 = New Label()
         TextBox1 = New TextBox()
@@ -1224,6 +1244,14 @@ Partial Class ItemDataForm
         GroupBox67.SuspendLayout()
         GroupBox65.SuspendLayout()
         GroupBox64.SuspendLayout()
+        RobotTab.SuspendLayout()
+        RobotBonusGroupBox.SuspendLayout()
+        TableLayoutPanel11.SuspendLayout()
+        CType(RobotAgiBonusUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(RobotStrBonusUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(RobotDexBonusUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        RobotFlagsGroupBox.SuspendLayout()
+        TableLayoutPanel10.SuspendLayout()
         CType(HeaderImage, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(uiIndexUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         GroupBox36.SuspendLayout()
@@ -1248,6 +1276,7 @@ Partial Class ItemDataForm
         ItemTab.Controls.Add(LBEPage)
         ItemTab.Controls.Add(OverheatingTabPage)
         ItemTab.Controls.Add(FlagsTab)
+        ItemTab.Controls.Add(RobotTab)
         ItemTab.HotTrack = True
         ItemTab.Location = New Point(0, 81)
         ItemTab.Margin = New Padding(4)
@@ -11858,6 +11887,266 @@ Partial Class ItemDataForm
         ItemFlagsCheckedList.Size = New Size(632, 244)
         ItemFlagsCheckedList.TabIndex = 0
         ' 
+        ' RobotTab
+        ' 
+        RobotTab.BackColor = SystemColors.Control
+        RobotTab.Controls.Add(RobotBonusGroupBox)
+        RobotTab.Controls.Add(RobotFlagsGroupBox)
+        RobotTab.Location = New Point(4, 48)
+        RobotTab.Name = "RobotTab"
+        RobotTab.Padding = New Padding(3)
+        RobotTab.Size = New Size(661, 662)
+        RobotTab.TabIndex = 21
+        RobotTab.Text = "Robot"
+        ' 
+        ' RobotBonusGroupBox
+        ' 
+        RobotBonusGroupBox.Controls.Add(TableLayoutPanel11)
+        RobotBonusGroupBox.Location = New Point(0, 0)
+        RobotBonusGroupBox.Margin = New Padding(4)
+        RobotBonusGroupBox.Name = "RobotBonusGroupBox"
+        RobotBonusGroupBox.Padding = New Padding(4)
+        RobotBonusGroupBox.Size = New Size(350, 383)
+        RobotBonusGroupBox.TabIndex = 3
+        RobotBonusGroupBox.TabStop = False
+        RobotBonusGroupBox.Text = "Bonuses"
+        ' 
+        ' TableLayoutPanel11
+        ' 
+        TableLayoutPanel11.ColumnCount = 2
+        TableLayoutPanel11.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanel11.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanel11.Controls.Add(RobotUtilitySkillGrantComboBox, 1, 5)
+        TableLayoutPanel11.Controls.Add(Label264, 0, 5)
+        TableLayoutPanel11.Controls.Add(RobotChassisSkillGrantComboBox, 1, 4)
+        TableLayoutPanel11.Controls.Add(Label263, 0, 4)
+        TableLayoutPanel11.Controls.Add(RobotTargetingSkillGrantComboBox, 1, 3)
+        TableLayoutPanel11.Controls.Add(Label262, 0, 3)
+        TableLayoutPanel11.Controls.Add(RobotAgiBonusUpDown, 1, 1)
+        TableLayoutPanel11.Controls.Add(Label250, 0, 0)
+        TableLayoutPanel11.Controls.Add(RobotStrBonusUpDown, 1, 0)
+        TableLayoutPanel11.Controls.Add(Label251, 0, 1)
+        TableLayoutPanel11.Controls.Add(Label260, 0, 2)
+        TableLayoutPanel11.Controls.Add(RobotDexBonusUpDown, 1, 2)
+        TableLayoutPanel11.Dock = DockStyle.Fill
+        TableLayoutPanel11.Location = New Point(4, 22)
+        TableLayoutPanel11.Margin = New Padding(4)
+        TableLayoutPanel11.Name = "TableLayoutPanel11"
+        TableLayoutPanel11.RowCount = 7
+        TableLayoutPanel11.RowStyles.Add(New RowStyle())
+        TableLayoutPanel11.RowStyles.Add(New RowStyle())
+        TableLayoutPanel11.RowStyles.Add(New RowStyle())
+        TableLayoutPanel11.RowStyles.Add(New RowStyle())
+        TableLayoutPanel11.RowStyles.Add(New RowStyle())
+        TableLayoutPanel11.RowStyles.Add(New RowStyle())
+        TableLayoutPanel11.RowStyles.Add(New RowStyle(SizeType.Absolute, 20.0F))
+        TableLayoutPanel11.Size = New Size(342, 357)
+        TableLayoutPanel11.TabIndex = 0
+        ' 
+        ' RobotUtilitySkillGrantComboBox
+        ' 
+        RobotUtilitySkillGrantComboBox.Dock = DockStyle.Fill
+        RobotUtilitySkillGrantComboBox.FormattingEnabled = True
+        RobotUtilitySkillGrantComboBox.Location = New Point(212, 169)
+        RobotUtilitySkillGrantComboBox.Margin = New Padding(4)
+        RobotUtilitySkillGrantComboBox.Name = "RobotUtilitySkillGrantComboBox"
+        RobotUtilitySkillGrantComboBox.Size = New Size(126, 25)
+        RobotUtilitySkillGrantComboBox.TabIndex = 8
+        RobotUtilitySkillGrantComboBox.Tag = "RobotUtilitySkillGrant"
+        ' 
+        ' Label264
+        ' 
+        Label264.AutoSize = True
+        Label264.Dock = DockStyle.Fill
+        Label264.Location = New Point(4, 165)
+        Label264.Margin = New Padding(4, 0, 4, 0)
+        Label264.Name = "Label264"
+        Label264.Size = New Size(200, 33)
+        Label264.TabIndex = 7
+        Label264.Text = "Utility Slot Bonus Trait:"
+        Label264.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' RobotChassisSkillGrantComboBox
+        ' 
+        RobotChassisSkillGrantComboBox.Dock = DockStyle.Fill
+        RobotChassisSkillGrantComboBox.FormattingEnabled = True
+        RobotChassisSkillGrantComboBox.Location = New Point(212, 136)
+        RobotChassisSkillGrantComboBox.Margin = New Padding(4)
+        RobotChassisSkillGrantComboBox.Name = "RobotChassisSkillGrantComboBox"
+        RobotChassisSkillGrantComboBox.Size = New Size(126, 25)
+        RobotChassisSkillGrantComboBox.TabIndex = 6
+        RobotChassisSkillGrantComboBox.Tag = "RobotChassisSkillGrant"
+        ' 
+        ' Label263
+        ' 
+        Label263.AutoSize = True
+        Label263.Dock = DockStyle.Fill
+        Label263.Location = New Point(4, 132)
+        Label263.Margin = New Padding(4, 0, 4, 0)
+        Label263.Name = "Label263"
+        Label263.Size = New Size(200, 33)
+        Label263.TabIndex = 5
+        Label263.Text = "Chassis Slot Bonus Trait:"
+        Label263.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' RobotTargetingSkillGrantComboBox
+        ' 
+        RobotTargetingSkillGrantComboBox.Dock = DockStyle.Fill
+        RobotTargetingSkillGrantComboBox.FormattingEnabled = True
+        RobotTargetingSkillGrantComboBox.Location = New Point(212, 103)
+        RobotTargetingSkillGrantComboBox.Margin = New Padding(4)
+        RobotTargetingSkillGrantComboBox.Name = "RobotTargetingSkillGrantComboBox"
+        RobotTargetingSkillGrantComboBox.Size = New Size(126, 25)
+        RobotTargetingSkillGrantComboBox.TabIndex = 4
+        RobotTargetingSkillGrantComboBox.Tag = "RobotTargetingSkillGrant"
+        ' 
+        ' Label262
+        ' 
+        Label262.AutoSize = True
+        Label262.Dock = DockStyle.Fill
+        Label262.Location = New Point(4, 99)
+        Label262.Margin = New Padding(4, 0, 4, 0)
+        Label262.Name = "Label262"
+        Label262.Size = New Size(200, 33)
+        Label262.TabIndex = 3
+        Label262.Text = "Targeting Slot Bonus Trait:"
+        Label262.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' RobotAgiBonusUpDown
+        ' 
+        RobotAgiBonusUpDown.Location = New Point(212, 37)
+        RobotAgiBonusUpDown.Margin = New Padding(4)
+        RobotAgiBonusUpDown.Name = "RobotAgiBonusUpDown"
+        RobotAgiBonusUpDown.Size = New Size(126, 25)
+        RobotAgiBonusUpDown.TabIndex = 1
+        RobotAgiBonusUpDown.Tag = "RobotAgiBonus"
+        ' 
+        ' Label250
+        ' 
+        Label250.AutoSize = True
+        Label250.Dock = DockStyle.Fill
+        Label250.Location = New Point(4, 0)
+        Label250.Margin = New Padding(4, 0, 4, 0)
+        Label250.Name = "Label250"
+        Label250.Size = New Size(200, 33)
+        Label250.TabIndex = 0
+        Label250.Text = "Strength:"
+        Label250.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' RobotStrBonusUpDown
+        ' 
+        RobotStrBonusUpDown.Location = New Point(212, 4)
+        RobotStrBonusUpDown.Margin = New Padding(4)
+        RobotStrBonusUpDown.Name = "RobotStrBonusUpDown"
+        RobotStrBonusUpDown.Size = New Size(126, 25)
+        RobotStrBonusUpDown.TabIndex = 0
+        RobotStrBonusUpDown.Tag = "RobotStrBonus"
+        ' 
+        ' Label251
+        ' 
+        Label251.AutoSize = True
+        Label251.Dock = DockStyle.Fill
+        Label251.Location = New Point(4, 33)
+        Label251.Margin = New Padding(4, 0, 4, 0)
+        Label251.Name = "Label251"
+        Label251.Size = New Size(200, 33)
+        Label251.TabIndex = 1
+        Label251.Text = "Agility:"
+        Label251.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Label260
+        ' 
+        Label260.AutoSize = True
+        Label260.Dock = DockStyle.Fill
+        Label260.Location = New Point(4, 66)
+        Label260.Margin = New Padding(4, 0, 4, 0)
+        Label260.Name = "Label260"
+        Label260.Size = New Size(200, 33)
+        Label260.TabIndex = 2
+        Label260.Text = "Dexterity:"
+        Label260.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' RobotDexBonusUpDown
+        ' 
+        RobotDexBonusUpDown.Location = New Point(212, 70)
+        RobotDexBonusUpDown.Margin = New Padding(4)
+        RobotDexBonusUpDown.Name = "RobotDexBonusUpDown"
+        RobotDexBonusUpDown.Size = New Size(126, 25)
+        RobotDexBonusUpDown.TabIndex = 2
+        RobotDexBonusUpDown.Tag = "RobotDexBonus"
+        ' 
+        ' RobotFlagsGroupBox
+        ' 
+        RobotFlagsGroupBox.Controls.Add(TableLayoutPanel10)
+        RobotFlagsGroupBox.Location = New Point(0, 394)
+        RobotFlagsGroupBox.Margin = New Padding(4, 7, 4, 7)
+        RobotFlagsGroupBox.Name = "RobotFlagsGroupBox"
+        RobotFlagsGroupBox.Padding = New Padding(4, 7, 4, 7)
+        RobotFlagsGroupBox.Size = New Size(350, 268)
+        RobotFlagsGroupBox.TabIndex = 2
+        RobotFlagsGroupBox.TabStop = False
+        RobotFlagsGroupBox.Text = "Flags"
+        ' 
+        ' TableLayoutPanel10
+        ' 
+        TableLayoutPanel10.ColumnCount = 1
+        TableLayoutPanel10.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanel10.Controls.Add(ProvidesRobotCamoCheckBox, 0, 0)
+        TableLayoutPanel10.Controls.Add(ProvidesRobotNightVisionCheckBox, 0, 1)
+        TableLayoutPanel10.Controls.Add(ProvidesRobotLaserBonusCheckBox, 0, 2)
+        TableLayoutPanel10.Dock = DockStyle.Fill
+        TableLayoutPanel10.Location = New Point(4, 25)
+        TableLayoutPanel10.Margin = New Padding(4)
+        TableLayoutPanel10.Name = "TableLayoutPanel10"
+        TableLayoutPanel10.RowCount = 6
+        TableLayoutPanel10.RowStyles.Add(New RowStyle())
+        TableLayoutPanel10.RowStyles.Add(New RowStyle())
+        TableLayoutPanel10.RowStyles.Add(New RowStyle())
+        TableLayoutPanel10.RowStyles.Add(New RowStyle())
+        TableLayoutPanel10.RowStyles.Add(New RowStyle())
+        TableLayoutPanel10.RowStyles.Add(New RowStyle())
+        TableLayoutPanel10.Size = New Size(342, 236)
+        TableLayoutPanel10.TabIndex = 0
+        ' 
+        ' ProvidesRobotCamoCheckBox
+        ' 
+        ProvidesRobotCamoCheckBox.AutoSize = True
+        ProvidesRobotCamoCheckBox.Dock = DockStyle.Fill
+        ProvidesRobotCamoCheckBox.Location = New Point(4, 4)
+        ProvidesRobotCamoCheckBox.Margin = New Padding(4)
+        ProvidesRobotCamoCheckBox.Name = "ProvidesRobotCamoCheckBox"
+        ProvidesRobotCamoCheckBox.Size = New Size(334, 21)
+        ProvidesRobotCamoCheckBox.TabIndex = 0
+        ProvidesRobotCamoCheckBox.Tag = "ProvidesRobotCamo"
+        ProvidesRobotCamoCheckBox.Text = "Provides Robot Camo"
+        ProvidesRobotCamoCheckBox.UseVisualStyleBackColor = True
+        ' 
+        ' ProvidesRobotNightVisionCheckBox
+        ' 
+        ProvidesRobotNightVisionCheckBox.AutoSize = True
+        ProvidesRobotNightVisionCheckBox.Dock = DockStyle.Fill
+        ProvidesRobotNightVisionCheckBox.Location = New Point(4, 33)
+        ProvidesRobotNightVisionCheckBox.Margin = New Padding(4)
+        ProvidesRobotNightVisionCheckBox.Name = "ProvidesRobotNightVisionCheckBox"
+        ProvidesRobotNightVisionCheckBox.Size = New Size(334, 21)
+        ProvidesRobotNightVisionCheckBox.TabIndex = 1
+        ProvidesRobotNightVisionCheckBox.Tag = "ProvidesRobotNightVision"
+        ProvidesRobotNightVisionCheckBox.Text = "Provides Robot Nightvision"
+        ProvidesRobotNightVisionCheckBox.UseVisualStyleBackColor = True
+        ' 
+        ' ProvidesRobotLaserBonusCheckBox
+        ' 
+        ProvidesRobotLaserBonusCheckBox.AutoSize = True
+        ProvidesRobotLaserBonusCheckBox.Dock = DockStyle.Fill
+        ProvidesRobotLaserBonusCheckBox.Location = New Point(4, 62)
+        ProvidesRobotLaserBonusCheckBox.Margin = New Padding(4)
+        ProvidesRobotLaserBonusCheckBox.Name = "ProvidesRobotLaserBonusCheckBox"
+        ProvidesRobotLaserBonusCheckBox.Size = New Size(334, 21)
+        ProvidesRobotLaserBonusCheckBox.TabIndex = 2
+        ProvidesRobotLaserBonusCheckBox.Tag = "ProvidesRobotLaserBonus"
+        ProvidesRobotLaserBonusCheckBox.Text = "Provides Robot Laser Bonus"
+        ProvidesRobotLaserBonusCheckBox.UseVisualStyleBackColor = True
+        ' 
         ' Label15
         ' 
         Label15.AutoSize = True
@@ -12622,6 +12911,16 @@ Partial Class ItemDataForm
         GroupBox67.ResumeLayout(False)
         GroupBox65.ResumeLayout(False)
         GroupBox64.ResumeLayout(False)
+        RobotTab.ResumeLayout(False)
+        RobotBonusGroupBox.ResumeLayout(False)
+        TableLayoutPanel11.ResumeLayout(False)
+        TableLayoutPanel11.PerformLayout()
+        CType(RobotAgiBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(RobotStrBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(RobotDexBonusUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        RobotFlagsGroupBox.ResumeLayout(False)
+        TableLayoutPanel10.ResumeLayout(False)
+        TableLayoutPanel10.PerformLayout()
         CType(HeaderImage, System.ComponentModel.ISupportInitialize).EndInit()
         CType(uiIndexUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         GroupBox36.ResumeLayout(False)
@@ -13479,4 +13778,24 @@ Partial Class ItemDataForm
     Friend WithEvents ItemFlags2CheckedList As CheckedListBox
     Friend WithEvents CigaretteCheckBox As CheckBox
     Friend WithEvents AttentionItemCheckBox As CheckBox
+    Friend WithEvents RobotTab As TabPage
+    Friend WithEvents RobotFlagsGroupBox As GroupBox
+    Friend WithEvents TableLayoutPanel10 As TableLayoutPanel
+    Friend WithEvents ProvidesRobotCamoCheckBox As CheckBox
+    Friend WithEvents ProvidesRobotNightVisionCheckBox As CheckBox
+    Friend WithEvents ProvidesRobotLaserBonusCheckBox As CheckBox
+    Friend WithEvents RobotBonusGroupBox As GroupBox
+    Friend WithEvents TableLayoutPanel11 As TableLayoutPanel
+    Friend WithEvents RobotAgiBonusUpDown As NumericUpDown
+    Friend WithEvents Label250 As Label
+    Friend WithEvents RobotStrBonusUpDown As NumericUpDown
+    Friend WithEvents Label251 As Label
+    Friend WithEvents Label260 As Label
+    Friend WithEvents RobotDexBonusUpDown As NumericUpDown
+    Friend WithEvents Label262 As Label
+    Friend WithEvents RobotTargetingSkillGrantComboBox As ComboBox
+    Friend WithEvents RobotUtilitySkillGrantComboBox As ComboBox
+    Friend WithEvents Label264 As Label
+    Friend WithEvents RobotChassisSkillGrantComboBox As ComboBox
+    Friend WithEvents Label263 As Label
 End Class

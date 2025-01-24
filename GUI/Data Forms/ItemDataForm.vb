@@ -1,4 +1,5 @@
 Imports System.Data
+Imports System.Diagnostics.Metrics
 
 Public Class ItemDataForm
     Inherits BaseDataForm
@@ -72,6 +73,11 @@ Public Class ItemDataForm
         GraphicTypeComboBox.SelectedIndex = _view(0)(Tables.Items.Fields.GraphicType)
         GraphicIndexUpDown.Maximum = _dm.ItemImages.SmallItems(GraphicTypeComboBox.SelectedIndex).Length - 1
         GraphicIndexUpDown.Value = _view(0)(Tables.Items.Fields.GraphicIndex)
+
+        PopulateRobotSkillComboBoxes()
+        RobotTargetingSkillGrantComboBox.SelectedIndex = _view(0)("RobotTargetingSkillGrant")
+        RobotChassisSkillGrantComboBox.SelectedIndex = _view(0)("RobotChassisSkillGrant")
+        RobotUtilitySkillGrantComboBox.SelectedIndex = _view(0)("RobotUtilitySkillGrant")
 
         DisplayTabs()
 
@@ -184,9 +190,9 @@ Public Class ItemDataForm
             BlockIronSightCheckBox,
             AllowClimbingCheckbox,
             CigaretteCheckBox,
-            ItemFlags2.ProvidesRobotCamo,
-            ItemFlags2.ProvidesRobotNightVision,
-            ItemFlags2.ProvidesRobotLaserBonus
+            ProvidesRobotCamoCheckBox,
+            ProvidesRobotNightVisionCheckBox,
+            ProvidesRobotLaserBonusCheckBox
         }
 
         'ItemFlag1
@@ -338,6 +344,45 @@ Public Class ItemDataForm
         Next
     End Sub
 
+    Protected Sub PopulateRobotSkillComboBoxes()
+        'Must match game sourcecode enum SkillTraitNew
+        Dim NewSkillTraits As String()
+        NewSkillTraits = {
+            "NoTrait",
+            "AutoWeapons",
+            "HeavyWeapons",
+            "Marksman",
+            "Hunter",
+            "Gunslinger",
+            "HandToHand",
+            "Deputy",
+            "Technician",
+            "Paramedic",
+            "Ambidextrous",
+            "Melee",
+            "Throwing",
+            "NightOps",
+            "Stealthy",
+            "Athletics",
+            "Bodybuilding",
+            "Demolitions",
+            "Teaching",
+            "Scouting",
+            "Covert",
+            "RadioOperator",
+            "Snitch",
+            "Survival"
+        }
+
+        Me.RobotTargetingSkillGrantComboBox.Items.Clear()
+        Me.RobotChassisSkillGrantComboBox.Items.Clear()
+        Me.RobotUtilitySkillGrantComboBox.Items.Clear()
+
+        Me.RobotTargetingSkillGrantComboBox.Items.AddRange(NewSkillTraits)
+        Me.RobotChassisSkillGrantComboBox.Items.AddRange(NewSkillTraits)
+        Me.RobotUtilitySkillGrantComboBox.Items.AddRange(NewSkillTraits)
+    End Sub
+
     'Create links between Flags tab checkboxes and same flags distributed to other tabs
     Private Sub AttentionItem_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AttentionItemCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
@@ -449,12 +494,12 @@ Public Class ItemDataForm
         checklist.SetItemChecked(ItemFlags.GasMask, GasMaskCheckBox.Checked)
     End Sub
 
-    Private Sub LockBomb_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles LockBombCheckBox.CheckedChanged
+    Private Sub LockBomb_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles LockBombCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
         checklist.SetItemChecked(ItemFlags.LockBomb, LockBombCheckBox.Checked)
     End Sub
 
-    Private Sub Flare_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles FlareCheckBox.CheckedChanged
+    Private Sub Flare_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles FlareCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
         checklist.SetItemChecked(ItemFlags.Flare, FlareCheckBox.Checked)
     End Sub
@@ -543,7 +588,7 @@ Public Class ItemDataForm
         checklist.SetItemChecked(ItemFlags2.Crowbar, CrowbarCheckBox.Checked)
     End Sub
 
-    Private Sub GLGrenade_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GLGrenadeCheckBox.CheckedChanged
+    Private Sub GLGrenade_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles GLGrenadeCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
         checklist.SetItemChecked(ItemFlags2.GLGrenade, GLGrenadeCheckBox.Checked)
     End Sub
@@ -638,7 +683,7 @@ Public Class ItemDataForm
         checklist.SetItemChecked(ItemFlags2.LocksmithKit, LocksmithKitCheckBox.Checked)
     End Sub
 
-    Private Sub Mine_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MineCheckBox.CheckedChanged
+    Private Sub Mine_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles MineCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
         checklist.SetItemChecked(ItemFlags2.Mine, MineCheckBox.Checked)
     End Sub
@@ -698,7 +743,7 @@ Public Class ItemDataForm
         checklist.SetItemChecked(ItemFlags2.TripWire, TripWireCheckBox.Checked)
     End Sub
 
-    Private Sub Directional_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DirectionalCheckBox.CheckedChanged
+    Private Sub Directional_ValueChanged(ByVal sender As Object, ByVal e As EventArgs) Handles DirectionalCheckBox.CheckedChanged
         Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
         checklist.SetItemChecked(ItemFlags2.Directional, DirectionalCheckBox.Checked)
     End Sub
@@ -718,14 +763,26 @@ Public Class ItemDataForm
         checklist.SetItemChecked(ItemFlags2.Cigarette, CigaretteCheckBox.Checked)
     End Sub
 
+    Private Sub RobotCamo_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ProvidesRobotCamoCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.ProvidesRobotCamo, ProvidesRobotCamoCheckBox.Checked)
+    End Sub
+
+    Private Sub RobotNightVision_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ProvidesRobotNightVisionCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.ProvidesRobotNightVision, ProvidesRobotNightVisionCheckBox.Checked)
+    End Sub
+
+    Private Sub RobotLaserBonus_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ProvidesRobotLaserBonusCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.ProvidesRobotLaserBonus, ProvidesRobotLaserBonusCheckBox.Checked)
+    End Sub
+
     Private Sub ItemFlag2_ValueChanged(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ItemCheckEventArgs) Handles ItemFlags2CheckedList.ItemCheck
         Select Case e.Index
             ' No checkboxes yet
             Case ItemFlags2.AntitankMine
             Case ItemFlags2.DiseaseSystemExclusive
-            Case ItemFlags2.ProvidesRobotCamo
-            Case ItemFlags2.ProvidesRobotNightVision
-            Case ItemFlags2.ProvidesRobotLaserBonus
 
             Case Else
                 itemFlags2Array(e.Index).Checked = e.NewValue
@@ -896,6 +953,9 @@ Public Class ItemDataForm
             _view(0)(Tables.Items.Fields.ItemImage) = BigItemImage.Image
             _view(0)(Tables.Items.Fields.GraphicIndex) = GraphicIndexUpDown.Value
             _view(0)(Tables.Items.Fields.GraphicType) = GraphicTypeComboBox.SelectedIndex
+            _view(0)("RobotTargetingSkillGrant") = RobotTargetingSkillGrantComboBox.SelectedIndex
+            _view(0)("RobotChassisSkillGrant") = RobotChassisSkillGrantComboBox.SelectedIndex
+            _view(0)("RobotUtilitySkillGrant") = RobotUtilitySkillGrantComboBox.SelectedIndex
 
             If otherItem IsNot Nothing AndAlso otherItem IsNot _view(0).Row Then
                 If MessageBox.Show("The Item ID you have entered is already being used by """ & otherItem(Tables.Items.Fields.Name) & """.  Do you want to swap IDs?", "Swap IDs", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) = System.Windows.Forms.DialogResult.Yes Then
