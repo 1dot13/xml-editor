@@ -255,6 +255,8 @@ Partial Class ItemDataForm
         FoodTypeComboBox = New ComboBox()
         GroupBox33 = New GroupBox()
         TableLayoutPanel5 = New TableLayoutPanel()
+        AlcoholUpDown = New NumericUpDown()
+        Label269 = New Label()
         CigaretteCheckBox = New CheckBox()
         MedicalCheckBox = New CheckBox()
         GroupBox11 = New GroupBox()
@@ -263,7 +265,6 @@ Partial Class ItemDataForm
         ContainsLiquidCheckBox = New CheckBox()
         JarCheckBox = New CheckBox()
         GasCanCheckBox = New CheckBox()
-        AlcoholCheckBox = New CheckBox()
         GroupBox49 = New GroupBox()
         tlpAbilitiesAbilities = New TableLayoutPanel()
         MetalDetectorCheckBox = New CheckBox()
@@ -965,6 +966,7 @@ Partial Class ItemDataForm
         TableLayoutPanel7.SuspendLayout()
         GroupBox33.SuspendLayout()
         TableLayoutPanel5.SuspendLayout()
+        CType(AlcoholUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         GroupBox11.SuspendLayout()
         tlpAbilitiesContainers.SuspendLayout()
         GroupBox49.SuspendLayout()
@@ -4044,7 +4046,11 @@ Partial Class ItemDataForm
         ' 
         TableLayoutPanel5.ColumnCount = 2
         TableLayoutPanel5.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanel5.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 240.0F))
+        TableLayoutPanel5.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanel5.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 20.0F))
+        TableLayoutPanel5.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 20.0F))
+        TableLayoutPanel5.Controls.Add(AlcoholUpDown, 1, 2)
+        TableLayoutPanel5.Controls.Add(Label269, 0, 2)
         TableLayoutPanel5.Controls.Add(CigaretteCheckBox, 0, 1)
         TableLayoutPanel5.Controls.Add(MedicalCheckBox, 0, 0)
         TableLayoutPanel5.Dock = DockStyle.Fill
@@ -4058,6 +4064,31 @@ Partial Class ItemDataForm
         TableLayoutPanel5.Size = New Size(238, 88)
         TableLayoutPanel5.TabIndex = 0
         ' 
+        ' AlcoholUpDown
+        ' 
+        AlcoholUpDown.DecimalPlaces = 2
+        AlcoholUpDown.Increment = New Decimal(New Integer() {1, 0, 0, 131072})
+        AlcoholUpDown.Location = New Point(66, 62)
+        AlcoholUpDown.Margin = New Padding(4)
+        AlcoholUpDown.Maximum = New Decimal(New Integer() {1000, 0, 0, 0})
+        AlcoholUpDown.Name = "AlcoholUpDown"
+        AlcoholUpDown.Size = New Size(166, 25)
+        AlcoholUpDown.TabIndex = 12
+        AlcoholUpDown.Tag = "Alcohol"
+        ' 
+        ' Label269
+        ' 
+        Label269.AutoSize = True
+        Label269.Dock = DockStyle.Fill
+        Label269.Location = New Point(4, 58)
+        Label269.Margin = New Padding(4, 0, 4, 0)
+        Label269.MinimumSize = New Size(0, 25)
+        Label269.Name = "Label269"
+        Label269.Size = New Size(54, 33)
+        Label269.TabIndex = 6
+        Label269.Text = "Alcohol:"
+        Label269.TextAlign = ContentAlignment.MiddleLeft
+        ' 
         ' CigaretteCheckBox
         ' 
         CigaretteCheckBox.AutoSize = True
@@ -4066,7 +4097,7 @@ Partial Class ItemDataForm
         CigaretteCheckBox.Location = New Point(4, 33)
         CigaretteCheckBox.Margin = New Padding(4)
         CigaretteCheckBox.Name = "CigaretteCheckBox"
-        CigaretteCheckBox.Size = New Size(232, 21)
+        CigaretteCheckBox.Size = New Size(230, 21)
         CigaretteCheckBox.TabIndex = 1
         CigaretteCheckBox.Tag = "Cigarette"
         CigaretteCheckBox.Text = "Cigarette"
@@ -4080,7 +4111,7 @@ Partial Class ItemDataForm
         MedicalCheckBox.Location = New Point(4, 4)
         MedicalCheckBox.Margin = New Padding(4)
         MedicalCheckBox.Name = "MedicalCheckBox"
-        MedicalCheckBox.Size = New Size(232, 21)
+        MedicalCheckBox.Size = New Size(230, 21)
         MedicalCheckBox.TabIndex = 0
         MedicalCheckBox.Tag = "Medical"
         MedicalCheckBox.Text = "Medicine / Drug"
@@ -4100,13 +4131,13 @@ Partial Class ItemDataForm
         ' 
         ' tlpAbilitiesContainers
         ' 
-        tlpAbilitiesContainers.ColumnCount = 1
+        tlpAbilitiesContainers.ColumnCount = 2
+        tlpAbilitiesContainers.ColumnStyles.Add(New ColumnStyle())
         tlpAbilitiesContainers.ColumnStyles.Add(New ColumnStyle())
         tlpAbilitiesContainers.Controls.Add(CanteenCheckBox, 0, 0)
-        tlpAbilitiesContainers.Controls.Add(ContainsLiquidCheckBox, 0, 5)
-        tlpAbilitiesContainers.Controls.Add(JarCheckBox, 0, 4)
+        tlpAbilitiesContainers.Controls.Add(ContainsLiquidCheckBox, 0, 3)
+        tlpAbilitiesContainers.Controls.Add(JarCheckBox, 0, 2)
         tlpAbilitiesContainers.Controls.Add(GasCanCheckBox, 0, 1)
-        tlpAbilitiesContainers.Controls.Add(AlcoholCheckBox, 0, 3)
         tlpAbilitiesContainers.Dock = DockStyle.Fill
         tlpAbilitiesContainers.Location = New Point(4, 22)
         tlpAbilitiesContainers.Margin = New Padding(4)
@@ -4132,7 +4163,7 @@ Partial Class ItemDataForm
         CanteenCheckBox.Location = New Point(4, 4)
         CanteenCheckBox.Margin = New Padding(4)
         CanteenCheckBox.Name = "CanteenCheckBox"
-        CanteenCheckBox.Size = New Size(230, 21)
+        CanteenCheckBox.Size = New Size(116, 21)
         CanteenCheckBox.TabIndex = 0
         CanteenCheckBox.Tag = "Canteen"
         CanteenCheckBox.Text = "Canteen"
@@ -4141,7 +4172,7 @@ Partial Class ItemDataForm
         ' ContainsLiquidCheckBox
         ' 
         ContainsLiquidCheckBox.AutoSize = True
-        ContainsLiquidCheckBox.Location = New Point(4, 120)
+        ContainsLiquidCheckBox.Location = New Point(4, 91)
         ContainsLiquidCheckBox.Margin = New Padding(4)
         ContainsLiquidCheckBox.Name = "ContainsLiquidCheckBox"
         ContainsLiquidCheckBox.Size = New Size(116, 21)
@@ -4154,10 +4185,10 @@ Partial Class ItemDataForm
         ' 
         JarCheckBox.AutoSize = True
         JarCheckBox.Dock = DockStyle.Fill
-        JarCheckBox.Location = New Point(4, 91)
+        JarCheckBox.Location = New Point(4, 62)
         JarCheckBox.Margin = New Padding(4)
         JarCheckBox.Name = "JarCheckBox"
-        JarCheckBox.Size = New Size(230, 21)
+        JarCheckBox.Size = New Size(116, 21)
         JarCheckBox.TabIndex = 3
         JarCheckBox.Tag = "Jar"
         JarCheckBox.Text = "Jar"
@@ -4170,24 +4201,11 @@ Partial Class ItemDataForm
         GasCanCheckBox.Location = New Point(4, 33)
         GasCanCheckBox.Margin = New Padding(4)
         GasCanCheckBox.Name = "GasCanCheckBox"
-        GasCanCheckBox.Size = New Size(230, 21)
+        GasCanCheckBox.Size = New Size(116, 21)
         GasCanCheckBox.TabIndex = 1
         GasCanCheckBox.Tag = "GasCan"
         GasCanCheckBox.Text = "Gas Can"
         GasCanCheckBox.UseVisualStyleBackColor = True
-        ' 
-        ' AlcoholCheckBox
-        ' 
-        AlcoholCheckBox.AutoSize = True
-        AlcoholCheckBox.Dock = DockStyle.Fill
-        AlcoholCheckBox.Location = New Point(4, 62)
-        AlcoholCheckBox.Margin = New Padding(4)
-        AlcoholCheckBox.Name = "AlcoholCheckBox"
-        AlcoholCheckBox.Size = New Size(230, 21)
-        AlcoholCheckBox.TabIndex = 2
-        AlcoholCheckBox.Tag = "Alcohol"
-        AlcoholCheckBox.Text = "Alcohol"
-        AlcoholCheckBox.UseVisualStyleBackColor = True
         ' 
         ' GroupBox49
         ' 
@@ -12684,6 +12702,7 @@ Partial Class ItemDataForm
         GroupBox33.ResumeLayout(False)
         TableLayoutPanel5.ResumeLayout(False)
         TableLayoutPanel5.PerformLayout()
+        CType(AlcoholUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         GroupBox11.ResumeLayout(False)
         tlpAbilitiesContainers.ResumeLayout(False)
         tlpAbilitiesContainers.PerformLayout()
@@ -13642,7 +13661,6 @@ Partial Class ItemDataForm
     Friend WithEvents ContainsLiquidCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents JarCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents GasCanCheckBox As System.Windows.Forms.CheckBox
-    Friend WithEvents AlcoholCheckBox As System.Windows.Forms.CheckBox
     Friend WithEvents ItemSizeUpDown As System.Windows.Forms.NumericUpDown
     Friend WithEvents Label137 As System.Windows.Forms.Label
     Friend WithEvents GroupBox32 As System.Windows.Forms.GroupBox
@@ -13911,4 +13929,6 @@ Partial Class ItemDataForm
     Friend WithEvents TransportGroupMinProgressUpDown As NumericUpDown
     Friend WithEvents Label267 As Label
     Friend WithEvents Label268 As Label
+    Friend WithEvents Label269 As Label
+    Friend WithEvents AlcoholUpDown As NumericUpDown
 End Class
