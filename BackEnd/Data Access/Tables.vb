@@ -213,6 +213,7 @@ Public Class Tables
         Public Const Name As String = "LOADBEARINGEQUIPMENT"
         Public Class Fields
             Public Const Silhouette As String = "pSilhouette"
+            Public Const LbeIndex As String = "lbeIndex"
             Public Const LbeClass As String = "lbeClass"
         End Class
     End Class
