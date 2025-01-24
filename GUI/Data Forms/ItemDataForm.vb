@@ -53,6 +53,9 @@ Public Class ItemDataForm
 
     End Function
 
+    Public itemFlagsArray()
+    Public itemFlags2Array()
+
     Protected Sub Initialize()
 
         ItemSizeUpDown.Maximum = ItemSizeMax
@@ -73,13 +76,233 @@ Public Class ItemDataForm
         DisplayTabs()
 
         'Setting Item Flags
-        Dim TempItemFlags As UInt32 = _view(0)("ItemFlag")
-        Dim BitItemFlags As String = ToBinary(TempItemFlags).PadRight(32, "0")
+        itemFlagsArray = {
+            ItemFlags.Bloodbag, 'Dummy value to keep the array indexes correct
+            ItemFlags.Manpad,
+            ItemFlags.Beartrap,
+            ItemFlags.Camera,
+            ItemFlags.Waterdrum,
+            ItemFlags.BloodcatMeat,
+            ItemFlags.CowMeat,
+            ItemFlags.Beltfed,
+            ItemFlags.Ammobelt,
+            ItemFlags.AmmobeltVest,
+            ItemFlags.CamoRemoval,
+            ItemFlags.Cleaningkit,
+            ItemFlags.AttentionItem,
+            ItemFlags.Garotte,
+            ItemFlags.Covert,
+            ItemFlags.Corpse,
+            ItemFlags.BloodcatSkin,
+            ItemFlags.NoMetalDetection,
+            ItemFlags.JumpGrenade,
+            ItemFlags.Handcuffs,
+            ItemFlags.Taser,
+            ItemFlags.ScubaBottle,
+            ItemFlags.ScubaMask,
+            ItemFlags.ScubaFins,
+            ItemFlags.TripwireRoll,
+            ItemFlags.Radioset,
+            ItemFlags.SignalShell,
+            ItemFlags.Soda,
+            ItemFlags.RoofcollapseItem,
+            ItemFlags.DiseaseprotectionFace,
+            ItemFlags.DiseaseprotectionHand,
+            ItemFlags.LBEexplosionproof,
+            ItemFlags.EmptyBloodbag,
+            ItemFlags.MedicalSplint,
+            DamageableCheckBox,
+            RepairableCheckBox,
+            WaterDamagesCheckBox,
+            MetalCheckBox,
+            SinksCheckBox,
+            ShowStatusCheckBox,
+            HiddenAddonCheckBox,
+            TwoHandedCheckBox,
+            NotBuyableCheckBox,
+            AttachmentCheckBox,
+            HiddenAttachmentCheckBox,
+            BigGunListCheckBox,
+            NotInEditorCheckBox,
+            DefaultUndroppableCheckBox,
+            UnaerodynamicCheckBox,
+            ElectronicCheckBox,
+            CannonRadioButton,
+            RocketRifleCheckBox,
+            FingerPrintIDCheckBox,
+            MetalDetectorCheckBox,
+            GasMaskCheckBox,
+            LockBombCheckBox,
+            FlareCheckBox,
+            GrenadeLauncherRadioButton,
+            MortarRadioButton,
+            DuckbillCheckBox,
+            ItemFlags.Detonator,
+            ItemFlags.RemoteDetonator,
+            HideMuzzleFlashCheckBox,
+            RocketLauncherRadioButton
+        }
 
+        itemFlags2Array = {
+            SingleShotRocketLauncherCheckBox,
+            BrassKnucklesCheckBox,
+            CrowbarCheckBox,
+            GLGrenadeCheckBox,
+            FlakJacketCheckBox,
+            LeatherJacketCheckBox,
+            BatteriesCheckBox,
+            NeedsBatteriesCheckBox,
+            XRayCheckBox,
+            WireCuttersCheckBox,
+            ToolKitCheckBox,
+            FirstAidKitCheckBox,
+            MedicalKitCheckBox,
+            CanteenCheckBox,
+            JarCheckBox,
+            CanAndStringCheckBox,
+            MarblesCheckBox,
+            WalkmanCheckBox,
+            RemoteTriggerCheckBox,
+            RobotRemoteControlCheckBox,
+            CamoKitCheckBox,
+            LocksmithKitCheckBox,
+            MineCheckBox,
+            ItemFlags2.AntitankMine,
+            HardwareCheckBox,
+            MedicalCheckBox,
+            GasCanCheckBox,
+            ContainsLiquidCheckBox,
+            RockCheckBox,
+            ThermalOpticsCheckBox,
+            SciFiCheckBox,
+            NewInventoryCheckBox,
+            ItemFlags2.DiseaseSystemExclusive,
+            BarrelCheckBox,
+            TripWireActivationCheckBox,
+            TripWireCheckBox,
+            DirectionalCheckBox,
+            BlockIronSightCheckBox,
+            AllowClimbingCheckbox,
+            ItemFlags2.Cigarette,
+            ItemFlags2.ProvidesRobotCamo,
+            ItemFlags2.ProvidesRobotNightVision,
+            ItemFlags2.ProvidesRobotLaserBonus
+        }
+
+        'ItemFlag1
         Dim TempChecklistBox As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
-        For i As Integer = 0 To 31
-            TempChecklistBox.SetItemChecked(i, (BitItemFlags(i).ToString.Equals("1")))
-        Next
+        TempChecklistBox.SetItemChecked(ItemFlags.Bloodbag, _view(0)("Bloodbag"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Manpad, _view(0)("Manpad"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Beartrap, _view(0)("Beartrap"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Camera, _view(0)("Camera"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Waterdrum, _view(0)("Waterdrum"))
+        TempChecklistBox.SetItemChecked(ItemFlags.BloodcatMeat, _view(0)("BloodcatMeat"))
+        TempChecklistBox.SetItemChecked(ItemFlags.CowMeat, _view(0)("CowMeat"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Beltfed, _view(0)("Beltfed"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Ammobelt, _view(0)("Ammobelt"))
+        TempChecklistBox.SetItemChecked(ItemFlags.AmmobeltVest, _view(0)("AmmobeltVest"))
+        TempChecklistBox.SetItemChecked(ItemFlags.CamoRemoval, _view(0)("CamoRemoval"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Cleaningkit, _view(0)("Cleaningkit"))
+        TempChecklistBox.SetItemChecked(ItemFlags.AttentionItem, _view(0)("AttentionItem"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Garotte, _view(0)("Garotte"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Covert, _view(0)("Covert"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Corpse, _view(0)("Corpse"))
+        TempChecklistBox.SetItemChecked(ItemFlags.BloodcatSkin, _view(0)("BloodcatSkin"))
+        TempChecklistBox.SetItemChecked(ItemFlags.NoMetalDetection, _view(0)("NoMetalDetection"))
+        TempChecklistBox.SetItemChecked(ItemFlags.JumpGrenade, _view(0)("JumpGrenade"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Handcuffs, _view(0)("Handcuffs"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Taser, _view(0)("Taser"))
+        TempChecklistBox.SetItemChecked(ItemFlags.ScubaBottle, _view(0)("ScubaBottle"))
+        TempChecklistBox.SetItemChecked(ItemFlags.ScubaMask, _view(0)("ScubaMask"))
+        TempChecklistBox.SetItemChecked(ItemFlags.ScubaFins, _view(0)("ScubaFins"))
+        TempChecklistBox.SetItemChecked(ItemFlags.TripwireRoll, _view(0)("TripwireRoll"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Radioset, _view(0)("Radioset"))
+        TempChecklistBox.SetItemChecked(ItemFlags.SignalShell, _view(0)("SignalShell"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Soda, _view(0)("Soda"))
+        TempChecklistBox.SetItemChecked(ItemFlags.RoofcollapseItem, _view(0)("RoofcollapseItem"))
+        TempChecklistBox.SetItemChecked(ItemFlags.DiseaseprotectionFace, _view(0)("DiseaseprotectionFace"))
+        TempChecklistBox.SetItemChecked(ItemFlags.DiseaseprotectionHand, _view(0)("DiseaseprotectionHand"))
+        TempChecklistBox.SetItemChecked(ItemFlags.LBEexplosionproof, _view(0)("LBEexplosionproof"))
+        TempChecklistBox.SetItemChecked(ItemFlags.EmptyBloodbag, _view(0)("EmptyBloodbag"))
+        TempChecklistBox.SetItemChecked(ItemFlags.MedicalSplint, _view(0)("MedicalSplint"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Damageable, _view(0)("Damageable"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Repairable, _view(0)("Repairable"))
+        TempChecklistBox.SetItemChecked(ItemFlags.WaterDamages, _view(0)("WaterDamages"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Metal, _view(0)("Metal"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Sinks, _view(0)("Sinks"))
+        TempChecklistBox.SetItemChecked(ItemFlags.ShowStatus, _view(0)("ShowStatus"))
+        TempChecklistBox.SetItemChecked(ItemFlags.HiddenAddon, _view(0)("HiddenAddon"))
+        TempChecklistBox.SetItemChecked(ItemFlags.TwoHanded, _view(0)("TwoHanded"))
+        TempChecklistBox.SetItemChecked(ItemFlags.NotBuyable, _view(0)("NotBuyable"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Attachment, _view(0)("Attachment"))
+        TempChecklistBox.SetItemChecked(ItemFlags.HiddenAttachment, _view(0)("HiddenAttachment"))
+        TempChecklistBox.SetItemChecked(ItemFlags.BigGunList, _view(0)("BigGunList"))
+        TempChecklistBox.SetItemChecked(ItemFlags.NotInEditor, _view(0)("NotInEditor"))
+        TempChecklistBox.SetItemChecked(ItemFlags.DefaultUndroppable, _view(0)("DefaultUndroppable"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Unaerodynamic, _view(0)("Unaerodynamic"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Electronic, _view(0)("Electronic"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Cannon, _view(0)("Cannon"))
+        TempChecklistBox.SetItemChecked(ItemFlags.RocketRifle, _view(0)("RocketRifle"))
+        TempChecklistBox.SetItemChecked(ItemFlags.FingerPrintID, _view(0)("FingerPrintID"))
+        TempChecklistBox.SetItemChecked(ItemFlags.MetalDetector, _view(0)("MetalDetector"))
+        TempChecklistBox.SetItemChecked(ItemFlags.GasMask, _view(0)("GasMask"))
+        TempChecklistBox.SetItemChecked(ItemFlags.LockBomb, _view(0)("LockBomb"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Flare, _view(0)("Flare"))
+        TempChecklistBox.SetItemChecked(ItemFlags.GrenadeLauncher, _view(0)("GrenadeLauncher"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Mortar, _view(0)("Mortar"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Duckbill, _view(0)("Duckbill"))
+        TempChecklistBox.SetItemChecked(ItemFlags.Detonator, _view(0)("Detonator"))
+        TempChecklistBox.SetItemChecked(ItemFlags.RemoteDetonator, _view(0)("RemoteDetonator"))
+        TempChecklistBox.SetItemChecked(ItemFlags.HideMuzzleFlash, _view(0)("HideMuzzleFlash"))
+        TempChecklistBox.SetItemChecked(ItemFlags.RocketLauncher, _view(0)("RocketLauncher"))
+
+        'ItemFlag2
+        TempChecklistBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        TempChecklistBox.SetItemChecked(ItemFlags2.SingleShotRocketLauncher, _view(0)("SingleShotRocketLauncher"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.BrassKnuckles, _view(0)("BrassKnuckles"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Crowbar, _view(0)("Crowbar"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.GLGrenade, _view(0)("GLGrenade"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.FlakJacket, _view(0)("FlakJacket"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.LeatherJacket, _view(0)("LeatherJacket"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Batteries, _view(0)("Batteries"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.NeedsBatteries, _view(0)("NeedsBatteries"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.XRay, _view(0)("XRay"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.WireCutters, _view(0)("WireCutters"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Toolkit, _view(0)("Toolkit"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.FirstAidKit, _view(0)("FirstAidKit"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.MedicalKit, _view(0)("MedicalKit"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Canteen, _view(0)("Canteen"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Jar, _view(0)("Jar"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.CanAndString, _view(0)("CanAndString"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Marbles, _view(0)("Marbles"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Walkman, _view(0)("Walkman"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.RemoteTrigger, _view(0)("RemoteTrigger"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.RobotRemoteControl, _view(0)("RobotRemoteControl"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.CamouflageKit, _view(0)("CamouflageKit"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.LocksmithKit, _view(0)("LocksmithKit"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Mine, _view(0)("Mine"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.AntitankMine, _view(0)("AntitankMine"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Hardware, _view(0)("Hardware"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Medical, _view(0)("Medical"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.GasCan, _view(0)("GasCan"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.ContainsLiquid, _view(0)("ContainsLiquid"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Rock, _view(0)("Rock"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.ThermalOptics, _view(0)("ThermalOptics"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.SciFi, _view(0)("SciFi"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.NewInv, _view(0)("NewInv"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.DiseaseSystemExclusive, _view(0)("DiseaseSystemExclusive"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Barrel, _view(0)("Barrel"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.TripWireActivation, _view(0)("TripWireActivation"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.TripWire, _view(0)("TripWire"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Directional, _view(0)("Directional"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.BlockIronSight, _view(0)("BlockIronSight"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.AllowClimbing, _view(0)("AllowClimbing"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.Cigarette, _view(0)("Cigarette"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.ProvidesRobotCamo, _view(0)("ProvidesRobotCamo"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.ProvidesRobotNightVision, _view(0)("ProvidesRobotNightVision"))
+        TempChecklistBox.SetItemChecked(ItemFlags2.ProvidesRobotLaserBonus, _view(0)("ProvidesRobotLaserBonus"))
+
+
 
         ''Setting Drugs
         'Dim TempDrugFlags As UInt32 = _view(0)("DrugType")
@@ -113,6 +336,392 @@ Public Class ItemDataForm
                 Me.GraphicTypeComboBox.Items.Add(String.Format("P{0}Items", i))
             End If
         Next
+    End Sub
+
+    'Create links between Flags tab checkboxes and same flags distributed to other tabs
+    Private Sub Damageable_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DamageableCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Damageable, DamageableCheckBox.Checked)
+    End Sub
+
+    Private Sub Repairable_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RepairableCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Repairable, RepairableCheckBox.Checked)
+    End Sub
+
+    Private Sub WaterDamages_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles WaterDamagesCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.WaterDamages, WaterDamagesCheckBox.Checked)
+    End Sub
+
+    Private Sub Metal_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MetalCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Metal, MetalCheckBox.Checked)
+    End Sub
+
+    Private Sub Sinks_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SinksCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Sinks, SinksCheckBox.Checked)
+    End Sub
+
+    Private Sub ShowStatus_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ShowStatusCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.ShowStatus, ShowStatusCheckBox.Checked)
+    End Sub
+
+    Private Sub HiddenAddon_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HiddenAddonCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.HiddenAddon, HiddenAddonCheckBox.Checked)
+    End Sub
+
+    Private Sub TwoHanded_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TwoHandedCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.TwoHanded, TwoHandedCheckBox.Checked)
+    End Sub
+
+    Private Sub NotBuyable_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NotBuyableCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.NotBuyable, NotBuyableCheckBox.Checked)
+    End Sub
+
+    Private Sub Attachment_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AttachmentCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Attachment, AttachmentCheckBox.Checked)
+    End Sub
+
+    Private Sub HiddenAttachment_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HiddenAttachmentCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.HiddenAttachment, HiddenAttachmentCheckBox.Checked)
+    End Sub
+
+    Private Sub BigGunList_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BigGunListCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.BigGunList, BigGunListCheckBox.Checked)
+    End Sub
+
+    Private Sub NotInEditor_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NotInEditorCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.NotInEditor, NotInEditorCheckBox.Checked)
+    End Sub
+
+    Private Sub DefaultUndroppable_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DefaultUndroppableCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.DefaultUndroppable, DefaultUndroppableCheckBox.Checked)
+    End Sub
+
+    Private Sub Unaerodynamic_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UnaerodynamicCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Unaerodynamic, UnaerodynamicCheckBox.Checked)
+    End Sub
+
+    Private Sub Electronic_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ElectronicCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Electronic, ElectronicCheckBox.Checked)
+    End Sub
+
+    Private Sub Cannon_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CannonRadioButton.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Cannon, CannonRadioButton.Checked)
+    End Sub
+
+    Private Sub RocketRifle_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RocketRifleCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.RocketRifle, RocketRifleCheckBox.Checked)
+    End Sub
+
+    Private Sub FingerPrintID_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles FingerPrintIDCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.FingerPrintID, FingerPrintIDCheckBox.Checked)
+    End Sub
+
+    Private Sub MetalDetector_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MetalDetectorCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.MetalDetector, MetalDetectorCheckBox.Checked)
+    End Sub
+
+    Private Sub GasMask_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GasMaskCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.GasMask, GasMaskCheckBox.Checked)
+    End Sub
+
+    Private Sub LockBomb_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles LockBombCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.LockBomb, LockBombCheckBox.Checked)
+    End Sub
+
+    Private Sub Flare_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles FlareCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Flare, FlareCheckBox.Checked)
+    End Sub
+
+    Private Sub GrenadeLauncher_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GrenadeLauncherRadioButton.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.GrenadeLauncher, GrenadeLauncherRadioButton.Checked)
+    End Sub
+
+    Private Sub Mortar_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MortarRadioButton.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Mortar, MortarRadioButton.Checked)
+    End Sub
+
+    Private Sub Duckbill_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DuckbillCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.Duckbill, DuckbillCheckBox.Checked)
+    End Sub
+
+    Private Sub HideMuzzleFlash_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HideMuzzleFlashCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.HideMuzzleFlash, HideMuzzleFlashCheckBox.Checked)
+    End Sub
+
+    Private Sub RocketLauncher_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RocketLauncherRadioButton.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
+        checklist.SetItemChecked(ItemFlags.RocketLauncher, RocketLauncherRadioButton.Checked)
+    End Sub
+
+    Private Sub ItemFlag_ValueChanged(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ItemCheckEventArgs) Handles ItemFlagsCheckedList.ItemCheck
+        Select Case e.Index
+            ' No checkboxes yet
+            Case ItemFlags.Bloodbag
+            Case ItemFlags.Manpad
+            Case ItemFlags.Beartrap
+            Case ItemFlags.Camera
+            Case ItemFlags.Waterdrum
+            Case ItemFlags.BloodcatMeat
+            Case ItemFlags.CowMeat
+            Case ItemFlags.Beltfed
+            Case ItemFlags.Ammobelt
+            Case ItemFlags.AmmobeltVest
+            Case ItemFlags.CamoRemoval
+            Case ItemFlags.Cleaningkit
+            Case ItemFlags.AttentionItem
+            Case ItemFlags.Garotte
+            Case ItemFlags.Covert
+            Case ItemFlags.Corpse
+            Case ItemFlags.BloodcatSkin
+            Case ItemFlags.NoMetalDetection
+            Case ItemFlags.JumpGrenade
+            Case ItemFlags.Handcuffs
+            Case ItemFlags.Taser
+            Case ItemFlags.ScubaBottle
+            Case ItemFlags.ScubaMask
+            Case ItemFlags.ScubaFins
+            Case ItemFlags.TripwireRoll
+            Case ItemFlags.Radioset
+            Case ItemFlags.SignalShell
+            Case ItemFlags.Soda
+            Case ItemFlags.RoofcollapseItem
+            Case ItemFlags.DiseaseprotectionFace
+            Case ItemFlags.DiseaseprotectionHand
+            Case ItemFlags.LBEexplosionproof
+            Case ItemFlags.EmptyBloodbag
+            Case ItemFlags.MedicalSplint
+            Case ItemFlags.Detonator
+            Case ItemFlags.RemoteDetonator
+
+            Case Else
+                itemFlagsArray(e.Index).Checked = e.NewValue
+        End Select
+    End Sub
+
+    Private Sub SingleShotRocketLauncher_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SingleShotRocketLauncherCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.SingleShotRocketLauncher, SingleShotRocketLauncherCheckBox.Checked)
+    End Sub
+
+    Private Sub BrassKnuckles_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BrassKnucklesCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.BrassKnuckles, BrassKnucklesCheckBox.Checked)
+    End Sub
+
+    Private Sub Crowbar_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CrowbarCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Crowbar, CrowbarCheckBox.Checked)
+    End Sub
+
+    Private Sub GLGrenade_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GLGrenadeCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.GLGrenade, GLGrenadeCheckBox.Checked)
+    End Sub
+
+    Private Sub Flakjacket_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles FlakJacketCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.FlakJacket, FlakJacketCheckBox.Checked)
+    End Sub
+
+    Private Sub LeatherJacket_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles LeatherJacketCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.LeatherJacket, LeatherJacketCheckBox.Checked)
+    End Sub
+
+    Private Sub Batteries_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BatteriesCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Batteries, BatteriesCheckBox.Checked)
+    End Sub
+
+    Private Sub NeedsBatteries_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NeedsBatteriesCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.NeedsBatteries, NeedsBatteriesCheckBox.Checked)
+    End Sub
+
+    Private Sub XRay_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles XRayCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.XRay, XRayCheckBox.Checked)
+    End Sub
+
+    Private Sub Wirecutters_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles WireCuttersCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.WireCutters, WireCuttersCheckBox.Checked)
+    End Sub
+
+    Private Sub Toolkit_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolKitCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Toolkit, ToolKitCheckBox.Checked)
+    End Sub
+
+    Private Sub FirstAidKit_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles FirstAidKitCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.FirstAidKit, FirstAidKitCheckBox.Checked)
+    End Sub
+
+    Private Sub MedicalKit_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MedicalKitCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.MedicalKit, MedicalKitCheckBox.Checked)
+    End Sub
+
+    Private Sub Canteen_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CanteenCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Canteen, CanteenCheckBox.Checked)
+    End Sub
+
+    Private Sub Jar_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles JarCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Jar, JarCheckBox.Checked)
+    End Sub
+
+    Private Sub CanAndString_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CanAndStringCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.CanAndString, CanAndStringCheckBox.Checked)
+    End Sub
+
+    Private Sub Marbles_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MarblesCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Marbles, MarblesCheckBox.Checked)
+    End Sub
+
+    Private Sub Walkman_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles WalkmanCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Walkman, WalkmanCheckBox.Checked)
+    End Sub
+
+    Private Sub RemoteTrigger_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RemoteTriggerCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.RemoteTrigger, RemoteTriggerCheckBox.Checked)
+    End Sub
+
+    Private Sub RobotRemoteControl_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RobotRemoteControlCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.RobotRemoteControl, RobotRemoteControlCheckBox.Checked)
+    End Sub
+
+    Private Sub CamoKit_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CamoKitCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.CamouflageKit, CamoKitCheckBox.Checked)
+    End Sub
+
+    Private Sub LocksmithKit_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles LocksmithKitCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.LocksmithKit, LocksmithKitCheckBox.Checked)
+    End Sub
+
+    Private Sub Mine_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MineCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Mine, MineCheckBox.Checked)
+    End Sub
+
+    Private Sub Hardware_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HardwareCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Hardware, HardwareCheckBox.Checked)
+    End Sub
+
+    Private Sub Medical_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MedicalCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Medical, MedicalCheckBox.Checked)
+    End Sub
+
+    Private Sub GasCan_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles GasCanCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.GasCan, GasCanCheckBox.Checked)
+    End Sub
+
+    Private Sub ContainsLiquid_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ContainsLiquidCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.ContainsLiquid, ContainsLiquidCheckBox.Checked)
+    End Sub
+
+    Private Sub Rock_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RockCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Rock, RockCheckBox.Checked)
+    End Sub
+
+    Private Sub ThermalOptics_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ThermalOpticsCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.ThermalOptics, ThermalOpticsCheckBox.Checked)
+    End Sub
+
+    Private Sub Scifi_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SciFiCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.SciFi, SciFiCheckBox.Checked)
+    End Sub
+
+    Private Sub NewInv_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles NewInventoryCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.NewInv, NewInventoryCheckBox.Checked)
+    End Sub
+
+    Private Sub Barrel_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BarrelCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Barrel, BarrelCheckBox.Checked)
+    End Sub
+
+    Private Sub TripWireActivation_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TripWireActivationCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.TripWireActivation, TripWireActivationCheckBox.Checked)
+    End Sub
+
+    Private Sub TripWire_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TripWireCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.TripWire, TripWireCheckBox.Checked)
+    End Sub
+
+    Private Sub Directional_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DirectionalCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.Directional, DirectionalCheckBox.Checked)
+    End Sub
+
+    Private Sub BlockIronsight_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BlockIronSightCheckBox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.BlockIronSight, BlockIronSightCheckBox.Checked)
+    End Sub
+
+    Private Sub AllowClimbing_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AllowClimbingCheckbox.CheckedChanged
+        Dim checklist As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+        checklist.SetItemChecked(ItemFlags2.AllowClimbing, AllowClimbingCheckbox.Checked)
+    End Sub
+
+    Private Sub ItemFlag2_ValueChanged(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ItemCheckEventArgs) Handles ItemFlags2CheckedList.ItemCheck
+        Select Case e.Index
+            ' No checkboxes yet
+            Case ItemFlags2.AntitankMine
+            Case ItemFlags2.DiseaseSystemExclusive
+            Case ItemFlags2.Cigarette
+            Case ItemFlags2.ProvidesRobotCamo
+            Case ItemFlags2.ProvidesRobotNightVision
+            Case ItemFlags2.ProvidesRobotLaserBonus
+
+            Case Else
+                itemFlags2Array(e.Index).Checked = e.NewValue
+        End Select
     End Sub
 
 #Region " General Tab "
@@ -303,15 +912,118 @@ Public Class ItemDataForm
             End If
 
             'Saving Itemflags
-            Dim TempItemFlags As UInt32 = 0
             Dim TempChecklistBox As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox64").Controls.Item("ItemFlagsCheckedList")
-            For i As Integer = 0 To 31
-                If TempChecklistBox.GetItemChecked(i) Then
-                    TempItemFlags += 2 ^ i
-                End If
-            Next
+            _view(0)("Bloodbag") = TempChecklistBox.GetItemChecked(0)
+            _view(0)("Manpad") = TempChecklistBox.GetItemChecked(1)
+            _view(0)("Beartrap") = TempChecklistBox.GetItemChecked(2)
+            _view(0)("Camera") = TempChecklistBox.GetItemChecked(3)
+            _view(0)("Waterdrum") = TempChecklistBox.GetItemChecked(4)
+            _view(0)("BloodcatMeat") = TempChecklistBox.GetItemChecked(5)
+            _view(0)("CowMeat") = TempChecklistBox.GetItemChecked(6)
+            _view(0)("Beltfed") = TempChecklistBox.GetItemChecked(7)
+            _view(0)("Ammobelt") = TempChecklistBox.GetItemChecked(8)
+            _view(0)("AmmobeltVest") = TempChecklistBox.GetItemChecked(9)
+            _view(0)("CamoRemoval") = TempChecklistBox.GetItemChecked(10)
+            _view(0)("Cleaningkit") = TempChecklistBox.GetItemChecked(11)
+            _view(0)("AttentionItem") = TempChecklistBox.GetItemChecked(12)
+            _view(0)("Garotte") = TempChecklistBox.GetItemChecked(13)
+            _view(0)("Covert") = TempChecklistBox.GetItemChecked(14)
+            _view(0)("Corpse") = TempChecklistBox.GetItemChecked(15)
+            _view(0)("BloodcatSkin") = TempChecklistBox.GetItemChecked(16)
+            _view(0)("NoMetalDetection") = TempChecklistBox.GetItemChecked(17)
+            _view(0)("JumpGrenade") = TempChecklistBox.GetItemChecked(18)
+            _view(0)("Handcuffs") = TempChecklistBox.GetItemChecked(19)
+            _view(0)("Taser") = TempChecklistBox.GetItemChecked(20)
+            _view(0)("ScubaBottle") = TempChecklistBox.GetItemChecked(21)
+            _view(0)("ScubaMask") = TempChecklistBox.GetItemChecked(22)
+            _view(0)("ScubaFins") = TempChecklistBox.GetItemChecked(23)
+            _view(0)("TripwireRoll") = TempChecklistBox.GetItemChecked(24)
+            _view(0)("Radioset") = TempChecklistBox.GetItemChecked(25)
+            _view(0)("SignalShell") = TempChecklistBox.GetItemChecked(26)
+            _view(0)("Soda") = TempChecklistBox.GetItemChecked(27)
+            _view(0)("RoofcollapseItem") = TempChecklistBox.GetItemChecked(28)
+            _view(0)("DiseaseprotectionFace") = TempChecklistBox.GetItemChecked(29)
+            _view(0)("DiseaseprotectionHand") = TempChecklistBox.GetItemChecked(30)
+            _view(0)("LBEexplosionproof") = TempChecklistBox.GetItemChecked(31)
+            _view(0)("EmptyBloodbag") = TempChecklistBox.GetItemChecked(32)
+            _view(0)("MedicalSplint") = TempChecklistBox.GetItemChecked(33)
+            _view(0)("Damageable") = TempChecklistBox.GetItemChecked(34)
+            _view(0)("Repairable") = TempChecklistBox.GetItemChecked(35)
+            _view(0)("WaterDamages") = TempChecklistBox.GetItemChecked(36)
+            _view(0)("Metal") = TempChecklistBox.GetItemChecked(37)
+            _view(0)("Sinks") = TempChecklistBox.GetItemChecked(38)
+            _view(0)("ShowStatus") = TempChecklistBox.GetItemChecked(39)
+            _view(0)("HiddenAddon") = TempChecklistBox.GetItemChecked(40)
+            _view(0)("TwoHanded") = TempChecklistBox.GetItemChecked(41)
+            _view(0)("NotBuyable") = TempChecklistBox.GetItemChecked(42)
+            _view(0)("Attachment") = TempChecklistBox.GetItemChecked(43)
+            _view(0)("HiddenAttachment") = TempChecklistBox.GetItemChecked(44)
+            _view(0)("BigGunList") = TempChecklistBox.GetItemChecked(45)
+            _view(0)("NotInEditor") = TempChecklistBox.GetItemChecked(46)
+            _view(0)("DefaultUndroppable") = TempChecklistBox.GetItemChecked(47)
+            _view(0)("Unaerodynamic") = TempChecklistBox.GetItemChecked(48)
+            _view(0)("Electronic") = TempChecklistBox.GetItemChecked(49)
+            _view(0)("Cannon") = TempChecklistBox.GetItemChecked(50)
+            _view(0)("RocketRifle") = TempChecklistBox.GetItemChecked(51)
+            _view(0)("FingerPrintID") = TempChecklistBox.GetItemChecked(52)
+            _view(0)("MetalDetector") = TempChecklistBox.GetItemChecked(53)
+            _view(0)("GasMask") = TempChecklistBox.GetItemChecked(54)
+            _view(0)("LockBomb") = TempChecklistBox.GetItemChecked(55)
+            _view(0)("Flare") = TempChecklistBox.GetItemChecked(56)
+            _view(0)("GrenadeLauncher") = TempChecklistBox.GetItemChecked(57)
+            _view(0)("Mortar") = TempChecklistBox.GetItemChecked(58)
+            _view(0)("Duckbill") = TempChecklistBox.GetItemChecked(59)
+            _view(0)("Detonator") = TempChecklistBox.GetItemChecked(60)
+            _view(0)("RemoteDetonator") = TempChecklistBox.GetItemChecked(61)
+            _view(0)("HideMuzzleFlash") = TempChecklistBox.GetItemChecked(62)
+            _view(0)("RocketLauncher") = TempChecklistBox.GetItemChecked(63)
 
-            _view(0)("ItemFlag") = TempItemFlags
+            'ItemFlag2
+            TempChecklistBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox67").Controls.Item("ItemFlags2CheckedList")
+            _view(0)("SingleShotRocketLauncher") = TempChecklistBox.GetItemChecked(0)
+            _view(0)("BrassKnuckles") = TempChecklistBox.GetItemChecked(1)
+            _view(0)("Crowbar") = TempChecklistBox.GetItemChecked(2)
+            _view(0)("GLGrenade") = TempChecklistBox.GetItemChecked(3)
+            _view(0)("FlakJacket") = TempChecklistBox.GetItemChecked(4)
+            _view(0)("LeatherJacket") = TempChecklistBox.GetItemChecked(5)
+            _view(0)("Batteries") = TempChecklistBox.GetItemChecked(6)
+            _view(0)("NeedsBatteries") = TempChecklistBox.GetItemChecked(7)
+            _view(0)("XRay") = TempChecklistBox.GetItemChecked(8)
+            _view(0)("WireCutters") = TempChecklistBox.GetItemChecked(9)
+            _view(0)("Toolkit") = TempChecklistBox.GetItemChecked(10)
+            _view(0)("FirstAidKit") = TempChecklistBox.GetItemChecked(11)
+            _view(0)("MedicalKit") = TempChecklistBox.GetItemChecked(12)
+            _view(0)("Canteen") = TempChecklistBox.GetItemChecked(13)
+            _view(0)("Jar") = TempChecklistBox.GetItemChecked(14)
+            _view(0)("CanAndString") = TempChecklistBox.GetItemChecked(15)
+            _view(0)("Marbles") = TempChecklistBox.GetItemChecked(16)
+            _view(0)("Walkman") = TempChecklistBox.GetItemChecked(17)
+            _view(0)("RemoteTrigger") = TempChecklistBox.GetItemChecked(18)
+            _view(0)("RobotRemoteControl") = TempChecklistBox.GetItemChecked(19)
+            _view(0)("CamouflageKit") = TempChecklistBox.GetItemChecked(20)
+            _view(0)("LocksmithKit") = TempChecklistBox.GetItemChecked(21)
+            _view(0)("Mine") = TempChecklistBox.GetItemChecked(22)
+            _view(0)("AntitankMine") = TempChecklistBox.GetItemChecked(23)
+            _view(0)("Hardware") = TempChecklistBox.GetItemChecked(24)
+            _view(0)("Medical") = TempChecklistBox.GetItemChecked(25)
+            _view(0)("GasCan") = TempChecklistBox.GetItemChecked(26)
+            _view(0)("ContainsLiquid") = TempChecklistBox.GetItemChecked(27)
+            _view(0)("Rock") = TempChecklistBox.GetItemChecked(28)
+            _view(0)("ThermalOptics") = TempChecklistBox.GetItemChecked(29)
+            _view(0)("SciFi") = TempChecklistBox.GetItemChecked(30)
+            _view(0)("NewInv") = TempChecklistBox.GetItemChecked(31)
+            _view(0)("DiseaseSystemExclusive") = TempChecklistBox.GetItemChecked(32)
+            _view(0)("Barrel") = TempChecklistBox.GetItemChecked(33)
+            _view(0)("TripWireActivation") = TempChecklistBox.GetItemChecked(34)
+            _view(0)("TripWire") = TempChecklistBox.GetItemChecked(35)
+            _view(0)("Directional") = TempChecklistBox.GetItemChecked(36)
+            _view(0)("BlockIronSight") = TempChecklistBox.GetItemChecked(37)
+            _view(0)("AllowClimbing") = TempChecklistBox.GetItemChecked(38)
+            _view(0)("Cigarette") = TempChecklistBox.GetItemChecked(39)
+            _view(0)("ProvidesRobotCamo") = TempChecklistBox.GetItemChecked(40)
+            _view(0)("ProvidesRobotNightVision") = TempChecklistBox.GetItemChecked(41)
+            _view(0)("ProvidesRobotLaserBonus") = TempChecklistBox.GetItemChecked(42)
+
 
             ''Saving Drugs
             'Dim TempDrugFlags As UInt32 = 0
@@ -810,5 +1522,119 @@ Public Class ItemDataForm
     Private Sub FoodTableLayout_Paint(sender As System.Object, e As System.Windows.Forms.PaintEventArgs)
 
     End Sub
+
+    Public Enum ItemFlags
+        Bloodbag = 0
+        Manpad
+        Beartrap
+        Camera
+        Waterdrum
+        BloodcatMeat
+        CowMeat
+        Beltfed
+        Ammobelt
+        AmmobeltVest
+        CamoRemoval
+        Cleaningkit
+        AttentionItem
+        Garotte
+        Covert
+        Corpse
+        BloodcatSkin
+        NoMetalDetection
+        JumpGrenade
+        Handcuffs
+        Taser
+        ScubaBottle
+        ScubaMask
+        ScubaFins
+        TripwireRoll
+        Radioset
+        SignalShell
+        Soda
+        RoofcollapseItem
+        DiseaseprotectionFace
+        DiseaseprotectionHand
+        LBEexplosionproof
+        EmptyBloodbag
+        MedicalSplint
+        Damageable
+        Repairable
+        WaterDamages
+        Metal
+        Sinks
+        ShowStatus
+        HiddenAddon
+        TwoHanded
+        NotBuyable
+        Attachment
+        HiddenAttachment
+        BigGunList
+        NotInEditor
+        DefaultUndroppable
+        Unaerodynamic
+        Electronic
+        Cannon
+        RocketRifle
+        FingerPrintID
+        MetalDetector
+        GasMask
+        LockBomb
+        Flare
+        GrenadeLauncher
+        Mortar
+        Duckbill
+        Detonator
+        RemoteDetonator
+        HideMuzzleFlash
+        RocketLauncher
+    End Enum
+
+    Public Enum ItemFlags2
+        SingleShotRocketLauncher = 0
+        BrassKnuckles
+        Crowbar
+        GLGrenade
+        FlakJacket
+        LeatherJacket
+        Batteries
+        NeedsBatteries
+        XRay
+        WireCutters
+        Toolkit
+        FirstAidKit
+        MedicalKit
+        Canteen
+        Jar
+        CanAndString
+        Marbles
+        Walkman
+        RemoteTrigger
+        RobotRemoteControl
+        CamouflageKit
+        LocksmithKit
+        Mine
+        AntitankMine
+        Hardware
+        Medical
+        GasCan
+        ContainsLiquid
+        Rock
+        ThermalOptics
+        SciFi
+        NewInv
+        DiseaseSystemExclusive
+        Barrel
+        TripWireActivation
+        TripWire
+        Directional
+        BlockIronSight
+        AllowClimbing
+        Cigarette
+        ProvidesRobotCamo
+        ProvidesRobotNightVision
+        ProvidesRobotLaserBonus
+    End Enum
+
 End Class
 
