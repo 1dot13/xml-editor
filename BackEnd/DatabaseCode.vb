@@ -460,6 +460,8 @@ Public Module DatabaseCode
             AddLookupData(explosionTypes, 8, "Fire")
             AddLookupData(explosionTypes, 9, "Flashbang")
             AddLookupData(explosionTypes, 10, "Signal Shell")
+            AddLookupData(explosionTypes, 11, "Roof Collapse")
+            AddLookupData(explosionTypes, 12, "White Smoke")
         Else
             LookupFile.AddLookupData(lookupFilename, explosionTypes)
         End If
