@@ -1,4 +1,5 @@
 Imports System.Data
+Imports System.Security.Cryptography.Pkcs
 
 Public Module DatabaseCode
     'JMich
@@ -70,6 +71,7 @@ Public Module DatabaseCode
         Dim attachmentPoints As DataTable = MakeAttachmentPointTable()
         Dim itemsToExplosives As DataTable = MakeITETable()
         Dim transform As DataTable = MakeTransformTable()
+        Dim disease As DataTable = MakeDiseaseTable()
         'Dim drugs As DataTable = MakeDrugsTable()
         Dim food As DataTable = MakeFoodTable()
         Dim clothes As DataTable = MakeClothesTable()
@@ -214,6 +216,7 @@ Public Module DatabaseCode
         ds.Tables.Add(itemsToExplosives)
         ds.Tables.Add(transform)
         ds.Tables.Add(attachmentPoints)
+        ds.Tables.Add(disease)
         'ds.Tables.Add(drugs)
         ds.Tables.Add(food)
         ds.Tables.Add(clothes)
@@ -2357,6 +2360,66 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("szTooltipText", "Tooltip", GetType(String), , , , , , , , 300))
 
         AddConstraint(t, New String() {"usItem", "usResult1", "usResult2", "usResult3", "usResult4", "usResult5", "usResult6", "usResult7", "usResult8", "usResult9", "usResult10"}, True)
+
+        Return t
+    End Function
+
+    Private Function MakeDiseaseTable() As DataTable
+        Dim t As New DataTable("DISEASE")
+        t.ExtendedProperties.Add(TableProperty.FileName, "Disease.xml")
+
+        t.Columns.Add(MakeColumn("uiIndex", "ID", GetType(Integer)))
+        t.Columns.Add(MakeColumn("szName", "Name", GetType(String)))
+        t.Columns.Add(MakeColumn("szFatName", "Bolded Name", GetType(String)))
+        t.Columns.Add(MakeColumn("szDescription", "Description", GetType(String)))
+        t.Columns.Add(MakeColumn("sInfectionPtsInitial", "Initial Infection Points", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sInfectionPtsOutbreak", "Outbreak Infection Points", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sInfectionPtsFull", "Full Infection Points", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sInfectionPtsGainPerHour", "Infection Point Gain Per Hour", GetType(Integer)))
+        t.Columns.Add(MakeColumn("InfectionChance_SWAMP", "Infection Chance From Swamp", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_TROPICS", "Infection Chance From Tropics", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_SEX", "Infection Chance From Sex", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_CONTACT_HUMAN", "Infection Chance From Humans", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_CONTACT_CORPSE", "Infection Chance From Corpses", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_ANIMAL", "Infection Chance From Animals", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_OPEN", "Infection Chance From Open Wounds", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_GUNSHOT", "Infection Chance From Gunshot Wounds", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_FIRE", "Infection Chance From Fire", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_GAS", "Infection Chance From Gas", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_AGI", "Infection Chance From Wound Agility Statloss", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_DEX", "Infection Chance From Wound Dexterity Statloss", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_STR", "Infection Chance From Wound Strength Statloss", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_WIS", "Infection Chance From Wound Wisdowm Statloss", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_WOUND_TRAUMATIC", "Infection Chance From Traumatic Events", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_BADFOOD", "Infection Chance From Spoiled Food", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("InfectionChance_BADWATER", "Infection Chance From Spoiled Water", GetType(Decimal)))
+        t.Columns.Add(MakeColumn("fCanBeCured", "Disease is Cureable", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fReverseOnFull", "Disease is Reversible", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fCanReInfect", "Disease can reinfect already infected", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fHideSymbol", "Hide Face Symbol Even If Diagnosed", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fDisgusting", "Other people will be disgusted be disease", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fSpecialFlagPTSDBuns", "Buns can change personality", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fSpecialFlagContractDisability", "Gain a new disability upon infection", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fSpecialFlagLimitedUseArms", "Arms have limited functionality", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("fSpecialFlagLimitedUseLegs", "Legs have limited functionality", GetType(Boolean)))
+        t.Columns.Add(MakeColumn("sEffStatAGI", "Agility effectivity is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sEffStatDEX", "Dexterity effectivity is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sEffStatSTR", "Strength effectivity is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sEffStatWIS", "Wisdom  effectivity is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sEffStatEXP", "Experience effectivity is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sEffAP", "AP amount is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("usMaxBreath", "Max Breath is lowered by this percentage", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sEffCarryStrength", "Carry strength is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sLifeRegenHundreds", "Hourly life regen is altered by the hundredths", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sNeedToSleep", "Need to sleep is altered", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sDrinkModifier", "Water consumption is altered as a percentage", GetType(Integer)))
+        t.Columns.Add(MakeColumn("sFoodModifier", "Food consumption is altered as a percentage", GetType(Integer)))
+        t.Columns.Add(MakeColumn("moralemodifier", "Modifier to total morale", GetType(Decimal)))
+
+
+        Dim pk(0) As DataColumn
+        pk(0) = t.Columns("uiIndex")
+        t.PrimaryKey = pk
 
         Return t
     End Function

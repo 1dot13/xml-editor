@@ -229,6 +229,7 @@ Public Class Tables
     Public Const AttachmentSlots As String = "ATTACHMENTSLOT"
     Public Const MagazineTypes As String = "MagazineType"
     Public Const ItemTransformations As String = "TRANSFORM"
+    Public Const Disease As String = "DISEASE"
     Public Const Drugs As String = "DRUG"
     Public Const DrugTypes As String = "DrugType"
     Public Const SeparabilityStates As String = "Separability"
