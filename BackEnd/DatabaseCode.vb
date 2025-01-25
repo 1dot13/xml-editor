@@ -1383,7 +1383,7 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("ItemChoiceTimeSetting", "Item Time Choice", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("SleepModifier", "Sleep Modifier", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("usPortionSize", "Portion Size", GetType(Integer), 0, , , , , , True))
-        t.Columns.Add(MakeColumn("usAdministrationModifier", "Administration Modifier", GetType(Byte), , , , , , , True))
+        t.Columns.Add(MakeColumn("usAdministrationModifier", "Administration Modifier", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("LockPickModifier", "Lockpicking Modifier", GetType(Integer), 0, , , , , , True))
         t.Columns.Add(MakeColumn("randomitemcoolnessmodificator", "Random Item Coolness Modifier", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("RobotStrBonus", "RobotStrBonus", GetType(Integer), , , , , , , True))
