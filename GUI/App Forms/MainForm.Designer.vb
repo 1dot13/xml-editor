@@ -23,1623 +23,1619 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
+        components = New ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
-        Me.MenuStrip = New System.Windows.Forms.MenuStrip()
-        Me.FileMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SelectDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data1ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data2ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data3ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data4ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data5ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data6ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data7ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data8ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data9ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Data10ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.SaveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SaveAllToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.PrintToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PrintPreviewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PrintSetupToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ViewMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolBarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StatusBarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.BackgroundImageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EditMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UndoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RedoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
-        Me.CutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CopyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PasteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
-        Me.SelectAllToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AmmoToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CalibersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnglishToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GermanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RussianToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PolishToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FrenchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ItalianToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DutchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ChineseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TypesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExplosionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SoundsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StandardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.BurstToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LookupTablesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AmmoFlagsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ArmourClassesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AttachmentSystemToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AttachmentClassesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CursorsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DrugTypesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExplosionTypesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SeparabilityStatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ItemClassesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ItemFlagsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LBEClassesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MergeTypesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SkillChecksToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.WeaponClassesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.WeaponTypesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewAttachmentSystemToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NasAttachmentClassesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NasAttachmentSlotsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AttachmentClassCodeMakerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PocketTypesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InventorySilhouettesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CommonAttachmentPointsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AttachmentPointCodeMakerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        'Me.DrugsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FoodToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ClothesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ItemsMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AllItemsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ByClassToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GunsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AmmoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LaunchersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GrenadesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ExplosivesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.KnivesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OtherWeaponsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ArmourToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FaceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.KitsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.KeysToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LoadBearingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MiscToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NoneItemToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RandomItemsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FilteredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AttachmentsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DrugsItemFilterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TonsOfGunsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NormalGunsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SciFiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NonSciFiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CustomFilterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CreateNewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
-        Me.MergesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StandardToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AttachmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AttachmentsToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ListingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InfoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.IncompatibleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LaunchablesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CompatibleFaceItemsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TransformationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RandToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.InventoriesMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.IMPItemsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyStuffToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyGunsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyGunsAdminToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyGunsRegularToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyGunsEliteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyGunsDefaultToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyItemsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyItemsAdminToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyItemsRegularToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyItemsEliteToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyItemsDefaultToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyAmmoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaItemsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaItemsGunsToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaGunsGreenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaGunsRegularToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaGunsEliteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaItemsItemsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaItemsGreenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaItemsRegularToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MilitiaItemsEliteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DropRatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyWeaponDropRateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyAmmoDropRateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyArmourDropRateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyExplosiveDropRateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EnemyMiscDropRateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShopkeepersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AlbertoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ArnieToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CarloToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DevinToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ElginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FrankToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FranzToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FredoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GabbyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HerveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HowardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.JakeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.KeithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MannyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MickeyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PerkoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PeterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SamToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TonyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MercStartingGearToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.WindowsMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CascadeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TileVerticalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TileHorizontalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CloseAllToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ArrangeIconsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ProfilesMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShowToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AllToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MapsMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AlternateSectorsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CitiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SAMSitesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MovementCostsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolsMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HelpMenu = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
-        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStrip = New System.Windows.Forms.ToolStrip()
-        Me.OpenToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.SaveAllToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.PrintToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.PrintPreviewToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.HelpToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.StatusStrip = New System.Windows.Forms.StatusStrip()
-        Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ToolStripStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.MenuStrip.SuspendLayout()
-        Me.ToolStrip.SuspendLayout()
-        Me.StatusStrip.SuspendLayout()
-        Me.SuspendLayout()
-        '
-        'MenuStrip
-        '
-        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileMenu, Me.ViewMenu, Me.EditMenu, Me.ToolStripMenuItem4, Me.ItemsMenu, Me.InventoriesMenu, Me.WindowsMenu, Me.ProfilesMenu, Me.MapsMenu, Me.ToolsMenu, Me.HelpMenu})
-        Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip.MdiWindowListItem = Me.WindowsMenu
-        Me.MenuStrip.Name = "MenuStrip"
-        Me.MenuStrip.Size = New System.Drawing.Size(522, 24)
-        Me.MenuStrip.TabIndex = 5
-        Me.MenuStrip.Text = "MenuStrip"
-        '
-        'FileMenu
-        '
-        Me.FileMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SelectDataToolStripMenuItem, Me.OpenToolStripMenuItem, Me.ToolStripSeparator3, Me.SaveToolStripMenuItem, Me.SaveAllToolStripMenuItem, Me.ToolStripSeparator4, Me.PrintToolStripMenuItem, Me.PrintPreviewToolStripMenuItem, Me.PrintSetupToolStripMenuItem, Me.ToolStripSeparator5, Me.ExitToolStripMenuItem})
-        Me.FileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder
-        Me.FileMenu.Name = "FileMenu"
-        Me.FileMenu.Size = New System.Drawing.Size(37, 20)
-        Me.FileMenu.Text = "&File"
-        '
-        'SelectDataToolStripMenuItem
-        '
-        Me.SelectDataToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Data1ToolStripMenuItem, Me.Data2ToolStripMenuItem, Me.Data3ToolStripMenuItem, Me.Data4ToolStripMenuItem, Me.Data5ToolStripMenuItem, Me.Data6ToolStripMenuItem, Me.Data7ToolStripMenuItem, Me.Data8ToolStripMenuItem, Me.Data9ToolStripMenuItem, Me.Data10ToolStripMenuItem})
-        Me.SelectDataToolStripMenuItem.Name = "SelectDataToolStripMenuItem"
-        Me.SelectDataToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.SelectDataToolStripMenuItem.Text = "&Active Data Set"
-        '
-        'Data1ToolStripMenuItem
-        '
-        Me.Data1ToolStripMenuItem.Checked = True
-        Me.Data1ToolStripMenuItem.CheckOnClick = True
-        Me.Data1ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.Data1ToolStripMenuItem.Name = "Data1ToolStripMenuItem"
-        Me.Data1ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D1), System.Windows.Forms.Keys)
-        Me.Data1ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data1ToolStripMenuItem.Tag = "0"
-        Me.Data1ToolStripMenuItem.Text = "&1 - {0} "
-        '
-        'Data2ToolStripMenuItem
-        '
-        Me.Data2ToolStripMenuItem.CheckOnClick = True
-        Me.Data2ToolStripMenuItem.Name = "Data2ToolStripMenuItem"
-        Me.Data2ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D2), System.Windows.Forms.Keys)
-        Me.Data2ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data2ToolStripMenuItem.Tag = "1"
-        Me.Data2ToolStripMenuItem.Text = "&2 - {0}"
-        '
-        'Data3ToolStripMenuItem
-        '
-        Me.Data3ToolStripMenuItem.CheckOnClick = True
-        Me.Data3ToolStripMenuItem.Name = "Data3ToolStripMenuItem"
-        Me.Data3ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D3), System.Windows.Forms.Keys)
-        Me.Data3ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data3ToolStripMenuItem.Tag = "2"
-        Me.Data3ToolStripMenuItem.Text = "&3 - {0}"
-        '
-        'Data4ToolStripMenuItem
-        '
-        Me.Data4ToolStripMenuItem.CheckOnClick = True
-        Me.Data4ToolStripMenuItem.Name = "Data4ToolStripMenuItem"
-        Me.Data4ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D4), System.Windows.Forms.Keys)
-        Me.Data4ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data4ToolStripMenuItem.Tag = "3"
-        Me.Data4ToolStripMenuItem.Text = "&4 - {0}"
-        '
-        'Data5ToolStripMenuItem
-        '
-        Me.Data5ToolStripMenuItem.CheckOnClick = True
-        Me.Data5ToolStripMenuItem.Name = "Data5ToolStripMenuItem"
-        Me.Data5ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D5), System.Windows.Forms.Keys)
-        Me.Data5ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data5ToolStripMenuItem.Tag = "4"
-        Me.Data5ToolStripMenuItem.Text = "&5 - {0}"
-        '
-        'Data6ToolStripMenuItem
-        '
-        Me.Data6ToolStripMenuItem.CheckOnClick = True
-        Me.Data6ToolStripMenuItem.Name = "Data6ToolStripMenuItem"
-        Me.Data6ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D6), System.Windows.Forms.Keys)
-        Me.Data6ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data6ToolStripMenuItem.Tag = "5"
-        Me.Data6ToolStripMenuItem.Text = "&6 - {0}"
-        '
-        'Data7ToolStripMenuItem
-        '
-        Me.Data7ToolStripMenuItem.CheckOnClick = True
-        Me.Data7ToolStripMenuItem.Name = "Data7ToolStripMenuItem"
-        Me.Data7ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D7), System.Windows.Forms.Keys)
-        Me.Data7ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data7ToolStripMenuItem.Tag = "6"
-        Me.Data7ToolStripMenuItem.Text = "&7 - {0}"
-        '
-        'Data8ToolStripMenuItem
-        '
-        Me.Data8ToolStripMenuItem.CheckOnClick = True
-        Me.Data8ToolStripMenuItem.Name = "Data8ToolStripMenuItem"
-        Me.Data8ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D8), System.Windows.Forms.Keys)
-        Me.Data8ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data8ToolStripMenuItem.Tag = "7"
-        Me.Data8ToolStripMenuItem.Text = "&8 - {0}"
-        '
-        'Data9ToolStripMenuItem
-        '
-        Me.Data9ToolStripMenuItem.CheckOnClick = True
-        Me.Data9ToolStripMenuItem.Name = "Data9ToolStripMenuItem"
-        Me.Data9ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D9), System.Windows.Forms.Keys)
-        Me.Data9ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data9ToolStripMenuItem.Tag = "8"
-        Me.Data9ToolStripMenuItem.Text = "&9 - {0}"
-        '
-        'Data10ToolStripMenuItem
-        '
-        Me.Data10ToolStripMenuItem.CheckOnClick = True
-        Me.Data10ToolStripMenuItem.Name = "Data10ToolStripMenuItem"
-        Me.Data10ToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.D0), System.Windows.Forms.Keys)
-        Me.Data10ToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.Data10ToolStripMenuItem.Tag = "9"
-        Me.Data10ToolStripMenuItem.Text = "1&0 - {0}"
-        '
-        'OpenToolStripMenuItem
-        '
-        Me.OpenToolStripMenuItem.Image = CType(resources.GetObject("OpenToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.OpenToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.R), System.Windows.Forms.Keys)
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.OpenToolStripMenuItem.Text = "&Reload"
-        '
-        'ToolStripSeparator3
-        '
-        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(235, 6)
-        Me.ToolStripSeparator3.Visible = False
-        '
-        'SaveToolStripMenuItem
-        '
-        Me.SaveToolStripMenuItem.Image = CType(resources.GetObject("SaveToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.SaveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem"
-        Me.SaveToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.SaveToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.SaveToolStripMenuItem.Text = "&Save Active Data Set"
-        '
-        'SaveAllToolStripMenuItem
-        '
-        Me.SaveAllToolStripMenuItem.Image = CType(resources.GetObject("SaveAllToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.SaveAllToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.SaveAllToolStripMenuItem.Name = "SaveAllToolStripMenuItem"
-        Me.SaveAllToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
-            Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.SaveAllToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.SaveAllToolStripMenuItem.Text = "Sa&ve All Data Sets"
-        '
-        'ToolStripSeparator4
-        '
-        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(235, 6)
-        Me.ToolStripSeparator4.Visible = False
-        '
-        'PrintToolStripMenuItem
-        '
-        Me.PrintToolStripMenuItem.Image = CType(resources.GetObject("PrintToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.PrintToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.PrintToolStripMenuItem.Name = "PrintToolStripMenuItem"
-        Me.PrintToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
-        Me.PrintToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.PrintToolStripMenuItem.Text = "&Print"
-        Me.PrintToolStripMenuItem.Visible = False
-        '
-        'PrintPreviewToolStripMenuItem
-        '
-        Me.PrintPreviewToolStripMenuItem.Image = CType(resources.GetObject("PrintPreviewToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.PrintPreviewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.PrintPreviewToolStripMenuItem.Name = "PrintPreviewToolStripMenuItem"
-        Me.PrintPreviewToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.PrintPreviewToolStripMenuItem.Text = "Print Pre&view"
-        Me.PrintPreviewToolStripMenuItem.Visible = False
-        '
-        'PrintSetupToolStripMenuItem
-        '
-        Me.PrintSetupToolStripMenuItem.Name = "PrintSetupToolStripMenuItem"
-        Me.PrintSetupToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.PrintSetupToolStripMenuItem.Text = "Print Setup"
-        Me.PrintSetupToolStripMenuItem.Visible = False
-        '
-        'ToolStripSeparator5
-        '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(235, 6)
-        Me.ToolStripSeparator5.Visible = False
-        '
-        'ExitToolStripMenuItem
-        '
-        Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(238, 22)
-        Me.ExitToolStripMenuItem.Text = "E&xit"
-        '
-        'ViewMenu
-        '
-        Me.ViewMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolBarToolStripMenuItem, Me.StatusBarToolStripMenuItem, Me.BackgroundImageToolStripMenuItem})
-        Me.ViewMenu.Name = "ViewMenu"
-        Me.ViewMenu.Size = New System.Drawing.Size(44, 20)
-        Me.ViewMenu.Text = "&View"
-        '
-        'ToolBarToolStripMenuItem
-        '
-        Me.ToolBarToolStripMenuItem.Checked = True
-        Me.ToolBarToolStripMenuItem.CheckOnClick = True
-        Me.ToolBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ToolBarToolStripMenuItem.Name = "ToolBarToolStripMenuItem"
-        Me.ToolBarToolStripMenuItem.Size = New System.Drawing.Size(138, 22)
-        Me.ToolBarToolStripMenuItem.Text = "&Toolbar"
-        '
-        'StatusBarToolStripMenuItem
-        '
-        Me.StatusBarToolStripMenuItem.Checked = True
-        Me.StatusBarToolStripMenuItem.CheckOnClick = True
-        Me.StatusBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.StatusBarToolStripMenuItem.Name = "StatusBarToolStripMenuItem"
-        Me.StatusBarToolStripMenuItem.Size = New System.Drawing.Size(138, 22)
-        Me.StatusBarToolStripMenuItem.Text = "&Status Bar"
-        '
-        'BackgroundImageToolStripMenuItem
-        '
-        Me.BackgroundImageToolStripMenuItem.Checked = True
-        Me.BackgroundImageToolStripMenuItem.CheckOnClick = True
-        Me.BackgroundImageToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.BackgroundImageToolStripMenuItem.Name = "BackgroundImageToolStripMenuItem"
-        Me.BackgroundImageToolStripMenuItem.Size = New System.Drawing.Size(138, 22)
-        Me.BackgroundImageToolStripMenuItem.Text = "&Background"
-        '
-        'EditMenu
-        '
-        Me.EditMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UndoToolStripMenuItem, Me.RedoToolStripMenuItem, Me.ToolStripSeparator6, Me.CutToolStripMenuItem, Me.CopyToolStripMenuItem, Me.PasteToolStripMenuItem, Me.ToolStripSeparator7, Me.SelectAllToolStripMenuItem})
-        Me.EditMenu.Name = "EditMenu"
-        Me.EditMenu.Size = New System.Drawing.Size(39, 20)
-        Me.EditMenu.Text = "&Edit"
-        Me.EditMenu.Visible = False
-        '
-        'UndoToolStripMenuItem
-        '
-        Me.UndoToolStripMenuItem.Image = CType(resources.GetObject("UndoToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.UndoToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.UndoToolStripMenuItem.Name = "UndoToolStripMenuItem"
-        Me.UndoToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.UndoToolStripMenuItem.Text = "&Undo"
-        '
-        'RedoToolStripMenuItem
-        '
-        Me.RedoToolStripMenuItem.Image = CType(resources.GetObject("RedoToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.RedoToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.RedoToolStripMenuItem.Name = "RedoToolStripMenuItem"
-        Me.RedoToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.RedoToolStripMenuItem.Text = "&Redo"
-        '
-        'ToolStripSeparator6
-        '
-        Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(119, 6)
-        '
-        'CutToolStripMenuItem
-        '
-        Me.CutToolStripMenuItem.Image = CType(resources.GetObject("CutToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.CutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.CutToolStripMenuItem.Name = "CutToolStripMenuItem"
-        Me.CutToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.CutToolStripMenuItem.Text = "Cu&t"
-        '
-        'CopyToolStripMenuItem
-        '
-        Me.CopyToolStripMenuItem.Image = CType(resources.GetObject("CopyToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.CopyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.CopyToolStripMenuItem.Name = "CopyToolStripMenuItem"
-        Me.CopyToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.CopyToolStripMenuItem.Text = "&Copy"
-        '
-        'PasteToolStripMenuItem
-        '
-        Me.PasteToolStripMenuItem.Image = CType(resources.GetObject("PasteToolStripMenuItem.Image"), System.Drawing.Image)
-        Me.PasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black
-        Me.PasteToolStripMenuItem.Name = "PasteToolStripMenuItem"
-        Me.PasteToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.PasteToolStripMenuItem.Text = "&Paste"
-        '
-        'ToolStripSeparator7
-        '
-        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New System.Drawing.Size(119, 6)
-        '
-        'SelectAllToolStripMenuItem
-        '
-        Me.SelectAllToolStripMenuItem.Name = "SelectAllToolStripMenuItem"
-        Me.SelectAllToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
-        Me.SelectAllToolStripMenuItem.Text = "Select &All"
-        '
-        'ToolStripMenuItem4
-        '
-        'Me.ToolStripMenuItem4.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AmmoToolStripMenuItem2, Me.ExplosionsToolStripMenuItem, Me.SoundsToolStripMenuItem, Me.LookupTablesToolStripMenuItem, Me.NewAttachmentSystemToolStripMenuItem, Me.PocketTypesToolStripMenuItem, Me.InventorySilhouettesToolStripMenuItem, Me.CommonAttachmentPointsToolStripMenuItem, Me.AttachmentPointCodeMakerToolStripMenuItem, Me.DrugsToolStripMenuItem, Me.FoodToolStripMenuItem, Me.ClothesToolStripMenuItem})
-        Me.ToolStripMenuItem4.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AmmoToolStripMenuItem2, Me.ExplosionsToolStripMenuItem, Me.SoundsToolStripMenuItem, Me.LookupTablesToolStripMenuItem, Me.NewAttachmentSystemToolStripMenuItem, Me.PocketTypesToolStripMenuItem, Me.InventorySilhouettesToolStripMenuItem, Me.CommonAttachmentPointsToolStripMenuItem, Me.AttachmentPointCodeMakerToolStripMenuItem, Me.FoodToolStripMenuItem, Me.ClothesToolStripMenuItem})
-        Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(43, 20)
-        Me.ToolStripMenuItem4.Text = "&Data"
-        '
-        'AmmoToolStripMenuItem2
-        '
-        Me.AmmoToolStripMenuItem2.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CalibersToolStripMenuItem, Me.TypesToolStripMenuItem})
-        Me.AmmoToolStripMenuItem2.Name = "AmmoToolStripMenuItem2"
-        Me.AmmoToolStripMenuItem2.Size = New System.Drawing.Size(332, 22)
-        Me.AmmoToolStripMenuItem2.Text = "&Ammo"
-        '
-        'CalibersToolStripMenuItem
-        '
-        Me.CalibersToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EnglishToolStripMenuItem, Me.GermanToolStripMenuItem, Me.RussianToolStripMenuItem, Me.PolishToolStripMenuItem, Me.FrenchToolStripMenuItem, Me.ItalianToolStripMenuItem, Me.DutchToolStripMenuItem, Me.ChineseToolStripMenuItem})
-        Me.CalibersToolStripMenuItem.Name = "CalibersToolStripMenuItem"
-        Me.CalibersToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.CalibersToolStripMenuItem.Text = "&Calibers"
-        '
-        'EnglishToolStripMenuItem
-        '
-        Me.EnglishToolStripMenuItem.Name = "EnglishToolStripMenuItem"
-        Me.EnglishToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.EnglishToolStripMenuItem.Text = "&English"
-        '
-        'GermanToolStripMenuItem
-        '
-        Me.GermanToolStripMenuItem.Name = "GermanToolStripMenuItem"
-        Me.GermanToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.GermanToolStripMenuItem.Text = "&German"
-        '
-        'RussianToolStripMenuItem
-        '
-        Me.RussianToolStripMenuItem.Name = "RussianToolStripMenuItem"
-        Me.RussianToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.RussianToolStripMenuItem.Text = "&Russian"
-        '
-        'PolishToolStripMenuItem
-        '
-        Me.PolishToolStripMenuItem.Name = "PolishToolStripMenuItem"
-        Me.PolishToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.PolishToolStripMenuItem.Text = "&Polish"
-        '
-        'FrenchToolStripMenuItem
-        '
-        Me.FrenchToolStripMenuItem.Name = "FrenchToolStripMenuItem"
-        Me.FrenchToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.FrenchToolStripMenuItem.Text = "&French"
-        '
-        'ItalianToolStripMenuItem
-        '
-        Me.ItalianToolStripMenuItem.Name = "ItalianToolStripMenuItem"
-        Me.ItalianToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.ItalianToolStripMenuItem.Text = "&Italian"
-        '
-        'DutchToolStripMenuItem
-        '
-        Me.DutchToolStripMenuItem.Name = "DutchToolStripMenuItem"
-        Me.DutchToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.DutchToolStripMenuItem.Text = "&Dutch"
-        '
-        'ChineseToolStripMenuItem
-        '
-        Me.ChineseToolStripMenuItem.Name = "ChineseToolStripMenuItem"
-        Me.ChineseToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.ChineseToolStripMenuItem.Text = "&Chinese"
-        '
-        'TypesToolStripMenuItem
-        '
-        Me.TypesToolStripMenuItem.Name = "TypesToolStripMenuItem"
-        Me.TypesToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.TypesToolStripMenuItem.Text = "&Types"
-        '
-        'ExplosionsToolStripMenuItem
-        '
-        Me.ExplosionsToolStripMenuItem.Name = "ExplosionsToolStripMenuItem"
-        Me.ExplosionsToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.ExplosionsToolStripMenuItem.Text = "&Explosions"
-        '
-        'SoundsToolStripMenuItem
-        '
-        Me.SoundsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StandardToolStripMenuItem, Me.BurstToolStripMenuItem})
-        Me.SoundsToolStripMenuItem.Name = "SoundsToolStripMenuItem"
-        Me.SoundsToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.SoundsToolStripMenuItem.Text = "&Sounds"
-        '
-        'StandardToolStripMenuItem
-        '
-        Me.StandardToolStripMenuItem.Name = "StandardToolStripMenuItem"
-        Me.StandardToolStripMenuItem.Size = New System.Drawing.Size(121, 22)
-        Me.StandardToolStripMenuItem.Text = "&Standard"
-        '
-        'BurstToolStripMenuItem
-        '
-        Me.BurstToolStripMenuItem.Name = "BurstToolStripMenuItem"
-        Me.BurstToolStripMenuItem.Size = New System.Drawing.Size(121, 22)
-        Me.BurstToolStripMenuItem.Text = "&Burst"
-        '
-        'LookupTablesToolStripMenuItem
-        '
-        Me.LookupTablesToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AmmoFlagsToolStripMenuItem, Me.ArmourClassesToolStripMenuItem, Me.AttachmentSystemToolStripMenuItem, Me.AttachmentClassesToolStripMenuItem, Me.CursorsToolStripMenuItem, Me.DrugTypesToolStripMenuItem, Me.ExplosionTypesToolStripMenuItem, Me.SeparabilityStatesToolStripMenuItem, Me.ItemClassesToolStripMenuItem, Me.ItemFlagsToolStripMenuItem, Me.LBEClassesToolStripMenuItem, Me.MergeTypesToolStripMenuItem, Me.SkillChecksToolStripMenuItem, Me.WeaponClassesToolStripMenuItem, Me.WeaponTypesToolStripMenuItem})
-        Me.LookupTablesToolStripMenuItem.Name = "LookupTablesToolStripMenuItem"
-        Me.LookupTablesToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.LookupTablesToolStripMenuItem.Text = "&Lookup Tables"
-        '
-        'AmmoFlagsToolStripMenuItem
-        '
-        Me.AmmoFlagsToolStripMenuItem.Name = "AmmoFlagsToolStripMenuItem"
-        Me.AmmoFlagsToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.AmmoFlagsToolStripMenuItem.Text = "Amm&o Flags"
-        '
-        'ArmourClassesToolStripMenuItem
-        '
-        Me.ArmourClassesToolStripMenuItem.Name = "ArmourClassesToolStripMenuItem"
-        Me.ArmourClassesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.ArmourClassesToolStripMenuItem.Text = "A&rmour Classes"
-        '
-        'AttachmentSystemToolStripMenuItem
-        '
-        Me.AttachmentSystemToolStripMenuItem.Name = "AttachmentSystemToolStripMenuItem"
-        Me.AttachmentSystemToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.AttachmentSystemToolStripMenuItem.Text = "A&ttachment System"
-        '
-        'AttachmentClassesToolStripMenuItem
-        '
-        Me.AttachmentClassesToolStripMenuItem.Name = "AttachmentClassesToolStripMenuItem"
-        Me.AttachmentClassesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.AttachmentClassesToolStripMenuItem.Text = "Built-in &Attachment Classes"
-        '
-        'CursorsToolStripMenuItem
-        '
-        Me.CursorsToolStripMenuItem.Name = "CursorsToolStripMenuItem"
-        Me.CursorsToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.CursorsToolStripMenuItem.Text = "&Cursors"
-        '
-        'DrugTypesToolStripMenuItem
-        '
-        Me.DrugTypesToolStripMenuItem.Name = "DrugTypesToolStripMenuItem"
-        Me.DrugTypesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.DrugTypesToolStripMenuItem.Text = "&Drug Types"
-        '
-        'ExplosionTypesToolStripMenuItem
-        '
-        Me.ExplosionTypesToolStripMenuItem.Name = "ExplosionTypesToolStripMenuItem"
-        Me.ExplosionTypesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.ExplosionTypesToolStripMenuItem.Text = "&Explosion Types"
-        '
-        'SeparabilityStatesToolStripMenuItem
-        '
-        Me.SeparabilityStatesToolStripMenuItem.Name = "SeparabilityStatesToolStripMenuItem"
-        Me.SeparabilityStatesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.SeparabilityStatesToolStripMenuItem.Text = "Se&parability States"
-        '
-        'ItemClassesToolStripMenuItem
-        '
-        Me.ItemClassesToolStripMenuItem.Name = "ItemClassesToolStripMenuItem"
-        Me.ItemClassesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.ItemClassesToolStripMenuItem.Text = "&Item Classes"
-        '
-        'ItemFlagsToolStripMenuItem
-        '
-        Me.ItemFlagsToolStripMenuItem.Name = "ItemFlagsToolStripMenuItem"
-        Me.ItemFlagsToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.ItemFlagsToolStripMenuItem.Text = "Item &Flags"
-        '
-        'LBEClassesToolStripMenuItem
-        '
-        Me.LBEClassesToolStripMenuItem.Name = "LBEClassesToolStripMenuItem"
-        Me.LBEClassesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.LBEClassesToolStripMenuItem.Text = "&LBE Classes"
-        '
-        'MergeTypesToolStripMenuItem
-        '
-        Me.MergeTypesToolStripMenuItem.Name = "MergeTypesToolStripMenuItem"
-        Me.MergeTypesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.MergeTypesToolStripMenuItem.Text = "&Merge Types"
-        '
-        'SkillChecksToolStripMenuItem
-        '
-        Me.SkillChecksToolStripMenuItem.Name = "SkillChecksToolStripMenuItem"
-        Me.SkillChecksToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.SkillChecksToolStripMenuItem.Text = "&Skill Checks"
-        '
-        'WeaponClassesToolStripMenuItem
-        '
-        Me.WeaponClassesToolStripMenuItem.Name = "WeaponClassesToolStripMenuItem"
-        Me.WeaponClassesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.WeaponClassesToolStripMenuItem.Text = "&Weapon Classes"
-        '
-        'WeaponTypesToolStripMenuItem
-        '
-        Me.WeaponTypesToolStripMenuItem.Name = "WeaponTypesToolStripMenuItem"
-        Me.WeaponTypesToolStripMenuItem.Size = New System.Drawing.Size(220, 22)
-        Me.WeaponTypesToolStripMenuItem.Text = "Weapon &Types"
-        '
-        'NewAttachmentSystemToolStripMenuItem
-        '
-        Me.NewAttachmentSystemToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NasAttachmentClassesToolStripMenuItem, Me.NasAttachmentSlotsToolStripMenuItem, Me.AttachmentClassCodeMakerToolStripMenuItem})
-        Me.NewAttachmentSystemToolStripMenuItem.Name = "NewAttachmentSystemToolStripMenuItem"
-        Me.NewAttachmentSystemToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.NewAttachmentSystemToolStripMenuItem.Text = "&New Attachment System"
-        '
-        'NasAttachmentClassesToolStripMenuItem
-        '
-        Me.NasAttachmentClassesToolStripMenuItem.Name = "NasAttachmentClassesToolStripMenuItem"
-        Me.NasAttachmentClassesToolStripMenuItem.Size = New System.Drawing.Size(331, 22)
-        Me.NasAttachmentClassesToolStripMenuItem.Text = "&Custom Attachment Classes"
-        '
-        'NasAttachmentSlotsToolStripMenuItem
-        '
-        Me.NasAttachmentSlotsToolStripMenuItem.Name = "NasAttachmentSlotsToolStripMenuItem"
-        Me.NasAttachmentSlotsToolStripMenuItem.Size = New System.Drawing.Size(331, 22)
-        Me.NasAttachmentSlotsToolStripMenuItem.Text = "Attachment &Slots"
-        '
-        'AttachmentClassCodeMakerToolStripMenuItem
-        '
-        Me.AttachmentClassCodeMakerToolStripMenuItem.Name = "AttachmentClassCodeMakerToolStripMenuItem"
-        Me.AttachmentClassCodeMakerToolStripMenuItem.ShortcutKeys = CType((((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
-            Or System.Windows.Forms.Keys.Shift) _
-            Or System.Windows.Forms.Keys.C), System.Windows.Forms.Keys)
-        Me.AttachmentClassCodeMakerToolStripMenuItem.Size = New System.Drawing.Size(331, 22)
-        Me.AttachmentClassCodeMakerToolStripMenuItem.Text = "Attachment Class Code Maker"
-        Me.AttachmentClassCodeMakerToolStripMenuItem.Visible = False
-        '
-        'PocketTypesToolStripMenuItem
-        '
-        Me.PocketTypesToolStripMenuItem.Name = "PocketTypesToolStripMenuItem"
-        Me.PocketTypesToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.PocketTypesToolStripMenuItem.Text = "&Pocket Types"
-        '
-        'InventorySilhouettesToolStripMenuItem
-        '
-        Me.InventorySilhouettesToolStripMenuItem.Name = "InventorySilhouettesToolStripMenuItem"
-        Me.InventorySilhouettesToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.InventorySilhouettesToolStripMenuItem.Text = "&Inventory Silhouettes"
-        '
-        'CommonAttachmentPointsToolStripMenuItem
-        '
-        Me.CommonAttachmentPointsToolStripMenuItem.Name = "CommonAttachmentPointsToolStripMenuItem"
-        Me.CommonAttachmentPointsToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.CommonAttachmentPointsToolStripMenuItem.Text = "&Common Attachment Points"
-        '
-        'AttachmentPointCodeMakerToolStripMenuItem
-        '
-        Me.AttachmentPointCodeMakerToolStripMenuItem.Name = "AttachmentPointCodeMakerToolStripMenuItem"
-        Me.AttachmentPointCodeMakerToolStripMenuItem.ShortcutKeys = CType((((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
-            Or System.Windows.Forms.Keys.Shift) _
-            Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
-        Me.AttachmentPointCodeMakerToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.AttachmentPointCodeMakerToolStripMenuItem.Text = "Attachment Point Code Maker"
-        Me.AttachmentPointCodeMakerToolStripMenuItem.Visible = False
-        ''
-        ''DrugsToolStripMenuItem
-        ''
-        'Me.DrugsToolStripMenuItem.Name = "DrugsToolStripMenuItem"
-        'Me.DrugsToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        'Me.DrugsToolStripMenuItem.Text = "&Drugs"
-        '
-        'FoodToolStripMenuItem
-        '
-        Me.FoodToolStripMenuItem.Name = "FoodToolStripMenuItem"
-        Me.FoodToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.FoodToolStripMenuItem.Text = "Food"
-        '
-        'ClothesToolStripMenuItem
-        '
-        Me.ClothesToolStripMenuItem.Name = "ClothesToolStripMenuItem"
-        Me.ClothesToolStripMenuItem.Size = New System.Drawing.Size(332, 22)
-        Me.ClothesToolStripMenuItem.Text = "Clothes"
-        '
-        'ItemsMenu
-        '
-        Me.ItemsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowToolStripMenuItem, Me.CreateNewToolStripMenuItem, Me.ToolStripSeparator9, Me.MergesToolStripMenuItem, Me.AttachmentsToolStripMenuItem1, Me.LaunchablesToolStripMenuItem, Me.CompatibleFaceItemsToolStripMenuItem, Me.TransformationsToolStripMenuItem, Me.RandToolStripMenuItem})
-        Me.ItemsMenu.Name = "ItemsMenu"
-        Me.ItemsMenu.Size = New System.Drawing.Size(48, 20)
-        Me.ItemsMenu.Text = "&Items"
-        '
-        'ShowToolStripMenuItem
-        '
-        Me.ShowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AllItemsToolStripMenuItem, Me.ToolStripMenuItem2, Me.ByClassToolStripMenuItem, Me.FilteredToolStripMenuItem})
-        Me.ShowToolStripMenuItem.Name = "ShowToolStripMenuItem"
-        Me.ShowToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.ShowToolStripMenuItem.Text = "&Show"
-        '
-        'AllItemsToolStripMenuItem
-        '
-        Me.AllItemsToolStripMenuItem.Name = "AllItemsToolStripMenuItem"
-        Me.AllItemsToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
-            Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
-        Me.AllItemsToolStripMenuItem.Size = New System.Drawing.Size(154, 22)
-        Me.AllItemsToolStripMenuItem.Text = "&All"
-        '
-        'ToolStripMenuItem2
-        '
-        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.I), System.Windows.Forms.Keys)
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(154, 22)
-        Me.ToolStripMenuItem2.Text = "By &ID"
-        '
-        'ByClassToolStripMenuItem
-        '
-        Me.ByClassToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GunsToolStripMenuItem, Me.AmmoToolStripMenuItem, Me.LaunchersToolStripMenuItem, Me.GrenadesToolStripMenuItem, Me.ExplosivesToolStripMenuItem, Me.KnivesToolStripMenuItem, Me.OtherWeaponsToolStripMenuItem, Me.ArmourToolStripMenuItem, Me.FaceToolStripMenuItem, Me.KitsToolStripMenuItem, Me.KeysToolStripMenuItem, Me.LoadBearingToolStripMenuItem, Me.MiscToolStripMenuItem, Me.NoneItemToolStripMenuItem, Me.RandomItemsToolStripMenuItem})
-        Me.ByClassToolStripMenuItem.Name = "ByClassToolStripMenuItem"
-        Me.ByClassToolStripMenuItem.Size = New System.Drawing.Size(154, 22)
-        Me.ByClassToolStripMenuItem.Text = "By &Class"
-        '
-        'GunsToolStripMenuItem
-        '
-        Me.GunsToolStripMenuItem.Name = "GunsToolStripMenuItem"
-        Me.GunsToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.G), System.Windows.Forms.Keys)
-        Me.GunsToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.GunsToolStripMenuItem.Text = "&Guns"
-        '
-        'AmmoToolStripMenuItem
-        '
-        Me.AmmoToolStripMenuItem.Name = "AmmoToolStripMenuItem"
-        Me.AmmoToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
-        Me.AmmoToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.AmmoToolStripMenuItem.Text = "&Ammo"
-        '
-        'LaunchersToolStripMenuItem
-        '
-        Me.LaunchersToolStripMenuItem.Name = "LaunchersToolStripMenuItem"
-        Me.LaunchersToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.L), System.Windows.Forms.Keys)
-        Me.LaunchersToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.LaunchersToolStripMenuItem.Text = "&Launchers"
-        '
-        'GrenadesToolStripMenuItem
-        '
-        Me.GrenadesToolStripMenuItem.Name = "GrenadesToolStripMenuItem"
-        Me.GrenadesToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
-        Me.GrenadesToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.GrenadesToolStripMenuItem.Text = "Gre&nades"
-        '
-        'ExplosivesToolStripMenuItem
-        '
-        Me.ExplosivesToolStripMenuItem.Name = "ExplosivesToolStripMenuItem"
-        Me.ExplosivesToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
-        Me.ExplosivesToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.ExplosivesToolStripMenuItem.Text = "&Explosives"
-        '
-        'KnivesToolStripMenuItem
-        '
-        Me.KnivesToolStripMenuItem.Name = "KnivesToolStripMenuItem"
-        Me.KnivesToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.K), System.Windows.Forms.Keys)
-        Me.KnivesToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.KnivesToolStripMenuItem.Text = "&Knives"
-        '
-        'OtherWeaponsToolStripMenuItem
-        '
-        Me.OtherWeaponsToolStripMenuItem.Name = "OtherWeaponsToolStripMenuItem"
-        Me.OtherWeaponsToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
-        Me.OtherWeaponsToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.OtherWeaponsToolStripMenuItem.Text = "&Other Weapons"
-        '
-        'ArmourToolStripMenuItem
-        '
-        Me.ArmourToolStripMenuItem.Name = "ArmourToolStripMenuItem"
-        Me.ArmourToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.R), System.Windows.Forms.Keys)
-        Me.ArmourToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.ArmourToolStripMenuItem.Text = "A&rmour"
-        '
-        'FaceToolStripMenuItem
-        '
-        Me.FaceToolStripMenuItem.Name = "FaceToolStripMenuItem"
-        Me.FaceToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.FaceToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.FaceToolStripMenuItem.Text = "&Facial Gear"
-        '
-        'KitsToolStripMenuItem
-        '
-        Me.KitsToolStripMenuItem.Name = "KitsToolStripMenuItem"
-        Me.KitsToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.I), System.Windows.Forms.Keys)
-        Me.KitsToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.KitsToolStripMenuItem.Text = "K&its"
-        '
-        'KeysToolStripMenuItem
-        '
-        Me.KeysToolStripMenuItem.Name = "KeysToolStripMenuItem"
-        Me.KeysToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.Y), System.Windows.Forms.Keys)
-        Me.KeysToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.KeysToolStripMenuItem.Text = "Ke&ys"
-        '
-        'LoadBearingToolStripMenuItem
-        '
-        Me.LoadBearingToolStripMenuItem.Name = "LoadBearingToolStripMenuItem"
-        Me.LoadBearingToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.B), System.Windows.Forms.Keys)
-        Me.LoadBearingToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.LoadBearingToolStripMenuItem.Text = "Load &Bearing"
-        '
-        'MiscToolStripMenuItem
-        '
-        Me.MiscToolStripMenuItem.Name = "MiscToolStripMenuItem"
-        Me.MiscToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.M), System.Windows.Forms.Keys)
-        Me.MiscToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.MiscToolStripMenuItem.Text = "&Misc"
-        '
-        'NoneItemToolStripMenuItem
-        '
-        Me.NoneItemToolStripMenuItem.Name = "NoneItemToolStripMenuItem"
-        Me.NoneItemToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
-            Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
-        Me.NoneItemToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.NoneItemToolStripMenuItem.Text = "Empty/&None"
-        '
-        'RandomItemsToolStripMenuItem
-        '
-        Me.RandomItemsToolStripMenuItem.Name = "RandomItemsToolStripMenuItem"
-        Me.RandomItemsToolStripMenuItem.Size = New System.Drawing.Size(208, 22)
-        Me.RandomItemsToolStripMenuItem.Text = "Random Items"
-        '
-        'FilteredToolStripMenuItem
-        '
-        Me.FilteredToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AttachmentsToolStripMenuItem, Me.DrugsItemFilterToolStripMenuItem, Me.TonsOfGunsToolStripMenuItem, Me.NormalGunsToolStripMenuItem, Me.SciFiToolStripMenuItem, Me.NonSciFiToolStripMenuItem, Me.CustomFilterToolStripMenuItem})
-        Me.FilteredToolStripMenuItem.Name = "FilteredToolStripMenuItem"
-        Me.FilteredToolStripMenuItem.Size = New System.Drawing.Size(154, 22)
-        Me.FilteredToolStripMenuItem.Text = "By &Other Filters"
-        '
-        'AttachmentsToolStripMenuItem
-        '
-        Me.AttachmentsToolStripMenuItem.Name = "AttachmentsToolStripMenuItem"
-        Me.AttachmentsToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.T), System.Windows.Forms.Keys)
-        Me.AttachmentsToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.AttachmentsToolStripMenuItem.Text = "&Attachments"
-        '
-        'DrugsItemFilterToolStripMenuItem
-        '
-        'Me.DrugsItemFilterToolStripMenuItem.Name = "DrugsItemFilterToolStripMenuItem"
-        'Me.DrugsItemFilterToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.D), System.Windows.Forms.Keys)
-        'Me.DrugsItemFilterToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        'Me.DrugsItemFilterToolStripMenuItem.Text = "&Drugs"
-        '
-        'TonsOfGunsToolStripMenuItem
-        '
-        Me.TonsOfGunsToolStripMenuItem.Name = "TonsOfGunsToolStripMenuItem"
-        Me.TonsOfGunsToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.TonsOfGunsToolStripMenuItem.Text = "&Tons Of Guns"
-        '
-        'NormalGunsToolStripMenuItem
-        '
-        Me.NormalGunsToolStripMenuItem.Name = "NormalGunsToolStripMenuItem"
-        Me.NormalGunsToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.NormalGunsToolStripMenuItem.Text = "&Normal Guns"
-        '
-        'SciFiToolStripMenuItem
-        '
-        Me.SciFiToolStripMenuItem.Name = "SciFiToolStripMenuItem"
-        Me.SciFiToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.SciFiToolStripMenuItem.Text = "&Sci-Fi"
-        '
-        'NonSciFiToolStripMenuItem
-        '
-        Me.NonSciFiToolStripMenuItem.Name = "NonSciFiToolStripMenuItem"
-        Me.NonSciFiToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.NonSciFiToolStripMenuItem.Text = "&Realistic"
-        '
-        'CustomFilterToolStripMenuItem
-        '
-        Me.CustomFilterToolStripMenuItem.Name = "CustomFilterToolStripMenuItem"
-        Me.CustomFilterToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.CustomFilterToolStripMenuItem.Size = New System.Drawing.Size(185, 22)
-        Me.CustomFilterToolStripMenuItem.Text = "&Custom Filter"
-        '
-        'CreateNewToolStripMenuItem
-        '
-        Me.CreateNewToolStripMenuItem.Name = "CreateNewToolStripMenuItem"
-        Me.CreateNewToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
-        Me.CreateNewToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.CreateNewToolStripMenuItem.Text = "&New"
-        '
-        'ToolStripSeparator9
-        '
-        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(192, 6)
-        '
-        'MergesToolStripMenuItem
-        '
-        Me.MergesToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StandardToolStripMenuItem1, Me.AttachmentToolStripMenuItem})
-        Me.MergesToolStripMenuItem.Name = "MergesToolStripMenuItem"
-        Me.MergesToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.MergesToolStripMenuItem.Text = "&Merges"
-        '
-        'StandardToolStripMenuItem1
-        '
-        Me.StandardToolStripMenuItem1.Name = "StandardToolStripMenuItem1"
-        Me.StandardToolStripMenuItem1.Size = New System.Drawing.Size(137, 22)
-        Me.StandardToolStripMenuItem1.Text = "&Standard"
-        '
-        'AttachmentToolStripMenuItem
-        '
-        Me.AttachmentToolStripMenuItem.Name = "AttachmentToolStripMenuItem"
-        Me.AttachmentToolStripMenuItem.Size = New System.Drawing.Size(137, 22)
-        Me.AttachmentToolStripMenuItem.Text = "&Attachment"
-        '
-        'AttachmentsToolStripMenuItem1
-        '
-        Me.AttachmentsToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ListingToolStripMenuItem, Me.InfoToolStripMenuItem, Me.IncompatibleToolStripMenuItem})
-        Me.AttachmentsToolStripMenuItem1.Name = "AttachmentsToolStripMenuItem1"
-        Me.AttachmentsToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
-        Me.AttachmentsToolStripMenuItem1.Text = "&Attachments"
-        '
-        'ListingToolStripMenuItem
-        '
-        Me.ListingToolStripMenuItem.Name = "ListingToolStripMenuItem"
-        Me.ListingToolStripMenuItem.Size = New System.Drawing.Size(162, 22)
-        Me.ListingToolStripMenuItem.Text = "Full &List"
-        '
-        'InfoToolStripMenuItem
-        '
-        Me.InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
-        Me.InfoToolStripMenuItem.Size = New System.Drawing.Size(162, 22)
-        Me.InfoToolStripMenuItem.Text = "&Info"
-        '
-        'IncompatibleToolStripMenuItem
-        '
-        Me.IncompatibleToolStripMenuItem.Name = "IncompatibleToolStripMenuItem"
-        Me.IncompatibleToolStripMenuItem.Size = New System.Drawing.Size(162, 22)
-        Me.IncompatibleToolStripMenuItem.Text = "&Incompatibilities"
-        '
-        'LaunchablesToolStripMenuItem
-        '
-        Me.LaunchablesToolStripMenuItem.Name = "LaunchablesToolStripMenuItem"
-        Me.LaunchablesToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.LaunchablesToolStripMenuItem.Text = "&Launchables"
-        '
-        'CompatibleFaceItemsToolStripMenuItem
-        '
-        Me.CompatibleFaceItemsToolStripMenuItem.Name = "CompatibleFaceItemsToolStripMenuItem"
-        Me.CompatibleFaceItemsToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.CompatibleFaceItemsToolStripMenuItem.Text = "&Compatible Face Items"
-        '
-        'TransformationsToolStripMenuItem
-        '
-        Me.TransformationsToolStripMenuItem.Name = "TransformationsToolStripMenuItem"
-        Me.TransformationsToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.TransformationsToolStripMenuItem.Text = "&Transformations"
-        '
-        'RandToolStripMenuItem
-        '
-        Me.RandToolStripMenuItem.Name = "RandToolStripMenuItem"
-        Me.RandToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
-        Me.RandToolStripMenuItem.Text = "Random Items"
-        '
-        'InventoriesMenu
-        '
-        Me.InventoriesMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.IMPItemsToolStripMenuItem, Me.EnemyStuffToolStripMenuItem, Me.MilitiaItemsToolStripMenuItem, Me.DropRatesToolStripMenuItem, Me.ShopkeepersToolStripMenuItem, Me.MercStartingGearToolStripMenuItem})
-        Me.InventoriesMenu.Name = "InventoriesMenu"
-        Me.InventoriesMenu.Size = New System.Drawing.Size(77, 20)
-        Me.InventoriesMenu.Text = "I&nventories"
-        '
-        'IMPItemsToolStripMenuItem
-        '
-        Me.IMPItemsToolStripMenuItem.Name = "IMPItemsToolStripMenuItem"
-        Me.IMPItemsToolStripMenuItem.Size = New System.Drawing.Size(172, 22)
-        Me.IMPItemsToolStripMenuItem.Text = "&IMP Items"
-        '
-        'EnemyStuffToolStripMenuItem
-        '
-        Me.EnemyStuffToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EnemyGunsToolStripMenuItem, Me.EnemyItemsToolStripMenuItem, Me.EnemyAmmoToolStripMenuItem})
-        Me.EnemyStuffToolStripMenuItem.Name = "EnemyStuffToolStripMenuItem"
-        Me.EnemyStuffToolStripMenuItem.Size = New System.Drawing.Size(172, 22)
-        Me.EnemyStuffToolStripMenuItem.Text = "&Enemy Items"
-        '
-        'EnemyGunsToolStripMenuItem
-        '
-        Me.EnemyGunsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EnemyGunsAdminToolStripMenuItem, Me.EnemyGunsRegularToolStripMenuItem, Me.EnemyGunsEliteToolStripMenuItem, Me.EnemyGunsDefaultToolStripMenuItem})
-        Me.EnemyGunsToolStripMenuItem.Name = "EnemyGunsToolStripMenuItem"
-        Me.EnemyGunsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyGunsToolStripMenuItem.Text = "&Guns"
-        '
-        'EnemyGunsAdminToolStripMenuItem
-        '
-        Me.EnemyGunsAdminToolStripMenuItem.Name = "EnemyGunsAdminToolStripMenuItem"
-        Me.EnemyGunsAdminToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyGunsAdminToolStripMenuItem.Text = "Admin"
-        '
-        'EnemyGunsRegularToolStripMenuItem
-        '
-        Me.EnemyGunsRegularToolStripMenuItem.Name = "EnemyGunsRegularToolStripMenuItem"
-        Me.EnemyGunsRegularToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyGunsRegularToolStripMenuItem.Text = "Regular"
-        '
-        'EnemyGunsEliteToolStripMenuItem
-        '
-        Me.EnemyGunsEliteToolStripMenuItem.Name = "EnemyGunsEliteToolStripMenuItem"
-        Me.EnemyGunsEliteToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyGunsEliteToolStripMenuItem.Text = "Elite"
-        '
-        'EnemyGunsDefaultToolStripMenuItem
-        '
-        Me.EnemyGunsDefaultToolStripMenuItem.Name = "EnemyGunsDefaultToolStripMenuItem"
-        Me.EnemyGunsDefaultToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyGunsDefaultToolStripMenuItem.Text = "Default"
-        '
-        'EnemyItemsToolStripMenuItem
-        '
-        Me.EnemyItemsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EnemyItemsAdminToolStripMenuItem1, Me.EnemyItemsRegularToolStripMenuItem1, Me.EnemyItemsEliteToolStripMenuItem1, Me.EnemyItemsDefaultToolStripMenuItem})
-        Me.EnemyItemsToolStripMenuItem.Name = "EnemyItemsToolStripMenuItem"
-        Me.EnemyItemsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyItemsToolStripMenuItem.Text = "&Items"
-        '
-        'EnemyItemsAdminToolStripMenuItem1
-        '
-        Me.EnemyItemsAdminToolStripMenuItem1.Name = "EnemyItemsAdminToolStripMenuItem1"
-        Me.EnemyItemsAdminToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyItemsAdminToolStripMenuItem1.Text = "Admin"
-        '
-        'EnemyItemsRegularToolStripMenuItem1
-        '
-        Me.EnemyItemsRegularToolStripMenuItem1.Name = "EnemyItemsRegularToolStripMenuItem1"
-        Me.EnemyItemsRegularToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyItemsRegularToolStripMenuItem1.Text = "Regular"
-        '
-        'EnemyItemsEliteToolStripMenuItem1
-        '
-        Me.EnemyItemsEliteToolStripMenuItem1.Name = "EnemyItemsEliteToolStripMenuItem1"
-        Me.EnemyItemsEliteToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyItemsEliteToolStripMenuItem1.Text = "Elite"
-        '
-        'EnemyItemsDefaultToolStripMenuItem
-        '
-        Me.EnemyItemsDefaultToolStripMenuItem.Name = "EnemyItemsDefaultToolStripMenuItem"
-        Me.EnemyItemsDefaultToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyItemsDefaultToolStripMenuItem.Text = "Default"
-        '
-        'EnemyAmmoToolStripMenuItem
-        '
-        Me.EnemyAmmoToolStripMenuItem.Name = "EnemyAmmoToolStripMenuItem"
-        Me.EnemyAmmoToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EnemyAmmoToolStripMenuItem.Text = "&Ammo"
-        '
-        'MilitiaItemsToolStripMenuItem
-        '
-        Me.MilitiaItemsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MilitiaItemsGunsToolStripMenuItem1, Me.MilitiaItemsItemsToolStripMenuItem})
-        Me.MilitiaItemsToolStripMenuItem.Name = "MilitiaItemsToolStripMenuItem"
-        Me.MilitiaItemsToolStripMenuItem.Size = New System.Drawing.Size(172, 22)
-        Me.MilitiaItemsToolStripMenuItem.Text = "Militia Items"
-        '
-        'MilitiaItemsGunsToolStripMenuItem1
-        '
-        Me.MilitiaItemsGunsToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MilitiaGunsGreenToolStripMenuItem, Me.MilitiaGunsRegularToolStripMenuItem, Me.MilitiaGunsEliteToolStripMenuItem})
-        Me.MilitiaItemsGunsToolStripMenuItem1.Name = "MilitiaItemsGunsToolStripMenuItem1"
-        Me.MilitiaItemsGunsToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
-        Me.MilitiaItemsGunsToolStripMenuItem1.Text = "Guns"
-        '
-        'MilitiaGunsGreenToolStripMenuItem
-        '
-        Me.MilitiaGunsGreenToolStripMenuItem.Name = "MilitiaGunsGreenToolStripMenuItem"
-        Me.MilitiaGunsGreenToolStripMenuItem.Size = New System.Drawing.Size(114, 22)
-        Me.MilitiaGunsGreenToolStripMenuItem.Text = "Green"
-        '
-        'MilitiaGunsRegularToolStripMenuItem
-        '
-        Me.MilitiaGunsRegularToolStripMenuItem.Name = "MilitiaGunsRegularToolStripMenuItem"
-        Me.MilitiaGunsRegularToolStripMenuItem.Size = New System.Drawing.Size(114, 22)
-        Me.MilitiaGunsRegularToolStripMenuItem.Text = "Regular"
-        '
-        'MilitiaGunsEliteToolStripMenuItem
-        '
-        Me.MilitiaGunsEliteToolStripMenuItem.Name = "MilitiaGunsEliteToolStripMenuItem"
-        Me.MilitiaGunsEliteToolStripMenuItem.Size = New System.Drawing.Size(114, 22)
-        Me.MilitiaGunsEliteToolStripMenuItem.Text = "Elite"
-        '
-        'MilitiaItemsItemsToolStripMenuItem
-        '
-        Me.MilitiaItemsItemsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MilitiaItemsGreenToolStripMenuItem, Me.MilitiaItemsRegularToolStripMenuItem, Me.MilitiaItemsEliteToolStripMenuItem})
-        Me.MilitiaItemsItemsToolStripMenuItem.Name = "MilitiaItemsItemsToolStripMenuItem"
-        Me.MilitiaItemsItemsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.MilitiaItemsItemsToolStripMenuItem.Text = "Items"
-        '
-        'MilitiaItemsGreenToolStripMenuItem
-        '
-        Me.MilitiaItemsGreenToolStripMenuItem.Name = "MilitiaItemsGreenToolStripMenuItem"
-        Me.MilitiaItemsGreenToolStripMenuItem.Size = New System.Drawing.Size(114, 22)
-        Me.MilitiaItemsGreenToolStripMenuItem.Text = "Green"
-        '
-        'MilitiaItemsRegularToolStripMenuItem
-        '
-        Me.MilitiaItemsRegularToolStripMenuItem.Name = "MilitiaItemsRegularToolStripMenuItem"
-        Me.MilitiaItemsRegularToolStripMenuItem.Size = New System.Drawing.Size(114, 22)
-        Me.MilitiaItemsRegularToolStripMenuItem.Text = "Regular"
-        '
-        'MilitiaItemsEliteToolStripMenuItem
-        '
-        Me.MilitiaItemsEliteToolStripMenuItem.Name = "MilitiaItemsEliteToolStripMenuItem"
-        Me.MilitiaItemsEliteToolStripMenuItem.Size = New System.Drawing.Size(114, 22)
-        Me.MilitiaItemsEliteToolStripMenuItem.Text = "Elite"
-        '
-        'DropRatesToolStripMenuItem
-        '
-        Me.DropRatesToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EnemyWeaponDropRateToolStripMenuItem, Me.EnemyAmmoDropRateToolStripMenuItem, Me.EnemyArmourDropRateToolStripMenuItem, Me.EnemyExplosiveDropRateToolStripMenuItem, Me.EnemyMiscDropRateToolStripMenuItem})
-        Me.DropRatesToolStripMenuItem.Name = "DropRatesToolStripMenuItem"
-        Me.DropRatesToolStripMenuItem.Size = New System.Drawing.Size(172, 22)
-        Me.DropRatesToolStripMenuItem.Text = "&Drop Rates"
-        '
-        'EnemyWeaponDropRateToolStripMenuItem
-        '
-        Me.EnemyWeaponDropRateToolStripMenuItem.Name = "EnemyWeaponDropRateToolStripMenuItem"
-        Me.EnemyWeaponDropRateToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
-        Me.EnemyWeaponDropRateToolStripMenuItem.Text = "&Weapons"
-        '
-        'EnemyAmmoDropRateToolStripMenuItem
-        '
-        Me.EnemyAmmoDropRateToolStripMenuItem.Name = "EnemyAmmoDropRateToolStripMenuItem"
-        Me.EnemyAmmoDropRateToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
-        Me.EnemyAmmoDropRateToolStripMenuItem.Text = "&Ammo"
-        '
-        'EnemyArmourDropRateToolStripMenuItem
-        '
-        Me.EnemyArmourDropRateToolStripMenuItem.Name = "EnemyArmourDropRateToolStripMenuItem"
-        Me.EnemyArmourDropRateToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
-        Me.EnemyArmourDropRateToolStripMenuItem.Text = "A&rmour"
-        '
-        'EnemyExplosiveDropRateToolStripMenuItem
-        '
-        Me.EnemyExplosiveDropRateToolStripMenuItem.Name = "EnemyExplosiveDropRateToolStripMenuItem"
-        Me.EnemyExplosiveDropRateToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
-        Me.EnemyExplosiveDropRateToolStripMenuItem.Text = "&Explosives"
-        '
-        'EnemyMiscDropRateToolStripMenuItem
-        '
-        Me.EnemyMiscDropRateToolStripMenuItem.Name = "EnemyMiscDropRateToolStripMenuItem"
-        Me.EnemyMiscDropRateToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
-        Me.EnemyMiscDropRateToolStripMenuItem.Text = "&Misc"
-        '
-        'ShopkeepersToolStripMenuItem
-        '
-        Me.ShopkeepersToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AlbertoToolStripMenuItem, Me.ArnieToolStripMenuItem, Me.CarloToolStripMenuItem, Me.DevinToolStripMenuItem, Me.ElginToolStripMenuItem, Me.FrankToolStripMenuItem, Me.FranzToolStripMenuItem, Me.FredoToolStripMenuItem, Me.GabbyToolStripMenuItem, Me.HerveToolStripMenuItem, Me.HowardToolStripMenuItem, Me.JakeToolStripMenuItem, Me.KeithToolStripMenuItem, Me.MannyToolStripMenuItem, Me.MickeyToolStripMenuItem, Me.PerkoToolStripMenuItem, Me.PeterToolStripMenuItem, Me.SamToolStripMenuItem, Me.TonyToolStripMenuItem})
-        Me.ShopkeepersToolStripMenuItem.Name = "ShopkeepersToolStripMenuItem"
-        Me.ShopkeepersToolStripMenuItem.Size = New System.Drawing.Size(172, 22)
-        Me.ShopkeepersToolStripMenuItem.Text = "&Shopkeepers"
-        '
-        'AlbertoToolStripMenuItem
-        '
-        Me.AlbertoToolStripMenuItem.Name = "AlbertoToolStripMenuItem"
-        Me.AlbertoToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.AlbertoToolStripMenuItem.Text = "&Alberto"
-        '
-        'ArnieToolStripMenuItem
-        '
-        Me.ArnieToolStripMenuItem.Name = "ArnieToolStripMenuItem"
-        Me.ArnieToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.ArnieToolStripMenuItem.Text = "&Arnie"
-        '
-        'CarloToolStripMenuItem
-        '
-        Me.CarloToolStripMenuItem.Name = "CarloToolStripMenuItem"
-        Me.CarloToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.CarloToolStripMenuItem.Text = "&Carlo"
-        '
-        'DevinToolStripMenuItem
-        '
-        Me.DevinToolStripMenuItem.Name = "DevinToolStripMenuItem"
-        Me.DevinToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.DevinToolStripMenuItem.Text = "&Devin"
-        '
-        'ElginToolStripMenuItem
-        '
-        Me.ElginToolStripMenuItem.Name = "ElginToolStripMenuItem"
-        Me.ElginToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.ElginToolStripMenuItem.Text = "&Elgin"
-        '
-        'FrankToolStripMenuItem
-        '
-        Me.FrankToolStripMenuItem.Name = "FrankToolStripMenuItem"
-        Me.FrankToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.FrankToolStripMenuItem.Text = "&Frank"
-        '
-        'FranzToolStripMenuItem
-        '
-        Me.FranzToolStripMenuItem.Name = "FranzToolStripMenuItem"
-        Me.FranzToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.FranzToolStripMenuItem.Text = "&Franz"
-        '
-        'FredoToolStripMenuItem
-        '
-        Me.FredoToolStripMenuItem.Name = "FredoToolStripMenuItem"
-        Me.FredoToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.FredoToolStripMenuItem.Text = "&Fredo"
-        '
-        'GabbyToolStripMenuItem
-        '
-        Me.GabbyToolStripMenuItem.Name = "GabbyToolStripMenuItem"
-        Me.GabbyToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.GabbyToolStripMenuItem.Text = "&Gabby"
-        '
-        'HerveToolStripMenuItem
-        '
-        Me.HerveToolStripMenuItem.Name = "HerveToolStripMenuItem"
-        Me.HerveToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.HerveToolStripMenuItem.Text = "&Herve"
-        '
-        'HowardToolStripMenuItem
-        '
-        Me.HowardToolStripMenuItem.Name = "HowardToolStripMenuItem"
-        Me.HowardToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.HowardToolStripMenuItem.Text = "&Howard"
-        '
-        'JakeToolStripMenuItem
-        '
-        Me.JakeToolStripMenuItem.Name = "JakeToolStripMenuItem"
-        Me.JakeToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.JakeToolStripMenuItem.Text = "&Jake"
-        '
-        'KeithToolStripMenuItem
-        '
-        Me.KeithToolStripMenuItem.Name = "KeithToolStripMenuItem"
-        Me.KeithToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.KeithToolStripMenuItem.Text = "&Keith"
-        '
-        'MannyToolStripMenuItem
-        '
-        Me.MannyToolStripMenuItem.Name = "MannyToolStripMenuItem"
-        Me.MannyToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.MannyToolStripMenuItem.Text = "&Manny"
-        '
-        'MickeyToolStripMenuItem
-        '
-        Me.MickeyToolStripMenuItem.Name = "MickeyToolStripMenuItem"
-        Me.MickeyToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.MickeyToolStripMenuItem.Text = "&Mickey"
-        '
-        'PerkoToolStripMenuItem
-        '
-        Me.PerkoToolStripMenuItem.Name = "PerkoToolStripMenuItem"
-        Me.PerkoToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.PerkoToolStripMenuItem.Text = "&Perko"
-        '
-        'PeterToolStripMenuItem
-        '
-        Me.PeterToolStripMenuItem.Name = "PeterToolStripMenuItem"
-        Me.PeterToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.PeterToolStripMenuItem.Text = "&Peter"
-        '
-        'SamToolStripMenuItem
-        '
-        Me.SamToolStripMenuItem.Name = "SamToolStripMenuItem"
-        Me.SamToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.SamToolStripMenuItem.Text = "&Sam"
-        '
-        'TonyToolStripMenuItem
-        '
-        Me.TonyToolStripMenuItem.Name = "TonyToolStripMenuItem"
-        Me.TonyToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.TonyToolStripMenuItem.Text = "&Tony"
-        '
-        'MercStartingGearToolStripMenuItem
-        '
-        Me.MercStartingGearToolStripMenuItem.Name = "MercStartingGearToolStripMenuItem"
-        Me.MercStartingGearToolStripMenuItem.Size = New System.Drawing.Size(172, 22)
-        Me.MercStartingGearToolStripMenuItem.Text = "&Merc Starting Gear"
-        '
-        'WindowsMenu
-        '
-        Me.WindowsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewWindowToolStripMenuItem, Me.CascadeToolStripMenuItem, Me.TileVerticalToolStripMenuItem, Me.TileHorizontalToolStripMenuItem, Me.CloseAllToolStripMenuItem, Me.ArrangeIconsToolStripMenuItem})
-        Me.WindowsMenu.Name = "WindowsMenu"
-        Me.WindowsMenu.Size = New System.Drawing.Size(68, 20)
-        Me.WindowsMenu.Text = "&Windows"
-        '
-        'NewWindowToolStripMenuItem
-        '
-        Me.NewWindowToolStripMenuItem.Name = "NewWindowToolStripMenuItem"
-        Me.NewWindowToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.NewWindowToolStripMenuItem.Text = "&New Window"
-        Me.NewWindowToolStripMenuItem.Visible = False
-        '
-        'CascadeToolStripMenuItem
-        '
-        Me.CascadeToolStripMenuItem.Name = "CascadeToolStripMenuItem"
-        Me.CascadeToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.CascadeToolStripMenuItem.Text = "&Cascade"
-        '
-        'TileVerticalToolStripMenuItem
-        '
-        Me.TileVerticalToolStripMenuItem.Name = "TileVerticalToolStripMenuItem"
-        Me.TileVerticalToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.TileVerticalToolStripMenuItem.Text = "Tile &Vertical"
-        '
-        'TileHorizontalToolStripMenuItem
-        '
-        Me.TileHorizontalToolStripMenuItem.Name = "TileHorizontalToolStripMenuItem"
-        Me.TileHorizontalToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.TileHorizontalToolStripMenuItem.Text = "Tile &Horizontal"
-        '
-        'CloseAllToolStripMenuItem
-        '
-        Me.CloseAllToolStripMenuItem.Name = "CloseAllToolStripMenuItem"
-        Me.CloseAllToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.CloseAllToolStripMenuItem.Text = "C&lose All"
-        '
-        'ArrangeIconsToolStripMenuItem
-        '
-        Me.ArrangeIconsToolStripMenuItem.Name = "ArrangeIconsToolStripMenuItem"
-        Me.ArrangeIconsToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
-        Me.ArrangeIconsToolStripMenuItem.Text = "&Arrange Icons"
-        '
-        'ProfilesMenu
-        '
-        Me.ProfilesMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowToolStripMenuItem1, Me.NewToolStripMenuItem})
-        Me.ProfilesMenu.Name = "ProfilesMenu"
-        Me.ProfilesMenu.Size = New System.Drawing.Size(58, 20)
-        Me.ProfilesMenu.Text = "&Profiles"
-        Me.ProfilesMenu.Visible = False
-        '
-        'ShowToolStripMenuItem1
-        '
-        Me.ShowToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AllToolStripMenuItem})
-        Me.ShowToolStripMenuItem1.Name = "ShowToolStripMenuItem1"
-        Me.ShowToolStripMenuItem1.Size = New System.Drawing.Size(103, 22)
-        Me.ShowToolStripMenuItem1.Text = "&Show"
-        '
-        'AllToolStripMenuItem
-        '
-        Me.AllToolStripMenuItem.Name = "AllToolStripMenuItem"
-        Me.AllToolStripMenuItem.Size = New System.Drawing.Size(88, 22)
-        Me.AllToolStripMenuItem.Text = "&All"
-        '
-        'NewToolStripMenuItem
-        '
-        Me.NewToolStripMenuItem.Name = "NewToolStripMenuItem"
-        Me.NewToolStripMenuItem.Size = New System.Drawing.Size(103, 22)
-        Me.NewToolStripMenuItem.Text = "&New"
-        '
-        'MapsMenu
-        '
-        Me.MapsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AlternateSectorsToolStripMenuItem, Me.CitiesToolStripMenuItem, Me.SAMSitesToolStripMenuItem, Me.MovementCostsToolStripMenuItem})
-        Me.MapsMenu.Name = "MapsMenu"
-        Me.MapsMenu.Size = New System.Drawing.Size(48, 20)
-        Me.MapsMenu.Text = "&Maps"
-        Me.MapsMenu.Visible = False
-        '
-        'AlternateSectorsToolStripMenuItem
-        '
-        Me.AlternateSectorsToolStripMenuItem.Name = "AlternateSectorsToolStripMenuItem"
-        Me.AlternateSectorsToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
-        Me.AlternateSectorsToolStripMenuItem.Text = "&Alternate Sectors"
-        '
-        'CitiesToolStripMenuItem
-        '
-        Me.CitiesToolStripMenuItem.Name = "CitiesToolStripMenuItem"
-        Me.CitiesToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
-        Me.CitiesToolStripMenuItem.Text = "&Cities"
-        '
-        'SAMSitesToolStripMenuItem
-        '
-        Me.SAMSitesToolStripMenuItem.Name = "SAMSitesToolStripMenuItem"
-        Me.SAMSitesToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
-        Me.SAMSitesToolStripMenuItem.Text = "&SAM Sites"
-        '
-        'MovementCostsToolStripMenuItem
-        '
-        Me.MovementCostsToolStripMenuItem.Name = "MovementCostsToolStripMenuItem"
-        Me.MovementCostsToolStripMenuItem.Size = New System.Drawing.Size(164, 22)
-        Me.MovementCostsToolStripMenuItem.Text = "&Movement Costs"
-        '
-        'ToolsMenu
-        '
-        Me.ToolsMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem})
-        Me.ToolsMenu.Name = "ToolsMenu"
-        Me.ToolsMenu.Size = New System.Drawing.Size(48, 20)
-        Me.ToolsMenu.Text = "&Tools"
-        Me.ToolsMenu.Visible = False
-        '
-        'OptionsToolStripMenuItem
-        '
-        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
-        Me.OptionsToolStripMenuItem.Text = "&Options"
-        '
-        'HelpMenu
-        '
-        Me.HelpMenu.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripSeparator8, Me.AboutToolStripMenuItem})
-        Me.HelpMenu.Name = "HelpMenu"
-        Me.HelpMenu.Size = New System.Drawing.Size(44, 20)
-        Me.HelpMenu.Text = "&Help"
-        '
-        'ToolStripSeparator8
-        '
-        Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
-        Me.ToolStripSeparator8.Size = New System.Drawing.Size(116, 6)
-        '
-        'AboutToolStripMenuItem
-        '
-        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(119, 22)
-        Me.AboutToolStripMenuItem.Text = "&About ..."
-        '
-        'ToolStrip
-        '
-        Me.ToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripButton, Me.SaveToolStripButton, Me.SaveAllToolStripButton, Me.ToolStripSeparator1, Me.PrintToolStripButton, Me.PrintPreviewToolStripButton, Me.ToolStripSeparator2, Me.HelpToolStripButton})
-        Me.ToolStrip.Location = New System.Drawing.Point(0, 24)
-        Me.ToolStrip.Name = "ToolStrip"
-        Me.ToolStrip.Size = New System.Drawing.Size(522, 25)
-        Me.ToolStrip.TabIndex = 6
-        Me.ToolStrip.Text = "ToolStrip"
-        '
-        'OpenToolStripButton
-        '
-        Me.OpenToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.OpenToolStripButton.Image = CType(resources.GetObject("OpenToolStripButton.Image"), System.Drawing.Image)
-        Me.OpenToolStripButton.ImageTransparentColor = System.Drawing.Color.Black
-        Me.OpenToolStripButton.Name = "OpenToolStripButton"
-        Me.OpenToolStripButton.Size = New System.Drawing.Size(23, 22)
-        Me.OpenToolStripButton.Text = "Reload"
-        Me.OpenToolStripButton.ToolTipText = "Reload All Data"
-        '
-        'SaveToolStripButton
-        '
-        Me.SaveToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.SaveToolStripButton.Image = CType(resources.GetObject("SaveToolStripButton.Image"), System.Drawing.Image)
-        Me.SaveToolStripButton.ImageTransparentColor = System.Drawing.Color.Black
-        Me.SaveToolStripButton.Name = "SaveToolStripButton"
-        Me.SaveToolStripButton.Size = New System.Drawing.Size(23, 22)
-        Me.SaveToolStripButton.Text = "Save"
-        Me.SaveToolStripButton.ToolTipText = "Save Active Data Set"
-        '
-        'SaveAllToolStripButton
-        '
-        Me.SaveAllToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.SaveAllToolStripButton.Image = CType(resources.GetObject("SaveAllToolStripButton.Image"), System.Drawing.Image)
-        Me.SaveAllToolStripButton.ImageTransparentColor = System.Drawing.Color.Black
-        Me.SaveAllToolStripButton.Name = "SaveAllToolStripButton"
-        Me.SaveAllToolStripButton.Size = New System.Drawing.Size(23, 22)
-        Me.SaveAllToolStripButton.Text = "Save"
-        Me.SaveAllToolStripButton.ToolTipText = "Save All Data Sets"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        Me.ToolStripSeparator1.Visible = False
-        '
-        'PrintToolStripButton
-        '
-        Me.PrintToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.PrintToolStripButton.Image = CType(resources.GetObject("PrintToolStripButton.Image"), System.Drawing.Image)
-        Me.PrintToolStripButton.ImageTransparentColor = System.Drawing.Color.Black
-        Me.PrintToolStripButton.Name = "PrintToolStripButton"
-        Me.PrintToolStripButton.Size = New System.Drawing.Size(23, 22)
-        Me.PrintToolStripButton.Text = "Print"
-        Me.PrintToolStripButton.Visible = False
-        '
-        'PrintPreviewToolStripButton
-        '
-        Me.PrintPreviewToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.PrintPreviewToolStripButton.Image = CType(resources.GetObject("PrintPreviewToolStripButton.Image"), System.Drawing.Image)
-        Me.PrintPreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Black
-        Me.PrintPreviewToolStripButton.Name = "PrintPreviewToolStripButton"
-        Me.PrintPreviewToolStripButton.Size = New System.Drawing.Size(23, 22)
-        Me.PrintPreviewToolStripButton.Text = "Print Preview"
-        Me.PrintPreviewToolStripButton.Visible = False
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
-        Me.ToolStripSeparator2.Visible = False
-        '
-        'HelpToolStripButton
-        '
-        Me.HelpToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.HelpToolStripButton.Image = CType(resources.GetObject("HelpToolStripButton.Image"), System.Drawing.Image)
-        Me.HelpToolStripButton.ImageTransparentColor = System.Drawing.Color.Black
-        Me.HelpToolStripButton.Name = "HelpToolStripButton"
-        Me.HelpToolStripButton.Size = New System.Drawing.Size(23, 22)
-        Me.HelpToolStripButton.Text = "Help"
-        Me.HelpToolStripButton.Visible = False
-        '
-        'StatusStrip
-        '
-        Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StatusLabel})
-        Me.StatusStrip.Location = New System.Drawing.Point(0, 379)
-        Me.StatusStrip.Name = "StatusStrip"
-        Me.StatusStrip.Size = New System.Drawing.Size(522, 22)
-        Me.StatusStrip.TabIndex = 7
-        Me.StatusStrip.Text = "StatusStrip"
-        '
-        'StatusLabel
-        '
-        Me.StatusLabel.Name = "StatusLabel"
-        Me.StatusLabel.Size = New System.Drawing.Size(0, 17)
-        '
-        'ToolStripStatusLabel
-        '
-        Me.ToolStripStatusLabel.Name = "ToolStripStatusLabel"
-        Me.ToolStripStatusLabel.Size = New System.Drawing.Size(38, 17)
-        Me.ToolStripStatusLabel.Text = "Status"
-        '
-        'MainForm
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.ClientSize = New System.Drawing.Size(522, 401)
-        Me.Controls.Add(Me.ToolStrip)
-        Me.Controls.Add(Me.MenuStrip)
-        Me.Controls.Add(Me.StatusStrip)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.IsMdiContainer = True
-        Me.MainMenuStrip = Me.MenuStrip
-        Me.Name = "MainForm"
-        Me.Text = "JA2 v1.13 - XML Editor"
-        Me.MenuStrip.ResumeLayout(False)
-        Me.MenuStrip.PerformLayout()
-        Me.ToolStrip.ResumeLayout(False)
-        Me.ToolStrip.PerformLayout()
-        Me.StatusStrip.ResumeLayout(False)
-        Me.StatusStrip.PerformLayout()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        MenuStrip = New MenuStrip()
+        FileMenu = New ToolStripMenuItem()
+        SelectDataToolStripMenuItem = New ToolStripMenuItem()
+        Data1ToolStripMenuItem = New ToolStripMenuItem()
+        Data2ToolStripMenuItem = New ToolStripMenuItem()
+        Data3ToolStripMenuItem = New ToolStripMenuItem()
+        Data4ToolStripMenuItem = New ToolStripMenuItem()
+        Data5ToolStripMenuItem = New ToolStripMenuItem()
+        Data6ToolStripMenuItem = New ToolStripMenuItem()
+        Data7ToolStripMenuItem = New ToolStripMenuItem()
+        Data8ToolStripMenuItem = New ToolStripMenuItem()
+        Data9ToolStripMenuItem = New ToolStripMenuItem()
+        Data10ToolStripMenuItem = New ToolStripMenuItem()
+        OpenToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripSeparator3 = New ToolStripSeparator()
+        SaveToolStripMenuItem = New ToolStripMenuItem()
+        SaveAllToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripSeparator4 = New ToolStripSeparator()
+        PrintToolStripMenuItem = New ToolStripMenuItem()
+        PrintPreviewToolStripMenuItem = New ToolStripMenuItem()
+        PrintSetupToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripSeparator5 = New ToolStripSeparator()
+        ExitToolStripMenuItem = New ToolStripMenuItem()
+        ViewMenu = New ToolStripMenuItem()
+        ToolBarToolStripMenuItem = New ToolStripMenuItem()
+        StatusBarToolStripMenuItem = New ToolStripMenuItem()
+        BackgroundImageToolStripMenuItem = New ToolStripMenuItem()
+        EditMenu = New ToolStripMenuItem()
+        UndoToolStripMenuItem = New ToolStripMenuItem()
+        RedoToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripSeparator6 = New ToolStripSeparator()
+        CutToolStripMenuItem = New ToolStripMenuItem()
+        CopyToolStripMenuItem = New ToolStripMenuItem()
+        PasteToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripSeparator7 = New ToolStripSeparator()
+        SelectAllToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripMenuItem4 = New ToolStripMenuItem()
+        AmmoToolStripMenuItem2 = New ToolStripMenuItem()
+        CalibersToolStripMenuItem = New ToolStripMenuItem()
+        EnglishToolStripMenuItem = New ToolStripMenuItem()
+        GermanToolStripMenuItem = New ToolStripMenuItem()
+        RussianToolStripMenuItem = New ToolStripMenuItem()
+        PolishToolStripMenuItem = New ToolStripMenuItem()
+        FrenchToolStripMenuItem = New ToolStripMenuItem()
+        ItalianToolStripMenuItem = New ToolStripMenuItem()
+        DutchToolStripMenuItem = New ToolStripMenuItem()
+        ChineseToolStripMenuItem = New ToolStripMenuItem()
+        TypesToolStripMenuItem = New ToolStripMenuItem()
+        ExplosionsToolStripMenuItem = New ToolStripMenuItem()
+        SoundsToolStripMenuItem = New ToolStripMenuItem()
+        StandardToolStripMenuItem = New ToolStripMenuItem()
+        BurstToolStripMenuItem = New ToolStripMenuItem()
+        LookupTablesToolStripMenuItem = New ToolStripMenuItem()
+        AmmoFlagsToolStripMenuItem = New ToolStripMenuItem()
+        ArmourClassesToolStripMenuItem = New ToolStripMenuItem()
+        AttachmentSystemToolStripMenuItem = New ToolStripMenuItem()
+        AttachmentClassesToolStripMenuItem = New ToolStripMenuItem()
+        CursorsToolStripMenuItem = New ToolStripMenuItem()
+        DrugTypesToolStripMenuItem = New ToolStripMenuItem()
+        ExplosionTypesToolStripMenuItem = New ToolStripMenuItem()
+        SeparabilityStatesToolStripMenuItem = New ToolStripMenuItem()
+        ItemClassesToolStripMenuItem = New ToolStripMenuItem()
+        ItemFlagsToolStripMenuItem = New ToolStripMenuItem()
+        LBEClassesToolStripMenuItem = New ToolStripMenuItem()
+        MergeTypesToolStripMenuItem = New ToolStripMenuItem()
+        SkillChecksToolStripMenuItem = New ToolStripMenuItem()
+        WeaponClassesToolStripMenuItem = New ToolStripMenuItem()
+        WeaponTypesToolStripMenuItem = New ToolStripMenuItem()
+        NewAttachmentSystemToolStripMenuItem = New ToolStripMenuItem()
+        NasAttachmentClassesToolStripMenuItem = New ToolStripMenuItem()
+        NasAttachmentSlotsToolStripMenuItem = New ToolStripMenuItem()
+        AttachmentClassCodeMakerToolStripMenuItem = New ToolStripMenuItem()
+        PocketTypesToolStripMenuItem = New ToolStripMenuItem()
+        InventorySilhouettesToolStripMenuItem = New ToolStripMenuItem()
+        CommonAttachmentPointsToolStripMenuItem = New ToolStripMenuItem()
+        AttachmentPointCodeMakerToolStripMenuItem = New ToolStripMenuItem()
+        FoodToolStripMenuItem = New ToolStripMenuItem()
+        ClothesToolStripMenuItem = New ToolStripMenuItem()
+        ItemsMenu = New ToolStripMenuItem()
+        ShowToolStripMenuItem = New ToolStripMenuItem()
+        AllItemsToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripMenuItem2 = New ToolStripMenuItem()
+        ByClassToolStripMenuItem = New ToolStripMenuItem()
+        GunsToolStripMenuItem = New ToolStripMenuItem()
+        AmmoToolStripMenuItem = New ToolStripMenuItem()
+        LaunchersToolStripMenuItem = New ToolStripMenuItem()
+        GrenadesToolStripMenuItem = New ToolStripMenuItem()
+        ExplosivesToolStripMenuItem = New ToolStripMenuItem()
+        KnivesToolStripMenuItem = New ToolStripMenuItem()
+        OtherWeaponsToolStripMenuItem = New ToolStripMenuItem()
+        ArmourToolStripMenuItem = New ToolStripMenuItem()
+        FaceToolStripMenuItem = New ToolStripMenuItem()
+        KitsToolStripMenuItem = New ToolStripMenuItem()
+        KeysToolStripMenuItem = New ToolStripMenuItem()
+        LoadBearingToolStripMenuItem = New ToolStripMenuItem()
+        MiscToolStripMenuItem = New ToolStripMenuItem()
+        NoneItemToolStripMenuItem = New ToolStripMenuItem()
+        RandomItemsToolStripMenuItem = New ToolStripMenuItem()
+        FilteredToolStripMenuItem = New ToolStripMenuItem()
+        AttachmentsToolStripMenuItem = New ToolStripMenuItem()
+        DrugsItemFilterToolStripMenuItem = New ToolStripMenuItem()
+        TonsOfGunsToolStripMenuItem = New ToolStripMenuItem()
+        NormalGunsToolStripMenuItem = New ToolStripMenuItem()
+        SciFiToolStripMenuItem = New ToolStripMenuItem()
+        NonSciFiToolStripMenuItem = New ToolStripMenuItem()
+        CustomFilterToolStripMenuItem = New ToolStripMenuItem()
+        CreateNewToolStripMenuItem = New ToolStripMenuItem()
+        ToolStripSeparator9 = New ToolStripSeparator()
+        MergesToolStripMenuItem = New ToolStripMenuItem()
+        StandardToolStripMenuItem1 = New ToolStripMenuItem()
+        AttachmentToolStripMenuItem = New ToolStripMenuItem()
+        AttachmentsToolStripMenuItem1 = New ToolStripMenuItem()
+        ListingToolStripMenuItem = New ToolStripMenuItem()
+        InfoToolStripMenuItem = New ToolStripMenuItem()
+        IncompatibleToolStripMenuItem = New ToolStripMenuItem()
+        LaunchablesToolStripMenuItem = New ToolStripMenuItem()
+        CompatibleFaceItemsToolStripMenuItem = New ToolStripMenuItem()
+        TransformationsToolStripMenuItem = New ToolStripMenuItem()
+        RandToolStripMenuItem = New ToolStripMenuItem()
+        InventoriesMenu = New ToolStripMenuItem()
+        IMPItemsToolStripMenuItem = New ToolStripMenuItem()
+        EnemyStuffToolStripMenuItem = New ToolStripMenuItem()
+        EnemyGunsToolStripMenuItem = New ToolStripMenuItem()
+        EnemyGunsAdminToolStripMenuItem = New ToolStripMenuItem()
+        EnemyGunsRegularToolStripMenuItem = New ToolStripMenuItem()
+        EnemyGunsEliteToolStripMenuItem = New ToolStripMenuItem()
+        EnemyGunsDefaultToolStripMenuItem = New ToolStripMenuItem()
+        EnemyItemsToolStripMenuItem = New ToolStripMenuItem()
+        EnemyItemsAdminToolStripMenuItem1 = New ToolStripMenuItem()
+        EnemyItemsRegularToolStripMenuItem1 = New ToolStripMenuItem()
+        EnemyItemsEliteToolStripMenuItem1 = New ToolStripMenuItem()
+        EnemyItemsDefaultToolStripMenuItem = New ToolStripMenuItem()
+        EnemyAmmoToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaItemsToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaItemsGunsToolStripMenuItem1 = New ToolStripMenuItem()
+        MilitiaGunsGreenToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaGunsRegularToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaGunsEliteToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaItemsItemsToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaItemsGreenToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaItemsRegularToolStripMenuItem = New ToolStripMenuItem()
+        MilitiaItemsEliteToolStripMenuItem = New ToolStripMenuItem()
+        DropRatesToolStripMenuItem = New ToolStripMenuItem()
+        EnemyWeaponDropRateToolStripMenuItem = New ToolStripMenuItem()
+        EnemyAmmoDropRateToolStripMenuItem = New ToolStripMenuItem()
+        EnemyArmourDropRateToolStripMenuItem = New ToolStripMenuItem()
+        EnemyExplosiveDropRateToolStripMenuItem = New ToolStripMenuItem()
+        EnemyMiscDropRateToolStripMenuItem = New ToolStripMenuItem()
+        ShopkeepersToolStripMenuItem = New ToolStripMenuItem()
+        AlbertoToolStripMenuItem = New ToolStripMenuItem()
+        ArnieToolStripMenuItem = New ToolStripMenuItem()
+        CarloToolStripMenuItem = New ToolStripMenuItem()
+        DevinToolStripMenuItem = New ToolStripMenuItem()
+        ElginToolStripMenuItem = New ToolStripMenuItem()
+        FrankToolStripMenuItem = New ToolStripMenuItem()
+        FranzToolStripMenuItem = New ToolStripMenuItem()
+        FredoToolStripMenuItem = New ToolStripMenuItem()
+        GabbyToolStripMenuItem = New ToolStripMenuItem()
+        HerveToolStripMenuItem = New ToolStripMenuItem()
+        HowardToolStripMenuItem = New ToolStripMenuItem()
+        JakeToolStripMenuItem = New ToolStripMenuItem()
+        KeithToolStripMenuItem = New ToolStripMenuItem()
+        MannyToolStripMenuItem = New ToolStripMenuItem()
+        MickeyToolStripMenuItem = New ToolStripMenuItem()
+        PerkoToolStripMenuItem = New ToolStripMenuItem()
+        PeterToolStripMenuItem = New ToolStripMenuItem()
+        SamToolStripMenuItem = New ToolStripMenuItem()
+        TonyToolStripMenuItem = New ToolStripMenuItem()
+        MercStartingGearToolStripMenuItem = New ToolStripMenuItem()
+        WindowsMenu = New ToolStripMenuItem()
+        NewWindowToolStripMenuItem = New ToolStripMenuItem()
+        CascadeToolStripMenuItem = New ToolStripMenuItem()
+        TileVerticalToolStripMenuItem = New ToolStripMenuItem()
+        TileHorizontalToolStripMenuItem = New ToolStripMenuItem()
+        CloseAllToolStripMenuItem = New ToolStripMenuItem()
+        ArrangeIconsToolStripMenuItem = New ToolStripMenuItem()
+        ProfilesMenu = New ToolStripMenuItem()
+        ShowToolStripMenuItem1 = New ToolStripMenuItem()
+        AllToolStripMenuItem = New ToolStripMenuItem()
+        NewToolStripMenuItem = New ToolStripMenuItem()
+        MapsMenu = New ToolStripMenuItem()
+        AlternateSectorsToolStripMenuItem = New ToolStripMenuItem()
+        CitiesToolStripMenuItem = New ToolStripMenuItem()
+        SAMSitesToolStripMenuItem = New ToolStripMenuItem()
+        MovementCostsToolStripMenuItem = New ToolStripMenuItem()
+        ToolsMenu = New ToolStripMenuItem()
+        OptionsToolStripMenuItem = New ToolStripMenuItem()
+        HelpMenu = New ToolStripMenuItem()
+        ToolStripSeparator8 = New ToolStripSeparator()
+        AboutToolStripMenuItem = New ToolStripMenuItem()
+        ToolStrip = New ToolStrip()
+        OpenToolStripButton = New ToolStripButton()
+        SaveToolStripButton = New ToolStripButton()
+        SaveAllToolStripButton = New ToolStripButton()
+        ToolStripSeparator1 = New ToolStripSeparator()
+        PrintToolStripButton = New ToolStripButton()
+        PrintPreviewToolStripButton = New ToolStripButton()
+        ToolStripSeparator2 = New ToolStripSeparator()
+        HelpToolStripButton = New ToolStripButton()
+        StatusStrip = New StatusStrip()
+        StatusLabel = New ToolStripStatusLabel()
+        ToolStripStatusLabel = New ToolStripStatusLabel()
+        ToolTip = New ToolTip(components)
+        DiseaseMenuItem = New ToolStripMenuItem()
+        MenuStrip.SuspendLayout()
+        ToolStrip.SuspendLayout()
+        StatusStrip.SuspendLayout()
+        SuspendLayout()
+        ' 
+        ' MenuStrip
+        ' 
+        MenuStrip.ImageScalingSize = New Size(18, 18)
+        MenuStrip.Items.AddRange(New ToolStripItem() {FileMenu, ViewMenu, EditMenu, ToolStripMenuItem4, ItemsMenu, InventoriesMenu, WindowsMenu, ProfilesMenu, MapsMenu, ToolsMenu, HelpMenu})
+        MenuStrip.Location = New Point(0, 0)
+        MenuStrip.MdiWindowListItem = WindowsMenu
+        MenuStrip.Name = "MenuStrip"
+        MenuStrip.Padding = New Padding(7, 3, 0, 3)
+        MenuStrip.Size = New Size(609, 27)
+        MenuStrip.TabIndex = 5
+        MenuStrip.Text = "MenuStrip"
+        ' 
+        ' FileMenu
+        ' 
+        FileMenu.DropDownItems.AddRange(New ToolStripItem() {SelectDataToolStripMenuItem, OpenToolStripMenuItem, ToolStripSeparator3, SaveToolStripMenuItem, SaveAllToolStripMenuItem, ToolStripSeparator4, PrintToolStripMenuItem, PrintPreviewToolStripMenuItem, PrintSetupToolStripMenuItem, ToolStripSeparator5, ExitToolStripMenuItem})
+        FileMenu.ImageTransparentColor = SystemColors.ActiveBorder
+        FileMenu.Name = "FileMenu"
+        FileMenu.Size = New Size(39, 21)
+        FileMenu.Text = "&File"
+        ' 
+        ' SelectDataToolStripMenuItem
+        ' 
+        SelectDataToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {Data1ToolStripMenuItem, Data2ToolStripMenuItem, Data3ToolStripMenuItem, Data4ToolStripMenuItem, Data5ToolStripMenuItem, Data6ToolStripMenuItem, Data7ToolStripMenuItem, Data8ToolStripMenuItem, Data9ToolStripMenuItem, Data10ToolStripMenuItem})
+        SelectDataToolStripMenuItem.Name = "SelectDataToolStripMenuItem"
+        SelectDataToolStripMenuItem.Size = New Size(264, 24)
+        SelectDataToolStripMenuItem.Text = "&Active Data Set"
+        ' 
+        ' Data1ToolStripMenuItem
+        ' 
+        Data1ToolStripMenuItem.Checked = True
+        Data1ToolStripMenuItem.CheckOnClick = True
+        Data1ToolStripMenuItem.CheckState = CheckState.Checked
+        Data1ToolStripMenuItem.Name = "Data1ToolStripMenuItem"
+        Data1ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D1
+        Data1ToolStripMenuItem.Size = New Size(168, 24)
+        Data1ToolStripMenuItem.Tag = "0"
+        Data1ToolStripMenuItem.Text = "&1 - {0} "
+        ' 
+        ' Data2ToolStripMenuItem
+        ' 
+        Data2ToolStripMenuItem.CheckOnClick = True
+        Data2ToolStripMenuItem.Name = "Data2ToolStripMenuItem"
+        Data2ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D2
+        Data2ToolStripMenuItem.Size = New Size(168, 24)
+        Data2ToolStripMenuItem.Tag = "1"
+        Data2ToolStripMenuItem.Text = "&2 - {0}"
+        ' 
+        ' Data3ToolStripMenuItem
+        ' 
+        Data3ToolStripMenuItem.CheckOnClick = True
+        Data3ToolStripMenuItem.Name = "Data3ToolStripMenuItem"
+        Data3ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D3
+        Data3ToolStripMenuItem.Size = New Size(168, 24)
+        Data3ToolStripMenuItem.Tag = "2"
+        Data3ToolStripMenuItem.Text = "&3 - {0}"
+        ' 
+        ' Data4ToolStripMenuItem
+        ' 
+        Data4ToolStripMenuItem.CheckOnClick = True
+        Data4ToolStripMenuItem.Name = "Data4ToolStripMenuItem"
+        Data4ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D4
+        Data4ToolStripMenuItem.Size = New Size(168, 24)
+        Data4ToolStripMenuItem.Tag = "3"
+        Data4ToolStripMenuItem.Text = "&4 - {0}"
+        ' 
+        ' Data5ToolStripMenuItem
+        ' 
+        Data5ToolStripMenuItem.CheckOnClick = True
+        Data5ToolStripMenuItem.Name = "Data5ToolStripMenuItem"
+        Data5ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D5
+        Data5ToolStripMenuItem.Size = New Size(168, 24)
+        Data5ToolStripMenuItem.Tag = "4"
+        Data5ToolStripMenuItem.Text = "&5 - {0}"
+        ' 
+        ' Data6ToolStripMenuItem
+        ' 
+        Data6ToolStripMenuItem.CheckOnClick = True
+        Data6ToolStripMenuItem.Name = "Data6ToolStripMenuItem"
+        Data6ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D6
+        Data6ToolStripMenuItem.Size = New Size(168, 24)
+        Data6ToolStripMenuItem.Tag = "5"
+        Data6ToolStripMenuItem.Text = "&6 - {0}"
+        ' 
+        ' Data7ToolStripMenuItem
+        ' 
+        Data7ToolStripMenuItem.CheckOnClick = True
+        Data7ToolStripMenuItem.Name = "Data7ToolStripMenuItem"
+        Data7ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D7
+        Data7ToolStripMenuItem.Size = New Size(168, 24)
+        Data7ToolStripMenuItem.Tag = "6"
+        Data7ToolStripMenuItem.Text = "&7 - {0}"
+        ' 
+        ' Data8ToolStripMenuItem
+        ' 
+        Data8ToolStripMenuItem.CheckOnClick = True
+        Data8ToolStripMenuItem.Name = "Data8ToolStripMenuItem"
+        Data8ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D8
+        Data8ToolStripMenuItem.Size = New Size(168, 24)
+        Data8ToolStripMenuItem.Tag = "7"
+        Data8ToolStripMenuItem.Text = "&8 - {0}"
+        ' 
+        ' Data9ToolStripMenuItem
+        ' 
+        Data9ToolStripMenuItem.CheckOnClick = True
+        Data9ToolStripMenuItem.Name = "Data9ToolStripMenuItem"
+        Data9ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D9
+        Data9ToolStripMenuItem.Size = New Size(168, 24)
+        Data9ToolStripMenuItem.Tag = "8"
+        Data9ToolStripMenuItem.Text = "&9 - {0}"
+        ' 
+        ' Data10ToolStripMenuItem
+        ' 
+        Data10ToolStripMenuItem.CheckOnClick = True
+        Data10ToolStripMenuItem.Name = "Data10ToolStripMenuItem"
+        Data10ToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.D0
+        Data10ToolStripMenuItem.Size = New Size(168, 24)
+        Data10ToolStripMenuItem.Tag = "9"
+        Data10ToolStripMenuItem.Text = "1&0 - {0}"
+        ' 
+        ' OpenToolStripMenuItem
+        ' 
+        OpenToolStripMenuItem.Image = CType(resources.GetObject("OpenToolStripMenuItem.Image"), Image)
+        OpenToolStripMenuItem.ImageTransparentColor = Color.Black
+        OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
+        OpenToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.R
+        OpenToolStripMenuItem.Size = New Size(264, 24)
+        OpenToolStripMenuItem.Text = "&Reload"
+        ' 
+        ' ToolStripSeparator3
+        ' 
+        ToolStripSeparator3.Name = "ToolStripSeparator3"
+        ToolStripSeparator3.Size = New Size(261, 6)
+        ToolStripSeparator3.Visible = False
+        ' 
+        ' SaveToolStripMenuItem
+        ' 
+        SaveToolStripMenuItem.Image = CType(resources.GetObject("SaveToolStripMenuItem.Image"), Image)
+        SaveToolStripMenuItem.ImageTransparentColor = Color.Black
+        SaveToolStripMenuItem.Name = "SaveToolStripMenuItem"
+        SaveToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.S
+        SaveToolStripMenuItem.Size = New Size(264, 24)
+        SaveToolStripMenuItem.Text = "&Save Active Data Set"
+        ' 
+        ' SaveAllToolStripMenuItem
+        ' 
+        SaveAllToolStripMenuItem.Image = CType(resources.GetObject("SaveAllToolStripMenuItem.Image"), Image)
+        SaveAllToolStripMenuItem.ImageTransparentColor = Color.Black
+        SaveAllToolStripMenuItem.Name = "SaveAllToolStripMenuItem"
+        SaveAllToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.Shift Or Keys.S
+        SaveAllToolStripMenuItem.Size = New Size(264, 24)
+        SaveAllToolStripMenuItem.Text = "Sa&ve All Data Sets"
+        ' 
+        ' ToolStripSeparator4
+        ' 
+        ToolStripSeparator4.Name = "ToolStripSeparator4"
+        ToolStripSeparator4.Size = New Size(261, 6)
+        ToolStripSeparator4.Visible = False
+        ' 
+        ' PrintToolStripMenuItem
+        ' 
+        PrintToolStripMenuItem.Image = CType(resources.GetObject("PrintToolStripMenuItem.Image"), Image)
+        PrintToolStripMenuItem.ImageTransparentColor = Color.Black
+        PrintToolStripMenuItem.Name = "PrintToolStripMenuItem"
+        PrintToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.P
+        PrintToolStripMenuItem.Size = New Size(264, 24)
+        PrintToolStripMenuItem.Text = "&Print"
+        PrintToolStripMenuItem.Visible = False
+        ' 
+        ' PrintPreviewToolStripMenuItem
+        ' 
+        PrintPreviewToolStripMenuItem.Image = CType(resources.GetObject("PrintPreviewToolStripMenuItem.Image"), Image)
+        PrintPreviewToolStripMenuItem.ImageTransparentColor = Color.Black
+        PrintPreviewToolStripMenuItem.Name = "PrintPreviewToolStripMenuItem"
+        PrintPreviewToolStripMenuItem.Size = New Size(264, 24)
+        PrintPreviewToolStripMenuItem.Text = "Print Pre&view"
+        PrintPreviewToolStripMenuItem.Visible = False
+        ' 
+        ' PrintSetupToolStripMenuItem
+        ' 
+        PrintSetupToolStripMenuItem.Name = "PrintSetupToolStripMenuItem"
+        PrintSetupToolStripMenuItem.Size = New Size(264, 24)
+        PrintSetupToolStripMenuItem.Text = "Print Setup"
+        PrintSetupToolStripMenuItem.Visible = False
+        ' 
+        ' ToolStripSeparator5
+        ' 
+        ToolStripSeparator5.Name = "ToolStripSeparator5"
+        ToolStripSeparator5.Size = New Size(261, 6)
+        ToolStripSeparator5.Visible = False
+        ' 
+        ' ExitToolStripMenuItem
+        ' 
+        ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
+        ExitToolStripMenuItem.Size = New Size(264, 24)
+        ExitToolStripMenuItem.Text = "E&xit"
+        ' 
+        ' ViewMenu
+        ' 
+        ViewMenu.DropDownItems.AddRange(New ToolStripItem() {ToolBarToolStripMenuItem, StatusBarToolStripMenuItem, BackgroundImageToolStripMenuItem})
+        ViewMenu.Name = "ViewMenu"
+        ViewMenu.Size = New Size(47, 21)
+        ViewMenu.Text = "&View"
+        ' 
+        ' ToolBarToolStripMenuItem
+        ' 
+        ToolBarToolStripMenuItem.Checked = True
+        ToolBarToolStripMenuItem.CheckOnClick = True
+        ToolBarToolStripMenuItem.CheckState = CheckState.Checked
+        ToolBarToolStripMenuItem.Name = "ToolBarToolStripMenuItem"
+        ToolBarToolStripMenuItem.Size = New Size(151, 24)
+        ToolBarToolStripMenuItem.Text = "&Toolbar"
+        ' 
+        ' StatusBarToolStripMenuItem
+        ' 
+        StatusBarToolStripMenuItem.Checked = True
+        StatusBarToolStripMenuItem.CheckOnClick = True
+        StatusBarToolStripMenuItem.CheckState = CheckState.Checked
+        StatusBarToolStripMenuItem.Name = "StatusBarToolStripMenuItem"
+        StatusBarToolStripMenuItem.Size = New Size(151, 24)
+        StatusBarToolStripMenuItem.Text = "&Status Bar"
+        ' 
+        ' BackgroundImageToolStripMenuItem
+        ' 
+        BackgroundImageToolStripMenuItem.Checked = True
+        BackgroundImageToolStripMenuItem.CheckOnClick = True
+        BackgroundImageToolStripMenuItem.CheckState = CheckState.Checked
+        BackgroundImageToolStripMenuItem.Name = "BackgroundImageToolStripMenuItem"
+        BackgroundImageToolStripMenuItem.Size = New Size(151, 24)
+        BackgroundImageToolStripMenuItem.Text = "&Background"
+        ' 
+        ' EditMenu
+        ' 
+        EditMenu.DropDownItems.AddRange(New ToolStripItem() {UndoToolStripMenuItem, RedoToolStripMenuItem, ToolStripSeparator6, CutToolStripMenuItem, CopyToolStripMenuItem, PasteToolStripMenuItem, ToolStripSeparator7, SelectAllToolStripMenuItem})
+        EditMenu.Name = "EditMenu"
+        EditMenu.Size = New Size(42, 21)
+        EditMenu.Text = "&Edit"
+        EditMenu.Visible = False
+        ' 
+        ' UndoToolStripMenuItem
+        ' 
+        UndoToolStripMenuItem.Image = CType(resources.GetObject("UndoToolStripMenuItem.Image"), Image)
+        UndoToolStripMenuItem.ImageTransparentColor = Color.Black
+        UndoToolStripMenuItem.Name = "UndoToolStripMenuItem"
+        UndoToolStripMenuItem.Size = New Size(134, 24)
+        UndoToolStripMenuItem.Text = "&Undo"
+        ' 
+        ' RedoToolStripMenuItem
+        ' 
+        RedoToolStripMenuItem.Image = CType(resources.GetObject("RedoToolStripMenuItem.Image"), Image)
+        RedoToolStripMenuItem.ImageTransparentColor = Color.Black
+        RedoToolStripMenuItem.Name = "RedoToolStripMenuItem"
+        RedoToolStripMenuItem.Size = New Size(134, 24)
+        RedoToolStripMenuItem.Text = "&Redo"
+        ' 
+        ' ToolStripSeparator6
+        ' 
+        ToolStripSeparator6.Name = "ToolStripSeparator6"
+        ToolStripSeparator6.Size = New Size(131, 6)
+        ' 
+        ' CutToolStripMenuItem
+        ' 
+        CutToolStripMenuItem.Image = CType(resources.GetObject("CutToolStripMenuItem.Image"), Image)
+        CutToolStripMenuItem.ImageTransparentColor = Color.Black
+        CutToolStripMenuItem.Name = "CutToolStripMenuItem"
+        CutToolStripMenuItem.Size = New Size(134, 24)
+        CutToolStripMenuItem.Text = "Cu&t"
+        ' 
+        ' CopyToolStripMenuItem
+        ' 
+        CopyToolStripMenuItem.Image = CType(resources.GetObject("CopyToolStripMenuItem.Image"), Image)
+        CopyToolStripMenuItem.ImageTransparentColor = Color.Black
+        CopyToolStripMenuItem.Name = "CopyToolStripMenuItem"
+        CopyToolStripMenuItem.Size = New Size(134, 24)
+        CopyToolStripMenuItem.Text = "&Copy"
+        ' 
+        ' PasteToolStripMenuItem
+        ' 
+        PasteToolStripMenuItem.Image = CType(resources.GetObject("PasteToolStripMenuItem.Image"), Image)
+        PasteToolStripMenuItem.ImageTransparentColor = Color.Black
+        PasteToolStripMenuItem.Name = "PasteToolStripMenuItem"
+        PasteToolStripMenuItem.Size = New Size(134, 24)
+        PasteToolStripMenuItem.Text = "&Paste"
+        ' 
+        ' ToolStripSeparator7
+        ' 
+        ToolStripSeparator7.Name = "ToolStripSeparator7"
+        ToolStripSeparator7.Size = New Size(131, 6)
+        ' 
+        ' SelectAllToolStripMenuItem
+        ' 
+        SelectAllToolStripMenuItem.Name = "SelectAllToolStripMenuItem"
+        SelectAllToolStripMenuItem.Size = New Size(134, 24)
+        SelectAllToolStripMenuItem.Text = "Select &All"
+        ' 
+        ' ToolStripMenuItem4
+        ' 
+        ToolStripMenuItem4.DropDownItems.AddRange(New ToolStripItem() {AmmoToolStripMenuItem2, ExplosionsToolStripMenuItem, SoundsToolStripMenuItem, LookupTablesToolStripMenuItem, NewAttachmentSystemToolStripMenuItem, PocketTypesToolStripMenuItem, InventorySilhouettesToolStripMenuItem, CommonAttachmentPointsToolStripMenuItem, AttachmentPointCodeMakerToolStripMenuItem, FoodToolStripMenuItem, ClothesToolStripMenuItem, DiseaseMenuItem})
+        ToolStripMenuItem4.Name = "ToolStripMenuItem4"
+        ToolStripMenuItem4.Size = New Size(47, 21)
+        ToolStripMenuItem4.Text = "&Data"
+        ' 
+        ' AmmoToolStripMenuItem2
+        ' 
+        AmmoToolStripMenuItem2.DropDownItems.AddRange(New ToolStripItem() {CalibersToolStripMenuItem, TypesToolStripMenuItem})
+        AmmoToolStripMenuItem2.Name = "AmmoToolStripMenuItem2"
+        AmmoToolStripMenuItem2.Size = New Size(359, 24)
+        AmmoToolStripMenuItem2.Text = "&Ammo"
+        ' 
+        ' CalibersToolStripMenuItem
+        ' 
+        CalibersToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {EnglishToolStripMenuItem, GermanToolStripMenuItem, RussianToolStripMenuItem, PolishToolStripMenuItem, FrenchToolStripMenuItem, ItalianToolStripMenuItem, DutchToolStripMenuItem, ChineseToolStripMenuItem})
+        CalibersToolStripMenuItem.Name = "CalibersToolStripMenuItem"
+        CalibersToolStripMenuItem.Size = New Size(129, 24)
+        CalibersToolStripMenuItem.Text = "&Calibers"
+        ' 
+        ' EnglishToolStripMenuItem
+        ' 
+        EnglishToolStripMenuItem.Name = "EnglishToolStripMenuItem"
+        EnglishToolStripMenuItem.Size = New Size(128, 24)
+        EnglishToolStripMenuItem.Text = "&English"
+        ' 
+        ' GermanToolStripMenuItem
+        ' 
+        GermanToolStripMenuItem.Name = "GermanToolStripMenuItem"
+        GermanToolStripMenuItem.Size = New Size(128, 24)
+        GermanToolStripMenuItem.Text = "&German"
+        ' 
+        ' RussianToolStripMenuItem
+        ' 
+        RussianToolStripMenuItem.Name = "RussianToolStripMenuItem"
+        RussianToolStripMenuItem.Size = New Size(128, 24)
+        RussianToolStripMenuItem.Text = "&Russian"
+        ' 
+        ' PolishToolStripMenuItem
+        ' 
+        PolishToolStripMenuItem.Name = "PolishToolStripMenuItem"
+        PolishToolStripMenuItem.Size = New Size(128, 24)
+        PolishToolStripMenuItem.Text = "&Polish"
+        ' 
+        ' FrenchToolStripMenuItem
+        ' 
+        FrenchToolStripMenuItem.Name = "FrenchToolStripMenuItem"
+        FrenchToolStripMenuItem.Size = New Size(128, 24)
+        FrenchToolStripMenuItem.Text = "&French"
+        ' 
+        ' ItalianToolStripMenuItem
+        ' 
+        ItalianToolStripMenuItem.Name = "ItalianToolStripMenuItem"
+        ItalianToolStripMenuItem.Size = New Size(128, 24)
+        ItalianToolStripMenuItem.Text = "&Italian"
+        ' 
+        ' DutchToolStripMenuItem
+        ' 
+        DutchToolStripMenuItem.Name = "DutchToolStripMenuItem"
+        DutchToolStripMenuItem.Size = New Size(128, 24)
+        DutchToolStripMenuItem.Text = "&Dutch"
+        ' 
+        ' ChineseToolStripMenuItem
+        ' 
+        ChineseToolStripMenuItem.Name = "ChineseToolStripMenuItem"
+        ChineseToolStripMenuItem.Size = New Size(128, 24)
+        ChineseToolStripMenuItem.Text = "&Chinese"
+        ' 
+        ' TypesToolStripMenuItem
+        ' 
+        TypesToolStripMenuItem.Name = "TypesToolStripMenuItem"
+        TypesToolStripMenuItem.Size = New Size(129, 24)
+        TypesToolStripMenuItem.Text = "&Types"
+        ' 
+        ' ExplosionsToolStripMenuItem
+        ' 
+        ExplosionsToolStripMenuItem.Name = "ExplosionsToolStripMenuItem"
+        ExplosionsToolStripMenuItem.Size = New Size(359, 24)
+        ExplosionsToolStripMenuItem.Text = "&Explosions"
+        ' 
+        ' SoundsToolStripMenuItem
+        ' 
+        SoundsToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {StandardToolStripMenuItem, BurstToolStripMenuItem})
+        SoundsToolStripMenuItem.Name = "SoundsToolStripMenuItem"
+        SoundsToolStripMenuItem.Size = New Size(359, 24)
+        SoundsToolStripMenuItem.Text = "&Sounds"
+        ' 
+        ' StandardToolStripMenuItem
+        ' 
+        StandardToolStripMenuItem.Name = "StandardToolStripMenuItem"
+        StandardToolStripMenuItem.Size = New Size(198, 24)
+        StandardToolStripMenuItem.Text = "&Standard"
+        ' 
+        ' BurstToolStripMenuItem
+        ' 
+        BurstToolStripMenuItem.Name = "BurstToolStripMenuItem"
+        BurstToolStripMenuItem.Size = New Size(198, 24)
+        BurstToolStripMenuItem.Text = "&Burst"
+        ' 
+        ' LookupTablesToolStripMenuItem
+        ' 
+        LookupTablesToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {AmmoFlagsToolStripMenuItem, ArmourClassesToolStripMenuItem, AttachmentSystemToolStripMenuItem, AttachmentClassesToolStripMenuItem, CursorsToolStripMenuItem, DrugTypesToolStripMenuItem, ExplosionTypesToolStripMenuItem, SeparabilityStatesToolStripMenuItem, ItemClassesToolStripMenuItem, ItemFlagsToolStripMenuItem, LBEClassesToolStripMenuItem, MergeTypesToolStripMenuItem, SkillChecksToolStripMenuItem, WeaponClassesToolStripMenuItem, WeaponTypesToolStripMenuItem})
+        LookupTablesToolStripMenuItem.Name = "LookupTablesToolStripMenuItem"
+        LookupTablesToolStripMenuItem.Size = New Size(359, 24)
+        LookupTablesToolStripMenuItem.Text = "&Lookup Tables"
+        ' 
+        ' AmmoFlagsToolStripMenuItem
+        ' 
+        AmmoFlagsToolStripMenuItem.Name = "AmmoFlagsToolStripMenuItem"
+        AmmoFlagsToolStripMenuItem.Size = New Size(237, 24)
+        AmmoFlagsToolStripMenuItem.Text = "Amm&o Flags"
+        ' 
+        ' ArmourClassesToolStripMenuItem
+        ' 
+        ArmourClassesToolStripMenuItem.Name = "ArmourClassesToolStripMenuItem"
+        ArmourClassesToolStripMenuItem.Size = New Size(237, 24)
+        ArmourClassesToolStripMenuItem.Text = "A&rmour Classes"
+        ' 
+        ' AttachmentSystemToolStripMenuItem
+        ' 
+        AttachmentSystemToolStripMenuItem.Name = "AttachmentSystemToolStripMenuItem"
+        AttachmentSystemToolStripMenuItem.Size = New Size(237, 24)
+        AttachmentSystemToolStripMenuItem.Text = "A&ttachment System"
+        ' 
+        ' AttachmentClassesToolStripMenuItem
+        ' 
+        AttachmentClassesToolStripMenuItem.Name = "AttachmentClassesToolStripMenuItem"
+        AttachmentClassesToolStripMenuItem.Size = New Size(237, 24)
+        AttachmentClassesToolStripMenuItem.Text = "Built-in &Attachment Classes"
+        ' 
+        ' CursorsToolStripMenuItem
+        ' 
+        CursorsToolStripMenuItem.Name = "CursorsToolStripMenuItem"
+        CursorsToolStripMenuItem.Size = New Size(237, 24)
+        CursorsToolStripMenuItem.Text = "&Cursors"
+        ' 
+        ' DrugTypesToolStripMenuItem
+        ' 
+        DrugTypesToolStripMenuItem.Name = "DrugTypesToolStripMenuItem"
+        DrugTypesToolStripMenuItem.Size = New Size(237, 24)
+        DrugTypesToolStripMenuItem.Text = "&Drug Types"
+        ' 
+        ' ExplosionTypesToolStripMenuItem
+        ' 
+        ExplosionTypesToolStripMenuItem.Name = "ExplosionTypesToolStripMenuItem"
+        ExplosionTypesToolStripMenuItem.Size = New Size(237, 24)
+        ExplosionTypesToolStripMenuItem.Text = "&Explosion Types"
+        ' 
+        ' SeparabilityStatesToolStripMenuItem
+        ' 
+        SeparabilityStatesToolStripMenuItem.Name = "SeparabilityStatesToolStripMenuItem"
+        SeparabilityStatesToolStripMenuItem.Size = New Size(237, 24)
+        SeparabilityStatesToolStripMenuItem.Text = "Se&parability States"
+        ' 
+        ' ItemClassesToolStripMenuItem
+        ' 
+        ItemClassesToolStripMenuItem.Name = "ItemClassesToolStripMenuItem"
+        ItemClassesToolStripMenuItem.Size = New Size(237, 24)
+        ItemClassesToolStripMenuItem.Text = "&Item Classes"
+        ' 
+        ' ItemFlagsToolStripMenuItem
+        ' 
+        ItemFlagsToolStripMenuItem.Name = "ItemFlagsToolStripMenuItem"
+        ItemFlagsToolStripMenuItem.Size = New Size(237, 24)
+        ItemFlagsToolStripMenuItem.Text = "Item &Flags"
+        ' 
+        ' LBEClassesToolStripMenuItem
+        ' 
+        LBEClassesToolStripMenuItem.Name = "LBEClassesToolStripMenuItem"
+        LBEClassesToolStripMenuItem.Size = New Size(237, 24)
+        LBEClassesToolStripMenuItem.Text = "&LBE Classes"
+        ' 
+        ' MergeTypesToolStripMenuItem
+        ' 
+        MergeTypesToolStripMenuItem.Name = "MergeTypesToolStripMenuItem"
+        MergeTypesToolStripMenuItem.Size = New Size(237, 24)
+        MergeTypesToolStripMenuItem.Text = "&Merge Types"
+        ' 
+        ' SkillChecksToolStripMenuItem
+        ' 
+        SkillChecksToolStripMenuItem.Name = "SkillChecksToolStripMenuItem"
+        SkillChecksToolStripMenuItem.Size = New Size(237, 24)
+        SkillChecksToolStripMenuItem.Text = "&Skill Checks"
+        ' 
+        ' WeaponClassesToolStripMenuItem
+        ' 
+        WeaponClassesToolStripMenuItem.Name = "WeaponClassesToolStripMenuItem"
+        WeaponClassesToolStripMenuItem.Size = New Size(237, 24)
+        WeaponClassesToolStripMenuItem.Text = "&Weapon Classes"
+        ' 
+        ' WeaponTypesToolStripMenuItem
+        ' 
+        WeaponTypesToolStripMenuItem.Name = "WeaponTypesToolStripMenuItem"
+        WeaponTypesToolStripMenuItem.Size = New Size(237, 24)
+        WeaponTypesToolStripMenuItem.Text = "Weapon &Types"
+        ' 
+        ' NewAttachmentSystemToolStripMenuItem
+        ' 
+        NewAttachmentSystemToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {NasAttachmentClassesToolStripMenuItem, NasAttachmentSlotsToolStripMenuItem, AttachmentClassCodeMakerToolStripMenuItem})
+        NewAttachmentSystemToolStripMenuItem.Name = "NewAttachmentSystemToolStripMenuItem"
+        NewAttachmentSystemToolStripMenuItem.Size = New Size(359, 24)
+        NewAttachmentSystemToolStripMenuItem.Text = "&New Attachment System"
+        ' 
+        ' NasAttachmentClassesToolStripMenuItem
+        ' 
+        NasAttachmentClassesToolStripMenuItem.Name = "NasAttachmentClassesToolStripMenuItem"
+        NasAttachmentClassesToolStripMenuItem.Size = New Size(360, 24)
+        NasAttachmentClassesToolStripMenuItem.Text = "&Custom Attachment Classes"
+        ' 
+        ' NasAttachmentSlotsToolStripMenuItem
+        ' 
+        NasAttachmentSlotsToolStripMenuItem.Name = "NasAttachmentSlotsToolStripMenuItem"
+        NasAttachmentSlotsToolStripMenuItem.Size = New Size(360, 24)
+        NasAttachmentSlotsToolStripMenuItem.Text = "Attachment &Slots"
+        ' 
+        ' AttachmentClassCodeMakerToolStripMenuItem
+        ' 
+        AttachmentClassCodeMakerToolStripMenuItem.Name = "AttachmentClassCodeMakerToolStripMenuItem"
+        AttachmentClassCodeMakerToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.Alt Or Keys.Shift Or Keys.C
+        AttachmentClassCodeMakerToolStripMenuItem.Size = New Size(360, 24)
+        AttachmentClassCodeMakerToolStripMenuItem.Text = "Attachment Class Code Maker"
+        AttachmentClassCodeMakerToolStripMenuItem.Visible = False
+        ' 
+        ' PocketTypesToolStripMenuItem
+        ' 
+        PocketTypesToolStripMenuItem.Name = "PocketTypesToolStripMenuItem"
+        PocketTypesToolStripMenuItem.Size = New Size(359, 24)
+        PocketTypesToolStripMenuItem.Text = "&Pocket Types"
+        ' 
+        ' InventorySilhouettesToolStripMenuItem
+        ' 
+        InventorySilhouettesToolStripMenuItem.Name = "InventorySilhouettesToolStripMenuItem"
+        InventorySilhouettesToolStripMenuItem.Size = New Size(359, 24)
+        InventorySilhouettesToolStripMenuItem.Text = "&Inventory Silhouettes"
+        ' 
+        ' CommonAttachmentPointsToolStripMenuItem
+        ' 
+        CommonAttachmentPointsToolStripMenuItem.Name = "CommonAttachmentPointsToolStripMenuItem"
+        CommonAttachmentPointsToolStripMenuItem.Size = New Size(359, 24)
+        CommonAttachmentPointsToolStripMenuItem.Text = "&Common Attachment Points"
+        ' 
+        ' AttachmentPointCodeMakerToolStripMenuItem
+        ' 
+        AttachmentPointCodeMakerToolStripMenuItem.Name = "AttachmentPointCodeMakerToolStripMenuItem"
+        AttachmentPointCodeMakerToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.Alt Or Keys.Shift Or Keys.A
+        AttachmentPointCodeMakerToolStripMenuItem.Size = New Size(359, 24)
+        AttachmentPointCodeMakerToolStripMenuItem.Text = "Attachment Point Code Maker"
+        AttachmentPointCodeMakerToolStripMenuItem.Visible = False
+        ' 
+        ' FoodToolStripMenuItem
+        ' 
+        FoodToolStripMenuItem.Name = "FoodToolStripMenuItem"
+        FoodToolStripMenuItem.Size = New Size(359, 24)
+        FoodToolStripMenuItem.Text = "Food"
+        ' 
+        ' ClothesToolStripMenuItem
+        ' 
+        ClothesToolStripMenuItem.Name = "ClothesToolStripMenuItem"
+        ClothesToolStripMenuItem.Size = New Size(359, 24)
+        ClothesToolStripMenuItem.Text = "Clothes"
+        ' 
+        ' ItemsMenu
+        ' 
+        ItemsMenu.DropDownItems.AddRange(New ToolStripItem() {ShowToolStripMenuItem, CreateNewToolStripMenuItem, ToolStripSeparator9, MergesToolStripMenuItem, AttachmentsToolStripMenuItem1, LaunchablesToolStripMenuItem, CompatibleFaceItemsToolStripMenuItem, TransformationsToolStripMenuItem, RandToolStripMenuItem})
+        ItemsMenu.Name = "ItemsMenu"
+        ItemsMenu.Size = New Size(51, 21)
+        ItemsMenu.Text = "&Items"
+        ' 
+        ' ShowToolStripMenuItem
+        ' 
+        ShowToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {AllItemsToolStripMenuItem, ToolStripMenuItem2, ByClassToolStripMenuItem, FilteredToolStripMenuItem})
+        ShowToolStripMenuItem.Name = "ShowToolStripMenuItem"
+        ShowToolStripMenuItem.Size = New Size(214, 24)
+        ShowToolStripMenuItem.Text = "&Show"
+        ' 
+        ' AllItemsToolStripMenuItem
+        ' 
+        AllItemsToolStripMenuItem.Name = "AllItemsToolStripMenuItem"
+        AllItemsToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.Alt Or Keys.A
+        AllItemsToolStripMenuItem.Size = New Size(170, 24)
+        AllItemsToolStripMenuItem.Text = "&All"
+        ' 
+        ' ToolStripMenuItem2
+        ' 
+        ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+        ToolStripMenuItem2.ShortcutKeys = Keys.Control Or Keys.I
+        ToolStripMenuItem2.Size = New Size(170, 24)
+        ToolStripMenuItem2.Text = "By &ID"
+        ' 
+        ' ByClassToolStripMenuItem
+        ' 
+        ByClassToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {GunsToolStripMenuItem, AmmoToolStripMenuItem, LaunchersToolStripMenuItem, GrenadesToolStripMenuItem, ExplosivesToolStripMenuItem, KnivesToolStripMenuItem, OtherWeaponsToolStripMenuItem, ArmourToolStripMenuItem, FaceToolStripMenuItem, KitsToolStripMenuItem, KeysToolStripMenuItem, LoadBearingToolStripMenuItem, MiscToolStripMenuItem, NoneItemToolStripMenuItem, RandomItemsToolStripMenuItem})
+        ByClassToolStripMenuItem.Name = "ByClassToolStripMenuItem"
+        ByClassToolStripMenuItem.Size = New Size(170, 24)
+        ByClassToolStripMenuItem.Text = "By &Class"
+        ' 
+        ' GunsToolStripMenuItem
+        ' 
+        GunsToolStripMenuItem.Name = "GunsToolStripMenuItem"
+        GunsToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.G
+        GunsToolStripMenuItem.Size = New Size(226, 24)
+        GunsToolStripMenuItem.Text = "&Guns"
+        ' 
+        ' AmmoToolStripMenuItem
+        ' 
+        AmmoToolStripMenuItem.Name = "AmmoToolStripMenuItem"
+        AmmoToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.A
+        AmmoToolStripMenuItem.Size = New Size(226, 24)
+        AmmoToolStripMenuItem.Text = "&Ammo"
+        ' 
+        ' LaunchersToolStripMenuItem
+        ' 
+        LaunchersToolStripMenuItem.Name = "LaunchersToolStripMenuItem"
+        LaunchersToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.L
+        LaunchersToolStripMenuItem.Size = New Size(226, 24)
+        LaunchersToolStripMenuItem.Text = "&Launchers"
+        ' 
+        ' GrenadesToolStripMenuItem
+        ' 
+        GrenadesToolStripMenuItem.Name = "GrenadesToolStripMenuItem"
+        GrenadesToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.N
+        GrenadesToolStripMenuItem.Size = New Size(226, 24)
+        GrenadesToolStripMenuItem.Text = "Gre&nades"
+        ' 
+        ' ExplosivesToolStripMenuItem
+        ' 
+        ExplosivesToolStripMenuItem.Name = "ExplosivesToolStripMenuItem"
+        ExplosivesToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.E
+        ExplosivesToolStripMenuItem.Size = New Size(226, 24)
+        ExplosivesToolStripMenuItem.Text = "&Explosives"
+        ' 
+        ' KnivesToolStripMenuItem
+        ' 
+        KnivesToolStripMenuItem.Name = "KnivesToolStripMenuItem"
+        KnivesToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.K
+        KnivesToolStripMenuItem.Size = New Size(226, 24)
+        KnivesToolStripMenuItem.Text = "&Knives"
+        ' 
+        ' OtherWeaponsToolStripMenuItem
+        ' 
+        OtherWeaponsToolStripMenuItem.Name = "OtherWeaponsToolStripMenuItem"
+        OtherWeaponsToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.O
+        OtherWeaponsToolStripMenuItem.Size = New Size(226, 24)
+        OtherWeaponsToolStripMenuItem.Text = "&Other Weapons"
+        ' 
+        ' ArmourToolStripMenuItem
+        ' 
+        ArmourToolStripMenuItem.Name = "ArmourToolStripMenuItem"
+        ArmourToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.R
+        ArmourToolStripMenuItem.Size = New Size(226, 24)
+        ArmourToolStripMenuItem.Text = "A&rmour"
+        ' 
+        ' FaceToolStripMenuItem
+        ' 
+        FaceToolStripMenuItem.Name = "FaceToolStripMenuItem"
+        FaceToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.F
+        FaceToolStripMenuItem.Size = New Size(226, 24)
+        FaceToolStripMenuItem.Text = "&Facial Gear"
+        ' 
+        ' KitsToolStripMenuItem
+        ' 
+        KitsToolStripMenuItem.Name = "KitsToolStripMenuItem"
+        KitsToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.I
+        KitsToolStripMenuItem.Size = New Size(226, 24)
+        KitsToolStripMenuItem.Text = "K&its"
+        ' 
+        ' KeysToolStripMenuItem
+        ' 
+        KeysToolStripMenuItem.Name = "KeysToolStripMenuItem"
+        KeysToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.Y
+        KeysToolStripMenuItem.Size = New Size(226, 24)
+        KeysToolStripMenuItem.Text = "Ke&ys"
+        ' 
+        ' LoadBearingToolStripMenuItem
+        ' 
+        LoadBearingToolStripMenuItem.Name = "LoadBearingToolStripMenuItem"
+        LoadBearingToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.B
+        LoadBearingToolStripMenuItem.Size = New Size(226, 24)
+        LoadBearingToolStripMenuItem.Text = "Load &Bearing"
+        ' 
+        ' MiscToolStripMenuItem
+        ' 
+        MiscToolStripMenuItem.Name = "MiscToolStripMenuItem"
+        MiscToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.M
+        MiscToolStripMenuItem.Size = New Size(226, 24)
+        MiscToolStripMenuItem.Text = "&Misc"
+        ' 
+        ' NoneItemToolStripMenuItem
+        ' 
+        NoneItemToolStripMenuItem.Name = "NoneItemToolStripMenuItem"
+        NoneItemToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.Alt Or Keys.N
+        NoneItemToolStripMenuItem.Size = New Size(226, 24)
+        NoneItemToolStripMenuItem.Text = "Empty/&None"
+        ' 
+        ' RandomItemsToolStripMenuItem
+        ' 
+        RandomItemsToolStripMenuItem.Name = "RandomItemsToolStripMenuItem"
+        RandomItemsToolStripMenuItem.Size = New Size(226, 24)
+        RandomItemsToolStripMenuItem.Text = "Random Items"
+        ' 
+        ' FilteredToolStripMenuItem
+        ' 
+        FilteredToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {AttachmentsToolStripMenuItem, DrugsItemFilterToolStripMenuItem, TonsOfGunsToolStripMenuItem, NormalGunsToolStripMenuItem, SciFiToolStripMenuItem, NonSciFiToolStripMenuItem, CustomFilterToolStripMenuItem})
+        FilteredToolStripMenuItem.Name = "FilteredToolStripMenuItem"
+        FilteredToolStripMenuItem.Size = New Size(170, 24)
+        FilteredToolStripMenuItem.Text = "By &Other Filters"
+        ' 
+        ' AttachmentsToolStripMenuItem
+        ' 
+        AttachmentsToolStripMenuItem.Name = "AttachmentsToolStripMenuItem"
+        AttachmentsToolStripMenuItem.ShortcutKeys = Keys.Alt Or Keys.T
+        AttachmentsToolStripMenuItem.Size = New Size(201, 24)
+        AttachmentsToolStripMenuItem.Text = "&Attachments"
+        ' 
+        ' DrugsItemFilterToolStripMenuItem
+        ' 
+        DrugsItemFilterToolStripMenuItem.Name = "DrugsItemFilterToolStripMenuItem"
+        DrugsItemFilterToolStripMenuItem.Size = New Size(201, 24)
+        ' 
+        ' TonsOfGunsToolStripMenuItem
+        ' 
+        TonsOfGunsToolStripMenuItem.Name = "TonsOfGunsToolStripMenuItem"
+        TonsOfGunsToolStripMenuItem.Size = New Size(201, 24)
+        TonsOfGunsToolStripMenuItem.Text = "&Tons Of Guns"
+        ' 
+        ' NormalGunsToolStripMenuItem
+        ' 
+        NormalGunsToolStripMenuItem.Name = "NormalGunsToolStripMenuItem"
+        NormalGunsToolStripMenuItem.Size = New Size(201, 24)
+        NormalGunsToolStripMenuItem.Text = "&Normal Guns"
+        ' 
+        ' SciFiToolStripMenuItem
+        ' 
+        SciFiToolStripMenuItem.Name = "SciFiToolStripMenuItem"
+        SciFiToolStripMenuItem.Size = New Size(201, 24)
+        SciFiToolStripMenuItem.Text = "&Sci-Fi"
+        ' 
+        ' NonSciFiToolStripMenuItem
+        ' 
+        NonSciFiToolStripMenuItem.Name = "NonSciFiToolStripMenuItem"
+        NonSciFiToolStripMenuItem.Size = New Size(201, 24)
+        NonSciFiToolStripMenuItem.Text = "&Realistic"
+        ' 
+        ' CustomFilterToolStripMenuItem
+        ' 
+        CustomFilterToolStripMenuItem.Name = "CustomFilterToolStripMenuItem"
+        CustomFilterToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.F
+        CustomFilterToolStripMenuItem.Size = New Size(201, 24)
+        CustomFilterToolStripMenuItem.Text = "&Custom Filter"
+        ' 
+        ' CreateNewToolStripMenuItem
+        ' 
+        CreateNewToolStripMenuItem.Name = "CreateNewToolStripMenuItem"
+        CreateNewToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.N
+        CreateNewToolStripMenuItem.Size = New Size(214, 24)
+        CreateNewToolStripMenuItem.Text = "&New"
+        ' 
+        ' ToolStripSeparator9
+        ' 
+        ToolStripSeparator9.Name = "ToolStripSeparator9"
+        ToolStripSeparator9.Size = New Size(211, 6)
+        ' 
+        ' MergesToolStripMenuItem
+        ' 
+        MergesToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {StandardToolStripMenuItem1, AttachmentToolStripMenuItem})
+        MergesToolStripMenuItem.Name = "MergesToolStripMenuItem"
+        MergesToolStripMenuItem.Size = New Size(214, 24)
+        MergesToolStripMenuItem.Text = "&Merges"
+        ' 
+        ' StandardToolStripMenuItem1
+        ' 
+        StandardToolStripMenuItem1.Name = "StandardToolStripMenuItem1"
+        StandardToolStripMenuItem1.Size = New Size(147, 24)
+        StandardToolStripMenuItem1.Text = "&Standard"
+        ' 
+        ' AttachmentToolStripMenuItem
+        ' 
+        AttachmentToolStripMenuItem.Name = "AttachmentToolStripMenuItem"
+        AttachmentToolStripMenuItem.Size = New Size(147, 24)
+        AttachmentToolStripMenuItem.Text = "&Attachment"
+        ' 
+        ' AttachmentsToolStripMenuItem1
+        ' 
+        AttachmentsToolStripMenuItem1.DropDownItems.AddRange(New ToolStripItem() {ListingToolStripMenuItem, InfoToolStripMenuItem, IncompatibleToolStripMenuItem})
+        AttachmentsToolStripMenuItem1.Name = "AttachmentsToolStripMenuItem1"
+        AttachmentsToolStripMenuItem1.Size = New Size(214, 24)
+        AttachmentsToolStripMenuItem1.Text = "&Attachments"
+        ' 
+        ' ListingToolStripMenuItem
+        ' 
+        ListingToolStripMenuItem.Name = "ListingToolStripMenuItem"
+        ListingToolStripMenuItem.Size = New Size(176, 24)
+        ListingToolStripMenuItem.Text = "Full &List"
+        ' 
+        ' InfoToolStripMenuItem
+        ' 
+        InfoToolStripMenuItem.Name = "InfoToolStripMenuItem"
+        InfoToolStripMenuItem.Size = New Size(176, 24)
+        InfoToolStripMenuItem.Text = "&Info"
+        ' 
+        ' IncompatibleToolStripMenuItem
+        ' 
+        IncompatibleToolStripMenuItem.Name = "IncompatibleToolStripMenuItem"
+        IncompatibleToolStripMenuItem.Size = New Size(176, 24)
+        IncompatibleToolStripMenuItem.Text = "&Incompatibilities"
+        ' 
+        ' LaunchablesToolStripMenuItem
+        ' 
+        LaunchablesToolStripMenuItem.Name = "LaunchablesToolStripMenuItem"
+        LaunchablesToolStripMenuItem.Size = New Size(214, 24)
+        LaunchablesToolStripMenuItem.Text = "&Launchables"
+        ' 
+        ' CompatibleFaceItemsToolStripMenuItem
+        ' 
+        CompatibleFaceItemsToolStripMenuItem.Name = "CompatibleFaceItemsToolStripMenuItem"
+        CompatibleFaceItemsToolStripMenuItem.Size = New Size(214, 24)
+        CompatibleFaceItemsToolStripMenuItem.Text = "&Compatible Face Items"
+        ' 
+        ' TransformationsToolStripMenuItem
+        ' 
+        TransformationsToolStripMenuItem.Name = "TransformationsToolStripMenuItem"
+        TransformationsToolStripMenuItem.Size = New Size(214, 24)
+        TransformationsToolStripMenuItem.Text = "&Transformations"
+        ' 
+        ' RandToolStripMenuItem
+        ' 
+        RandToolStripMenuItem.Name = "RandToolStripMenuItem"
+        RandToolStripMenuItem.Size = New Size(214, 24)
+        RandToolStripMenuItem.Text = "Random Items"
+        ' 
+        ' InventoriesMenu
+        ' 
+        InventoriesMenu.DropDownItems.AddRange(New ToolStripItem() {IMPItemsToolStripMenuItem, EnemyStuffToolStripMenuItem, MilitiaItemsToolStripMenuItem, DropRatesToolStripMenuItem, ShopkeepersToolStripMenuItem, MercStartingGearToolStripMenuItem})
+        InventoriesMenu.Name = "InventoriesMenu"
+        InventoriesMenu.Size = New Size(83, 21)
+        InventoriesMenu.Text = "I&nventories"
+        ' 
+        ' IMPItemsToolStripMenuItem
+        ' 
+        IMPItemsToolStripMenuItem.Name = "IMPItemsToolStripMenuItem"
+        IMPItemsToolStripMenuItem.Size = New Size(193, 24)
+        IMPItemsToolStripMenuItem.Text = "&IMP Items"
+        ' 
+        ' EnemyStuffToolStripMenuItem
+        ' 
+        EnemyStuffToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {EnemyGunsToolStripMenuItem, EnemyItemsToolStripMenuItem, EnemyAmmoToolStripMenuItem})
+        EnemyStuffToolStripMenuItem.Name = "EnemyStuffToolStripMenuItem"
+        EnemyStuffToolStripMenuItem.Size = New Size(193, 24)
+        EnemyStuffToolStripMenuItem.Text = "&Enemy Items"
+        ' 
+        ' EnemyGunsToolStripMenuItem
+        ' 
+        EnemyGunsToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {EnemyGunsAdminToolStripMenuItem, EnemyGunsRegularToolStripMenuItem, EnemyGunsEliteToolStripMenuItem, EnemyGunsDefaultToolStripMenuItem})
+        EnemyGunsToolStripMenuItem.Name = "EnemyGunsToolStripMenuItem"
+        EnemyGunsToolStripMenuItem.Size = New Size(120, 24)
+        EnemyGunsToolStripMenuItem.Text = "&Guns"
+        ' 
+        ' EnemyGunsAdminToolStripMenuItem
+        ' 
+        EnemyGunsAdminToolStripMenuItem.Name = "EnemyGunsAdminToolStripMenuItem"
+        EnemyGunsAdminToolStripMenuItem.Size = New Size(127, 24)
+        EnemyGunsAdminToolStripMenuItem.Text = "Admin"
+        ' 
+        ' EnemyGunsRegularToolStripMenuItem
+        ' 
+        EnemyGunsRegularToolStripMenuItem.Name = "EnemyGunsRegularToolStripMenuItem"
+        EnemyGunsRegularToolStripMenuItem.Size = New Size(127, 24)
+        EnemyGunsRegularToolStripMenuItem.Text = "Regular"
+        ' 
+        ' EnemyGunsEliteToolStripMenuItem
+        ' 
+        EnemyGunsEliteToolStripMenuItem.Name = "EnemyGunsEliteToolStripMenuItem"
+        EnemyGunsEliteToolStripMenuItem.Size = New Size(127, 24)
+        EnemyGunsEliteToolStripMenuItem.Text = "Elite"
+        ' 
+        ' EnemyGunsDefaultToolStripMenuItem
+        ' 
+        EnemyGunsDefaultToolStripMenuItem.Name = "EnemyGunsDefaultToolStripMenuItem"
+        EnemyGunsDefaultToolStripMenuItem.Size = New Size(127, 24)
+        EnemyGunsDefaultToolStripMenuItem.Text = "Default"
+        ' 
+        ' EnemyItemsToolStripMenuItem
+        ' 
+        EnemyItemsToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {EnemyItemsAdminToolStripMenuItem1, EnemyItemsRegularToolStripMenuItem1, EnemyItemsEliteToolStripMenuItem1, EnemyItemsDefaultToolStripMenuItem})
+        EnemyItemsToolStripMenuItem.Name = "EnemyItemsToolStripMenuItem"
+        EnemyItemsToolStripMenuItem.Size = New Size(120, 24)
+        EnemyItemsToolStripMenuItem.Text = "&Items"
+        ' 
+        ' EnemyItemsAdminToolStripMenuItem1
+        ' 
+        EnemyItemsAdminToolStripMenuItem1.Name = "EnemyItemsAdminToolStripMenuItem1"
+        EnemyItemsAdminToolStripMenuItem1.Size = New Size(127, 24)
+        EnemyItemsAdminToolStripMenuItem1.Text = "Admin"
+        ' 
+        ' EnemyItemsRegularToolStripMenuItem1
+        ' 
+        EnemyItemsRegularToolStripMenuItem1.Name = "EnemyItemsRegularToolStripMenuItem1"
+        EnemyItemsRegularToolStripMenuItem1.Size = New Size(127, 24)
+        EnemyItemsRegularToolStripMenuItem1.Text = "Regular"
+        ' 
+        ' EnemyItemsEliteToolStripMenuItem1
+        ' 
+        EnemyItemsEliteToolStripMenuItem1.Name = "EnemyItemsEliteToolStripMenuItem1"
+        EnemyItemsEliteToolStripMenuItem1.Size = New Size(127, 24)
+        EnemyItemsEliteToolStripMenuItem1.Text = "Elite"
+        ' 
+        ' EnemyItemsDefaultToolStripMenuItem
+        ' 
+        EnemyItemsDefaultToolStripMenuItem.Name = "EnemyItemsDefaultToolStripMenuItem"
+        EnemyItemsDefaultToolStripMenuItem.Size = New Size(127, 24)
+        EnemyItemsDefaultToolStripMenuItem.Text = "Default"
+        ' 
+        ' EnemyAmmoToolStripMenuItem
+        ' 
+        EnemyAmmoToolStripMenuItem.Name = "EnemyAmmoToolStripMenuItem"
+        EnemyAmmoToolStripMenuItem.Size = New Size(120, 24)
+        EnemyAmmoToolStripMenuItem.Text = "&Ammo"
+        ' 
+        ' MilitiaItemsToolStripMenuItem
+        ' 
+        MilitiaItemsToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {MilitiaItemsGunsToolStripMenuItem1, MilitiaItemsItemsToolStripMenuItem})
+        MilitiaItemsToolStripMenuItem.Name = "MilitiaItemsToolStripMenuItem"
+        MilitiaItemsToolStripMenuItem.Size = New Size(193, 24)
+        MilitiaItemsToolStripMenuItem.Text = "Militia Items"
+        ' 
+        ' MilitiaItemsGunsToolStripMenuItem1
+        ' 
+        MilitiaItemsGunsToolStripMenuItem1.DropDownItems.AddRange(New ToolStripItem() {MilitiaGunsGreenToolStripMenuItem, MilitiaGunsRegularToolStripMenuItem, MilitiaGunsEliteToolStripMenuItem})
+        MilitiaItemsGunsToolStripMenuItem1.Name = "MilitiaItemsGunsToolStripMenuItem1"
+        MilitiaItemsGunsToolStripMenuItem1.Size = New Size(113, 24)
+        MilitiaItemsGunsToolStripMenuItem1.Text = "Guns"
+        ' 
+        ' MilitiaGunsGreenToolStripMenuItem
+        ' 
+        MilitiaGunsGreenToolStripMenuItem.Name = "MilitiaGunsGreenToolStripMenuItem"
+        MilitiaGunsGreenToolStripMenuItem.Size = New Size(127, 24)
+        MilitiaGunsGreenToolStripMenuItem.Text = "Green"
+        ' 
+        ' MilitiaGunsRegularToolStripMenuItem
+        ' 
+        MilitiaGunsRegularToolStripMenuItem.Name = "MilitiaGunsRegularToolStripMenuItem"
+        MilitiaGunsRegularToolStripMenuItem.Size = New Size(127, 24)
+        MilitiaGunsRegularToolStripMenuItem.Text = "Regular"
+        ' 
+        ' MilitiaGunsEliteToolStripMenuItem
+        ' 
+        MilitiaGunsEliteToolStripMenuItem.Name = "MilitiaGunsEliteToolStripMenuItem"
+        MilitiaGunsEliteToolStripMenuItem.Size = New Size(127, 24)
+        MilitiaGunsEliteToolStripMenuItem.Text = "Elite"
+        ' 
+        ' MilitiaItemsItemsToolStripMenuItem
+        ' 
+        MilitiaItemsItemsToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {MilitiaItemsGreenToolStripMenuItem, MilitiaItemsRegularToolStripMenuItem, MilitiaItemsEliteToolStripMenuItem})
+        MilitiaItemsItemsToolStripMenuItem.Name = "MilitiaItemsItemsToolStripMenuItem"
+        MilitiaItemsItemsToolStripMenuItem.Size = New Size(113, 24)
+        MilitiaItemsItemsToolStripMenuItem.Text = "Items"
+        ' 
+        ' MilitiaItemsGreenToolStripMenuItem
+        ' 
+        MilitiaItemsGreenToolStripMenuItem.Name = "MilitiaItemsGreenToolStripMenuItem"
+        MilitiaItemsGreenToolStripMenuItem.Size = New Size(127, 24)
+        MilitiaItemsGreenToolStripMenuItem.Text = "Green"
+        ' 
+        ' MilitiaItemsRegularToolStripMenuItem
+        ' 
+        MilitiaItemsRegularToolStripMenuItem.Name = "MilitiaItemsRegularToolStripMenuItem"
+        MilitiaItemsRegularToolStripMenuItem.Size = New Size(127, 24)
+        MilitiaItemsRegularToolStripMenuItem.Text = "Regular"
+        ' 
+        ' MilitiaItemsEliteToolStripMenuItem
+        ' 
+        MilitiaItemsEliteToolStripMenuItem.Name = "MilitiaItemsEliteToolStripMenuItem"
+        MilitiaItemsEliteToolStripMenuItem.Size = New Size(127, 24)
+        MilitiaItemsEliteToolStripMenuItem.Text = "Elite"
+        ' 
+        ' DropRatesToolStripMenuItem
+        ' 
+        DropRatesToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {EnemyWeaponDropRateToolStripMenuItem, EnemyAmmoDropRateToolStripMenuItem, EnemyArmourDropRateToolStripMenuItem, EnemyExplosiveDropRateToolStripMenuItem, EnemyMiscDropRateToolStripMenuItem})
+        DropRatesToolStripMenuItem.Name = "DropRatesToolStripMenuItem"
+        DropRatesToolStripMenuItem.Size = New Size(193, 24)
+        DropRatesToolStripMenuItem.Text = "&Drop Rates"
+        ' 
+        ' EnemyWeaponDropRateToolStripMenuItem
+        ' 
+        EnemyWeaponDropRateToolStripMenuItem.Name = "EnemyWeaponDropRateToolStripMenuItem"
+        EnemyWeaponDropRateToolStripMenuItem.Size = New Size(142, 24)
+        EnemyWeaponDropRateToolStripMenuItem.Text = "&Weapons"
+        ' 
+        ' EnemyAmmoDropRateToolStripMenuItem
+        ' 
+        EnemyAmmoDropRateToolStripMenuItem.Name = "EnemyAmmoDropRateToolStripMenuItem"
+        EnemyAmmoDropRateToolStripMenuItem.Size = New Size(142, 24)
+        EnemyAmmoDropRateToolStripMenuItem.Text = "&Ammo"
+        ' 
+        ' EnemyArmourDropRateToolStripMenuItem
+        ' 
+        EnemyArmourDropRateToolStripMenuItem.Name = "EnemyArmourDropRateToolStripMenuItem"
+        EnemyArmourDropRateToolStripMenuItem.Size = New Size(142, 24)
+        EnemyArmourDropRateToolStripMenuItem.Text = "A&rmour"
+        ' 
+        ' EnemyExplosiveDropRateToolStripMenuItem
+        ' 
+        EnemyExplosiveDropRateToolStripMenuItem.Name = "EnemyExplosiveDropRateToolStripMenuItem"
+        EnemyExplosiveDropRateToolStripMenuItem.Size = New Size(142, 24)
+        EnemyExplosiveDropRateToolStripMenuItem.Text = "&Explosives"
+        ' 
+        ' EnemyMiscDropRateToolStripMenuItem
+        ' 
+        EnemyMiscDropRateToolStripMenuItem.Name = "EnemyMiscDropRateToolStripMenuItem"
+        EnemyMiscDropRateToolStripMenuItem.Size = New Size(142, 24)
+        EnemyMiscDropRateToolStripMenuItem.Text = "&Misc"
+        ' 
+        ' ShopkeepersToolStripMenuItem
+        ' 
+        ShopkeepersToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {AlbertoToolStripMenuItem, ArnieToolStripMenuItem, CarloToolStripMenuItem, DevinToolStripMenuItem, ElginToolStripMenuItem, FrankToolStripMenuItem, FranzToolStripMenuItem, FredoToolStripMenuItem, GabbyToolStripMenuItem, HerveToolStripMenuItem, HowardToolStripMenuItem, JakeToolStripMenuItem, KeithToolStripMenuItem, MannyToolStripMenuItem, MickeyToolStripMenuItem, PerkoToolStripMenuItem, PeterToolStripMenuItem, SamToolStripMenuItem, TonyToolStripMenuItem})
+        ShopkeepersToolStripMenuItem.Name = "ShopkeepersToolStripMenuItem"
+        ShopkeepersToolStripMenuItem.Size = New Size(193, 24)
+        ShopkeepersToolStripMenuItem.Text = "&Shopkeepers"
+        ' 
+        ' AlbertoToolStripMenuItem
+        ' 
+        AlbertoToolStripMenuItem.Name = "AlbertoToolStripMenuItem"
+        AlbertoToolStripMenuItem.Size = New Size(128, 24)
+        AlbertoToolStripMenuItem.Text = "&Alberto"
+        ' 
+        ' ArnieToolStripMenuItem
+        ' 
+        ArnieToolStripMenuItem.Name = "ArnieToolStripMenuItem"
+        ArnieToolStripMenuItem.Size = New Size(128, 24)
+        ArnieToolStripMenuItem.Text = "&Arnie"
+        ' 
+        ' CarloToolStripMenuItem
+        ' 
+        CarloToolStripMenuItem.Name = "CarloToolStripMenuItem"
+        CarloToolStripMenuItem.Size = New Size(128, 24)
+        CarloToolStripMenuItem.Text = "&Carlo"
+        ' 
+        ' DevinToolStripMenuItem
+        ' 
+        DevinToolStripMenuItem.Name = "DevinToolStripMenuItem"
+        DevinToolStripMenuItem.Size = New Size(128, 24)
+        DevinToolStripMenuItem.Text = "&Devin"
+        ' 
+        ' ElginToolStripMenuItem
+        ' 
+        ElginToolStripMenuItem.Name = "ElginToolStripMenuItem"
+        ElginToolStripMenuItem.Size = New Size(128, 24)
+        ElginToolStripMenuItem.Text = "&Elgin"
+        ' 
+        ' FrankToolStripMenuItem
+        ' 
+        FrankToolStripMenuItem.Name = "FrankToolStripMenuItem"
+        FrankToolStripMenuItem.Size = New Size(128, 24)
+        FrankToolStripMenuItem.Text = "&Frank"
+        ' 
+        ' FranzToolStripMenuItem
+        ' 
+        FranzToolStripMenuItem.Name = "FranzToolStripMenuItem"
+        FranzToolStripMenuItem.Size = New Size(128, 24)
+        FranzToolStripMenuItem.Text = "&Franz"
+        ' 
+        ' FredoToolStripMenuItem
+        ' 
+        FredoToolStripMenuItem.Name = "FredoToolStripMenuItem"
+        FredoToolStripMenuItem.Size = New Size(128, 24)
+        FredoToolStripMenuItem.Text = "&Fredo"
+        ' 
+        ' GabbyToolStripMenuItem
+        ' 
+        GabbyToolStripMenuItem.Name = "GabbyToolStripMenuItem"
+        GabbyToolStripMenuItem.Size = New Size(128, 24)
+        GabbyToolStripMenuItem.Text = "&Gabby"
+        ' 
+        ' HerveToolStripMenuItem
+        ' 
+        HerveToolStripMenuItem.Name = "HerveToolStripMenuItem"
+        HerveToolStripMenuItem.Size = New Size(128, 24)
+        HerveToolStripMenuItem.Text = "&Herve"
+        ' 
+        ' HowardToolStripMenuItem
+        ' 
+        HowardToolStripMenuItem.Name = "HowardToolStripMenuItem"
+        HowardToolStripMenuItem.Size = New Size(128, 24)
+        HowardToolStripMenuItem.Text = "&Howard"
+        ' 
+        ' JakeToolStripMenuItem
+        ' 
+        JakeToolStripMenuItem.Name = "JakeToolStripMenuItem"
+        JakeToolStripMenuItem.Size = New Size(128, 24)
+        JakeToolStripMenuItem.Text = "&Jake"
+        ' 
+        ' KeithToolStripMenuItem
+        ' 
+        KeithToolStripMenuItem.Name = "KeithToolStripMenuItem"
+        KeithToolStripMenuItem.Size = New Size(128, 24)
+        KeithToolStripMenuItem.Text = "&Keith"
+        ' 
+        ' MannyToolStripMenuItem
+        ' 
+        MannyToolStripMenuItem.Name = "MannyToolStripMenuItem"
+        MannyToolStripMenuItem.Size = New Size(128, 24)
+        MannyToolStripMenuItem.Text = "&Manny"
+        ' 
+        ' MickeyToolStripMenuItem
+        ' 
+        MickeyToolStripMenuItem.Name = "MickeyToolStripMenuItem"
+        MickeyToolStripMenuItem.Size = New Size(128, 24)
+        MickeyToolStripMenuItem.Text = "&Mickey"
+        ' 
+        ' PerkoToolStripMenuItem
+        ' 
+        PerkoToolStripMenuItem.Name = "PerkoToolStripMenuItem"
+        PerkoToolStripMenuItem.Size = New Size(128, 24)
+        PerkoToolStripMenuItem.Text = "&Perko"
+        ' 
+        ' PeterToolStripMenuItem
+        ' 
+        PeterToolStripMenuItem.Name = "PeterToolStripMenuItem"
+        PeterToolStripMenuItem.Size = New Size(128, 24)
+        PeterToolStripMenuItem.Text = "&Peter"
+        ' 
+        ' SamToolStripMenuItem
+        ' 
+        SamToolStripMenuItem.Name = "SamToolStripMenuItem"
+        SamToolStripMenuItem.Size = New Size(128, 24)
+        SamToolStripMenuItem.Text = "&Sam"
+        ' 
+        ' TonyToolStripMenuItem
+        ' 
+        TonyToolStripMenuItem.Name = "TonyToolStripMenuItem"
+        TonyToolStripMenuItem.Size = New Size(128, 24)
+        TonyToolStripMenuItem.Text = "&Tony"
+        ' 
+        ' MercStartingGearToolStripMenuItem
+        ' 
+        MercStartingGearToolStripMenuItem.Name = "MercStartingGearToolStripMenuItem"
+        MercStartingGearToolStripMenuItem.Size = New Size(193, 24)
+        MercStartingGearToolStripMenuItem.Text = "&Merc Starting Gear"
+        ' 
+        ' WindowsMenu
+        ' 
+        WindowsMenu.DropDownItems.AddRange(New ToolStripItem() {NewWindowToolStripMenuItem, CascadeToolStripMenuItem, TileVerticalToolStripMenuItem, TileHorizontalToolStripMenuItem, CloseAllToolStripMenuItem, ArrangeIconsToolStripMenuItem})
+        WindowsMenu.Name = "WindowsMenu"
+        WindowsMenu.Size = New Size(73, 21)
+        WindowsMenu.Text = "&Windows"
+        ' 
+        ' NewWindowToolStripMenuItem
+        ' 
+        NewWindowToolStripMenuItem.Name = "NewWindowToolStripMenuItem"
+        NewWindowToolStripMenuItem.Size = New Size(166, 24)
+        NewWindowToolStripMenuItem.Text = "&New Window"
+        NewWindowToolStripMenuItem.Visible = False
+        ' 
+        ' CascadeToolStripMenuItem
+        ' 
+        CascadeToolStripMenuItem.Name = "CascadeToolStripMenuItem"
+        CascadeToolStripMenuItem.Size = New Size(166, 24)
+        CascadeToolStripMenuItem.Text = "&Cascade"
+        ' 
+        ' TileVerticalToolStripMenuItem
+        ' 
+        TileVerticalToolStripMenuItem.Name = "TileVerticalToolStripMenuItem"
+        TileVerticalToolStripMenuItem.Size = New Size(166, 24)
+        TileVerticalToolStripMenuItem.Text = "Tile &Vertical"
+        ' 
+        ' TileHorizontalToolStripMenuItem
+        ' 
+        TileHorizontalToolStripMenuItem.Name = "TileHorizontalToolStripMenuItem"
+        TileHorizontalToolStripMenuItem.Size = New Size(166, 24)
+        TileHorizontalToolStripMenuItem.Text = "Tile &Horizontal"
+        ' 
+        ' CloseAllToolStripMenuItem
+        ' 
+        CloseAllToolStripMenuItem.Name = "CloseAllToolStripMenuItem"
+        CloseAllToolStripMenuItem.Size = New Size(166, 24)
+        CloseAllToolStripMenuItem.Text = "C&lose All"
+        ' 
+        ' ArrangeIconsToolStripMenuItem
+        ' 
+        ArrangeIconsToolStripMenuItem.Name = "ArrangeIconsToolStripMenuItem"
+        ArrangeIconsToolStripMenuItem.Size = New Size(166, 24)
+        ArrangeIconsToolStripMenuItem.Text = "&Arrange Icons"
+        ' 
+        ' ProfilesMenu
+        ' 
+        ProfilesMenu.DropDownItems.AddRange(New ToolStripItem() {ShowToolStripMenuItem1, NewToolStripMenuItem})
+        ProfilesMenu.Name = "ProfilesMenu"
+        ProfilesMenu.Size = New Size(63, 21)
+        ProfilesMenu.Text = "&Profiles"
+        ProfilesMenu.Visible = False
+        ' 
+        ' ShowToolStripMenuItem1
+        ' 
+        ShowToolStripMenuItem1.DropDownItems.AddRange(New ToolStripItem() {AllToolStripMenuItem})
+        ShowToolStripMenuItem1.Name = "ShowToolStripMenuItem1"
+        ShowToolStripMenuItem1.Size = New Size(113, 24)
+        ShowToolStripMenuItem1.Text = "&Show"
+        ' 
+        ' AllToolStripMenuItem
+        ' 
+        AllToolStripMenuItem.Name = "AllToolStripMenuItem"
+        AllToolStripMenuItem.Size = New Size(96, 24)
+        AllToolStripMenuItem.Text = "&All"
+        ' 
+        ' NewToolStripMenuItem
+        ' 
+        NewToolStripMenuItem.Name = "NewToolStripMenuItem"
+        NewToolStripMenuItem.Size = New Size(113, 24)
+        NewToolStripMenuItem.Text = "&New"
+        ' 
+        ' MapsMenu
+        ' 
+        MapsMenu.DropDownItems.AddRange(New ToolStripItem() {AlternateSectorsToolStripMenuItem, CitiesToolStripMenuItem, SAMSitesToolStripMenuItem, MovementCostsToolStripMenuItem})
+        MapsMenu.Name = "MapsMenu"
+        MapsMenu.Size = New Size(53, 21)
+        MapsMenu.Text = "&Maps"
+        MapsMenu.Visible = False
+        ' 
+        ' AlternateSectorsToolStripMenuItem
+        ' 
+        AlternateSectorsToolStripMenuItem.Name = "AlternateSectorsToolStripMenuItem"
+        AlternateSectorsToolStripMenuItem.Size = New Size(181, 24)
+        AlternateSectorsToolStripMenuItem.Text = "&Alternate Sectors"
+        ' 
+        ' CitiesToolStripMenuItem
+        ' 
+        CitiesToolStripMenuItem.Name = "CitiesToolStripMenuItem"
+        CitiesToolStripMenuItem.Size = New Size(181, 24)
+        CitiesToolStripMenuItem.Text = "&Cities"
+        ' 
+        ' SAMSitesToolStripMenuItem
+        ' 
+        SAMSitesToolStripMenuItem.Name = "SAMSitesToolStripMenuItem"
+        SAMSitesToolStripMenuItem.Size = New Size(181, 24)
+        SAMSitesToolStripMenuItem.Text = "&SAM Sites"
+        ' 
+        ' MovementCostsToolStripMenuItem
+        ' 
+        MovementCostsToolStripMenuItem.Name = "MovementCostsToolStripMenuItem"
+        MovementCostsToolStripMenuItem.Size = New Size(181, 24)
+        MovementCostsToolStripMenuItem.Text = "&Movement Costs"
+        ' 
+        ' ToolsMenu
+        ' 
+        ToolsMenu.DropDownItems.AddRange(New ToolStripItem() {OptionsToolStripMenuItem})
+        ToolsMenu.Name = "ToolsMenu"
+        ToolsMenu.Size = New Size(51, 21)
+        ToolsMenu.Text = "&Tools"
+        ToolsMenu.Visible = False
+        ' 
+        ' OptionsToolStripMenuItem
+        ' 
+        OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
+        OptionsToolStripMenuItem.Size = New Size(128, 24)
+        OptionsToolStripMenuItem.Text = "&Options"
+        ' 
+        ' HelpMenu
+        ' 
+        HelpMenu.DropDownItems.AddRange(New ToolStripItem() {ToolStripSeparator8, AboutToolStripMenuItem})
+        HelpMenu.Name = "HelpMenu"
+        HelpMenu.Size = New Size(47, 21)
+        HelpMenu.Text = "&Help"
+        ' 
+        ' ToolStripSeparator8
+        ' 
+        ToolStripSeparator8.Name = "ToolStripSeparator8"
+        ToolStripSeparator8.Size = New Size(127, 6)
+        ' 
+        ' AboutToolStripMenuItem
+        ' 
+        AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        AboutToolStripMenuItem.Size = New Size(130, 24)
+        AboutToolStripMenuItem.Text = "&About ..."
+        ' 
+        ' ToolStrip
+        ' 
+        ToolStrip.ImageScalingSize = New Size(18, 18)
+        ToolStrip.Items.AddRange(New ToolStripItem() {OpenToolStripButton, SaveToolStripButton, SaveAllToolStripButton, ToolStripSeparator1, PrintToolStripButton, PrintPreviewToolStripButton, ToolStripSeparator2, HelpToolStripButton})
+        ToolStrip.Location = New Point(0, 27)
+        ToolStrip.Name = "ToolStrip"
+        ToolStrip.Size = New Size(609, 25)
+        ToolStrip.TabIndex = 6
+        ToolStrip.Text = "ToolStrip"
+        ' 
+        ' OpenToolStripButton
+        ' 
+        OpenToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
+        OpenToolStripButton.Image = CType(resources.GetObject("OpenToolStripButton.Image"), Image)
+        OpenToolStripButton.ImageTransparentColor = Color.Black
+        OpenToolStripButton.Name = "OpenToolStripButton"
+        OpenToolStripButton.Size = New Size(25, 22)
+        OpenToolStripButton.Text = "Reload"
+        OpenToolStripButton.ToolTipText = "Reload All Data"
+        ' 
+        ' SaveToolStripButton
+        ' 
+        SaveToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
+        SaveToolStripButton.Image = CType(resources.GetObject("SaveToolStripButton.Image"), Image)
+        SaveToolStripButton.ImageTransparentColor = Color.Black
+        SaveToolStripButton.Name = "SaveToolStripButton"
+        SaveToolStripButton.Size = New Size(25, 22)
+        SaveToolStripButton.Text = "Save"
+        SaveToolStripButton.ToolTipText = "Save Active Data Set"
+        ' 
+        ' SaveAllToolStripButton
+        ' 
+        SaveAllToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
+        SaveAllToolStripButton.Image = CType(resources.GetObject("SaveAllToolStripButton.Image"), Image)
+        SaveAllToolStripButton.ImageTransparentColor = Color.Black
+        SaveAllToolStripButton.Name = "SaveAllToolStripButton"
+        SaveAllToolStripButton.Size = New Size(25, 22)
+        SaveAllToolStripButton.Text = "Save"
+        SaveAllToolStripButton.ToolTipText = "Save All Data Sets"
+        ' 
+        ' ToolStripSeparator1
+        ' 
+        ToolStripSeparator1.Name = "ToolStripSeparator1"
+        ToolStripSeparator1.Size = New Size(6, 25)
+        ToolStripSeparator1.Visible = False
+        ' 
+        ' PrintToolStripButton
+        ' 
+        PrintToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
+        PrintToolStripButton.Image = CType(resources.GetObject("PrintToolStripButton.Image"), Image)
+        PrintToolStripButton.ImageTransparentColor = Color.Black
+        PrintToolStripButton.Name = "PrintToolStripButton"
+        PrintToolStripButton.Size = New Size(25, 22)
+        PrintToolStripButton.Text = "Print"
+        PrintToolStripButton.Visible = False
+        ' 
+        ' PrintPreviewToolStripButton
+        ' 
+        PrintPreviewToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
+        PrintPreviewToolStripButton.Image = CType(resources.GetObject("PrintPreviewToolStripButton.Image"), Image)
+        PrintPreviewToolStripButton.ImageTransparentColor = Color.Black
+        PrintPreviewToolStripButton.Name = "PrintPreviewToolStripButton"
+        PrintPreviewToolStripButton.Size = New Size(25, 22)
+        PrintPreviewToolStripButton.Text = "Print Preview"
+        PrintPreviewToolStripButton.Visible = False
+        ' 
+        ' ToolStripSeparator2
+        ' 
+        ToolStripSeparator2.Name = "ToolStripSeparator2"
+        ToolStripSeparator2.Size = New Size(6, 25)
+        ToolStripSeparator2.Visible = False
+        ' 
+        ' HelpToolStripButton
+        ' 
+        HelpToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
+        HelpToolStripButton.Image = CType(resources.GetObject("HelpToolStripButton.Image"), Image)
+        HelpToolStripButton.ImageTransparentColor = Color.Black
+        HelpToolStripButton.Name = "HelpToolStripButton"
+        HelpToolStripButton.Size = New Size(25, 22)
+        HelpToolStripButton.Text = "Help"
+        HelpToolStripButton.Visible = False
+        ' 
+        ' StatusStrip
+        ' 
+        StatusStrip.ImageScalingSize = New Size(18, 18)
+        StatusStrip.Items.AddRange(New ToolStripItem() {StatusLabel})
+        StatusStrip.Location = New Point(0, 502)
+        StatusStrip.Name = "StatusStrip"
+        StatusStrip.Padding = New Padding(1, 0, 16, 0)
+        StatusStrip.Size = New Size(609, 22)
+        StatusStrip.TabIndex = 7
+        StatusStrip.Text = "StatusStrip"
+        ' 
+        ' StatusLabel
+        ' 
+        StatusLabel.Name = "StatusLabel"
+        StatusLabel.Size = New Size(0, 17)
+        ' 
+        ' ToolStripStatusLabel
+        ' 
+        ToolStripStatusLabel.Name = "ToolStripStatusLabel"
+        ToolStripStatusLabel.Size = New Size(38, 17)
+        ToolStripStatusLabel.Text = "Status"
+        ' 
+        ' DiseaseMenuItem
+        ' 
+        DiseaseMenuItem.Name = "DiseaseMenuItem"
+        DiseaseMenuItem.Size = New Size(359, 24)
+        DiseaseMenuItem.Text = "Disease"
+        ' 
+        ' MainForm
+        ' 
+        AutoScaleDimensions = New SizeF(7F, 17F)
+        AutoScaleMode = AutoScaleMode.Font
+        BackgroundImageLayout = ImageLayout.Stretch
+        ClientSize = New Size(609, 524)
+        Controls.Add(ToolStrip)
+        Controls.Add(MenuStrip)
+        Controls.Add(StatusStrip)
+        Icon = CType(resources.GetObject("$this.Icon"), Icon)
+        IsMdiContainer = True
+        MainMenuStrip = MenuStrip
+        Margin = New Padding(4, 4, 4, 4)
+        Name = "MainForm"
+        Text = "JA2 v1.13 - XML Editor"
+        MenuStrip.ResumeLayout(False)
+        MenuStrip.PerformLayout()
+        ToolStrip.ResumeLayout(False)
+        ToolStrip.PerformLayout()
+        StatusStrip.ResumeLayout(False)
+        StatusStrip.PerformLayout()
+        ResumeLayout(False)
+        PerformLayout()
 
     End Sub
     Friend WithEvents HelpMenu As System.Windows.Forms.ToolStripMenuItem
@@ -1846,5 +1842,6 @@ Partial Class MainForm
     Friend WithEvents MilitiaItemsEliteToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents EnemyGunsDefaultToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents EnemyItemsDefaultToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents DiseaseMenuItem As ToolStripMenuItem
 
 End Class

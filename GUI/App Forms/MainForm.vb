@@ -765,4 +765,7 @@ Public Class MainForm
         AboutForm.Visible = True
     End Sub
 
+    Private Sub DiseaseMenuItem_Click(sender As Object, e As EventArgs) Handles DiseaseMenuItem.Click
+        ShowDataGridForm(_activeDataSet, DisplayText.Disease, Tables.Disease)
+    End Sub
 End Class
