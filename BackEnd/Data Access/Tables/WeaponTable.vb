@@ -57,7 +57,9 @@ Public Class WeaponTable
 
         ' Add unique barrelconfiguration columns to WeaponTable so we can load the data using default ReadXml function
         For i = 0 To (iMax - 1)
-            _table.Columns.Add(MakeColumn($"BarrelConfiguration{i}", $"BarrelConfiguration{i}", GetType(Integer), , , , , , , True))
+            If Not _table.Columns.Contains($"BarrelConfiguration{i}") Then
+                _table.Columns.Add(MakeColumn($"BarrelConfiguration{i}", $"BarrelConfiguration{i}", GetType(Integer), , , , , , , True))
+            End If
         Next
 
         Dim xmlFile As XmlReader = doc.CreateReader()
