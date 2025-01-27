@@ -143,8 +143,8 @@ Public Class ItemDataForm
             GrenadeLauncherRadioButton,
             MortarRadioButton,
             DuckbillCheckBox,
-            ItemFlags.Detonator,
-            ItemFlags.RemoteDetonator,
+            ItemFlags.Detonator_UNUSED,
+            ItemFlags.RemoteDetonator_UNUSED,
             HideMuzzleFlashCheckBox,
             RocketLauncherRadioButton
         }
@@ -257,8 +257,8 @@ Public Class ItemDataForm
         TempChecklistBox.SetItemChecked(ItemFlags.GrenadeLauncher, _view(0)("GrenadeLauncher"))
         TempChecklistBox.SetItemChecked(ItemFlags.Mortar, _view(0)("Mortar"))
         TempChecklistBox.SetItemChecked(ItemFlags.Duckbill, _view(0)("Duckbill"))
-        TempChecklistBox.SetItemChecked(ItemFlags.Detonator, _view(0)("Detonator"))
-        TempChecklistBox.SetItemChecked(ItemFlags.RemoteDetonator, _view(0)("RemoteDetonator"))
+        'TempChecklistBox.SetItemChecked(ItemFlags.Detonator_UNUSED, _view(0)("Detonator"))
+        'TempChecklistBox.SetItemChecked(ItemFlags.RemoteDetonator_UNUSED, _view(0)("RemoteDetonator"))
         TempChecklistBox.SetItemChecked(ItemFlags.HideMuzzleFlash, _view(0)("HideMuzzleFlash"))
         TempChecklistBox.SetItemChecked(ItemFlags.RocketLauncher, _view(0)("RocketLauncher"))
 
@@ -565,8 +565,8 @@ Public Class ItemDataForm
             Case ItemFlags.LBEexplosionproof
             Case ItemFlags.EmptyBloodbag
             Case ItemFlags.MedicalSplint
-            Case ItemFlags.Detonator
-            Case ItemFlags.RemoteDetonator
+            Case ItemFlags.Detonator_UNUSED
+            Case ItemFlags.RemoteDetonator_UNUSED
 
             Case Else
                 itemFlagsArray(e.Index).Checked = e.NewValue
@@ -1652,8 +1652,8 @@ Public Class ItemDataForm
         GrenadeLauncher
         Mortar
         Duckbill
-        Detonator
-        RemoteDetonator
+        Detonator_UNUSED
+        RemoteDetonator_UNUSED
         HideMuzzleFlash
         RocketLauncher
     End Enum
