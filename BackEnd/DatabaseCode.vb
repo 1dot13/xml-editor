@@ -1460,8 +1460,8 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("GrenadeLauncher", "Grenade Launcher", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("Mortar", "Mortar", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("Duckbill", "Duckbill", GetType(Boolean), , , , , , , True))
-        t.Columns.Add(MakeColumn("Detonator", "Detonator", GetType(Boolean), , , , , , , True))
-        t.Columns.Add(MakeColumn("RemoteDetonator", "RemoteDetonator", GetType(Boolean), , , , , , , True))
+        't.Columns.Add(MakeColumn("Detonator", "Detonator", GetType(Boolean), , , , , , , True))
+        't.Columns.Add(MakeColumn("RemoteDetonator", "RemoteDetonator", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("HideMuzzleFlash", "Hide Muzzle Flash", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("RocketLauncher", "Rocket Launcher", GetType(Boolean), , , , , , , True))
         'ItemFlag2
