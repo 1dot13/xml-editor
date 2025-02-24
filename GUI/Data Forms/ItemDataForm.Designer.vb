@@ -229,6 +229,10 @@ Partial Class ItemDataForm
         TwoHandedCheckBox = New CheckBox()
         GroupBox6 = New GroupBox()
         tlpAttributesKits = New TableLayoutPanel()
+        usAdministrationModifierUpDown = New NumericUpDown()
+        usHackingModifierUpDown = New NumericUpDown()
+        Label271 = New Label()
+        Label270 = New Label()
         CamoKitCheckBox = New CheckBox()
         ToolKitCheckBox = New CheckBox()
         HardwareCheckBox = New CheckBox()
@@ -954,6 +958,8 @@ Partial Class ItemDataForm
         tlpPropertiesAttributes.SuspendLayout()
         GroupBox6.SuspendLayout()
         tlpAttributesKits.SuspendLayout()
+        CType(usAdministrationModifierUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(usHackingModifierUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(RepairModifierUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(LockPickModifierUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(DisarmModifierUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -3678,7 +3684,7 @@ Partial Class ItemDataForm
         GroupBox6.Margin = New Padding(4)
         GroupBox6.Name = "GroupBox6"
         GroupBox6.Padding = New Padding(4)
-        GroupBox6.Size = New Size(338, 299)
+        GroupBox6.Size = New Size(338, 360)
         GroupBox6.TabIndex = 3
         GroupBox6.TabStop = False
         GroupBox6.Text = "Kits"
@@ -3688,6 +3694,10 @@ Partial Class ItemDataForm
         tlpAttributesKits.ColumnCount = 2
         tlpAttributesKits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
         tlpAttributesKits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        tlpAttributesKits.Controls.Add(usAdministrationModifierUpDown, 1, 12)
+        tlpAttributesKits.Controls.Add(usHackingModifierUpDown, 1, 11)
+        tlpAttributesKits.Controls.Add(Label271, 0, 12)
+        tlpAttributesKits.Controls.Add(Label270, 0, 11)
         tlpAttributesKits.Controls.Add(CamoKitCheckBox, 0, 4)
         tlpAttributesKits.Controls.Add(ToolKitCheckBox, 0, 2)
         tlpAttributesKits.Controls.Add(HardwareCheckBox, 0, 1)
@@ -3706,7 +3716,7 @@ Partial Class ItemDataForm
         tlpAttributesKits.Location = New Point(4, 22)
         tlpAttributesKits.Margin = New Padding(4)
         tlpAttributesKits.Name = "tlpAttributesKits"
-        tlpAttributesKits.RowCount = 11
+        tlpAttributesKits.RowCount = 13
         tlpAttributesKits.RowStyles.Add(New RowStyle())
         tlpAttributesKits.RowStyles.Add(New RowStyle())
         tlpAttributesKits.RowStyles.Add(New RowStyle())
@@ -3717,9 +3727,55 @@ Partial Class ItemDataForm
         tlpAttributesKits.RowStyles.Add(New RowStyle())
         tlpAttributesKits.RowStyles.Add(New RowStyle())
         tlpAttributesKits.RowStyles.Add(New RowStyle())
-        tlpAttributesKits.RowStyles.Add(New RowStyle(SizeType.Absolute, 26.0F))
-        tlpAttributesKits.Size = New Size(330, 273)
+        tlpAttributesKits.RowStyles.Add(New RowStyle())
+        tlpAttributesKits.RowStyles.Add(New RowStyle())
+        tlpAttributesKits.RowStyles.Add(New RowStyle())
+        tlpAttributesKits.Size = New Size(330, 334)
         tlpAttributesKits.TabIndex = 0
+        ' 
+        ' usAdministrationModifierUpDown
+        ' 
+        usAdministrationModifierUpDown.Anchor = CType((((AnchorStyles.Top) Or (AnchorStyles.Bottom)) Or (AnchorStyles.Left)) Or (AnchorStyles.Right), AnchorStyles)
+        usAdministrationModifierUpDown.Location = New Point(169, 302)
+        usAdministrationModifierUpDown.Margin = New Padding(4)
+        usAdministrationModifierUpDown.Name = "usAdministrationModifierUpDown"
+        usAdministrationModifierUpDown.Size = New Size(157, 25)
+        usAdministrationModifierUpDown.TabIndex = 18
+        usAdministrationModifierUpDown.Tag = "usAdministrationModifier"
+        ' 
+        ' usHackingModifierUpDown
+        ' 
+        usHackingModifierUpDown.Anchor = CType((((AnchorStyles.Top) Or (AnchorStyles.Bottom)) Or (AnchorStyles.Left)) Or (AnchorStyles.Right), AnchorStyles)
+        usHackingModifierUpDown.Location = New Point(169, 269)
+        usHackingModifierUpDown.Margin = New Padding(4)
+        usHackingModifierUpDown.Name = "usHackingModifierUpDown"
+        usHackingModifierUpDown.Size = New Size(157, 25)
+        usHackingModifierUpDown.TabIndex = 17
+        usHackingModifierUpDown.Tag = "usHackingModifier"
+        ' 
+        ' Label271
+        ' 
+        Label271.Anchor = AnchorStyles.Left
+        Label271.AutoSize = True
+        Label271.Location = New Point(4, 307)
+        Label271.Margin = New Padding(4, 0, 4, 0)
+        Label271.Name = "Label271"
+        Label271.Size = New Size(149, 17)
+        Label271.TabIndex = 16
+        Label271.Text = "Administration Modifier:"
+        Label271.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Label270
+        ' 
+        Label270.Anchor = AnchorStyles.Left
+        Label270.AutoSize = True
+        Label270.Location = New Point(4, 273)
+        Label270.Margin = New Padding(4, 0, 4, 0)
+        Label270.Name = "Label270"
+        Label270.Size = New Size(111, 17)
+        Label270.TabIndex = 15
+        Label270.Text = "Hacking Modifier:"
+        Label270.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' CamoKitCheckBox
         ' 
@@ -3871,7 +3927,7 @@ Partial Class ItemDataForm
         ' 
         Label261.Anchor = AnchorStyles.Left
         Label261.AutoSize = True
-        Label261.Location = New Point(4, 244)
+        Label261.Location = New Point(4, 240)
         Label261.Margin = New Padding(4, 0, 4, 0)
         Label261.Name = "Label261"
         Label261.Size = New Size(97, 17)
@@ -12688,6 +12744,8 @@ Partial Class ItemDataForm
         GroupBox6.ResumeLayout(False)
         tlpAttributesKits.ResumeLayout(False)
         tlpAttributesKits.PerformLayout()
+        CType(usAdministrationModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(usHackingModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(RepairModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(LockPickModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         CType(DisarmModifierUpDown, System.ComponentModel.ISupportInitialize).EndInit()
@@ -13931,4 +13989,8 @@ Partial Class ItemDataForm
     Friend WithEvents Label268 As Label
     Friend WithEvents Label269 As Label
     Friend WithEvents AlcoholUpDown As NumericUpDown
+    Friend WithEvents Label270 As Label
+    Friend WithEvents usHackingModifierUpDown As NumericUpDown
+    Friend WithEvents usAdministrationModifierUpDown As NumericUpDown
+    Friend WithEvents Label271 As Label
 End Class
