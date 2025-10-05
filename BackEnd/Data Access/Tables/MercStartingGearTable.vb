@@ -33,9 +33,11 @@ Public Class MercStartingGearTable
         Dim y As Integer
         Dim a As Integer
         Dim uiComments As Integer = 0
-        Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
 
-        xmldoc.Load(fs)
+        Using fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+            xmldoc.Load(fs)
+        End Using
+
         xmlnode = xmldoc.GetElementsByTagName("MERCGEARLIST").Item(0)
 
         For i = 0 To xmlnode.ChildNodes.Count - 1

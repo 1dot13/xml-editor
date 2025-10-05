@@ -335,9 +335,11 @@ Public Class ItemTable
         Dim a As Integer
         Dim da, aap As Integer
         Dim uicomments As Integer = 0
-        Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
 
-        xmldoc.Load(fs)
+        Using fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+            xmldoc.Load(fs)
+        End Using
+
         xmlnode = xmldoc.GetElementsByTagName("ITEMLIST").Item(0)
         For i = 0 To xmlnode.ChildNodes.Count - 1
             If xmlnode.ChildNodes.Item(i).Name = "#comment" Then
@@ -402,8 +404,6 @@ Public Class ItemTable
             Next
             _table.Rows(rowIndex).EndEdit()
         Next
-        fs.Close()
-        fs.Dispose()
     End Sub
 
     Protected Overrides Sub WriteXml(ByVal table As DataTable, ByVal fileName As String)

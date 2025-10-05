@@ -45,8 +45,10 @@ Public Class ControlTable
 
     Protected Overridable Sub LoadControlData(ByVal fileName As String, ByVal filePath As String)
         Dim xmldoc As New XmlDocument()
-        Dim fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
-        xmldoc.Load(fs)
+
+        Using fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+            xmldoc.Load(fs)
+        End Using
 
         Dim xmlnode As XmlNode = xmldoc.GetElementsByTagName("INVENTORYLIST").Item(0)
         Dim xmlParentNode As XmlNodeList
