@@ -1,4 +1,7 @@
-﻿Public Class DataManager
+﻿Option Strict On
+Option Explicit On
+
+Public Class DataManager
     Protected _dataDirectory As String
     Protected _gameDirRussianPath As String
     Protected _gameDirPolishPath As String

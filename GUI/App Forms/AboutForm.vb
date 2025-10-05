@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Public NotInheritable Class AboutForm
 
     Private Sub AboutBox1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load

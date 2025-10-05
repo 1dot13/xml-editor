@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Public Class MercGearDataForm
     Inherits BaseDataForm
 

@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Imports System.Data
 
 Public Class ChildDataGridForm

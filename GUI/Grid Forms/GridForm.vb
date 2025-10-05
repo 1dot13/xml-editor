@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Imports System.Data
 Imports GUI.GUI
 Imports System.ComponentModel

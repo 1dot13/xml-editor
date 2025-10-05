@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Public Class Tables
     Public Const Sounds As String = "SOUND"
     Public Const BurstSounds As String = "BURSTSOUND"

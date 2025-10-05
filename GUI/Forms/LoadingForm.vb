@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Public Class LoadingForm
     Private _saving As Boolean
 

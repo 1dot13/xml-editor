@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Public Class IniFile
     Protected Const MaxDataDir As Integer = 9
     Protected Shared dataDir(MaxDataDir) As String

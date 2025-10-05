@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Imports GUI.My
 Imports Microsoft.VisualBasic.CompilerServices
 Imports System

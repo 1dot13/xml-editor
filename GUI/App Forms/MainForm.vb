@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Imports System.Windows.Forms
 
 Public Class MainForm

@@ -1,4 +1,7 @@
-﻿Public Module Localization
+﻿Option Strict On
+Option Explicit On
+
+Public Module Localization
     Public Function IsLanguageSpecificFile(ByVal filename As String) As Boolean
         Dim langSpec = False
 

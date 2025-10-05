@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Public Class SimpleFormBase
 
     Protected _dm As DataManager

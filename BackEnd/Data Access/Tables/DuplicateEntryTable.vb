@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Imports System.Data
 
 'for incompatible attachments and compatible face items

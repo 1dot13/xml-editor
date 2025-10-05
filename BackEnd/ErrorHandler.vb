@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Public Class ErrorHandler
 
     Protected Shared strLogFilename As String

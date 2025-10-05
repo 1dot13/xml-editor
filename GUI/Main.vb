@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Imports System.Globalization
 Imports GUI.GUI
 Imports System.Threading

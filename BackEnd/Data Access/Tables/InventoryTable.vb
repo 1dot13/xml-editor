@@ -1,4 +1,7 @@
-﻿Imports System.Data
+﻿Option Strict On
+Option Explicit On
+
+Imports System.Data
 Imports System.Xml
 
 Public Class InventoryTable

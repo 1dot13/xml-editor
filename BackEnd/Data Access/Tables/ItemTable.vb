@@ -1,3 +1,6 @@
+Option Strict On
+Option Explicit On
+
 Imports System.Xml
 Imports System.IO
 Imports System.Data
