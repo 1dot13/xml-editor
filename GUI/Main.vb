@@ -17,7 +17,10 @@ Module Main
     Public Splash As SplashForm
 
     Public Sub Main()
-        If CheckForDuplicateProcess(My.Application.Info.AssemblyName) Then End
+        If CheckForDuplicateProcess(My.Application.Info.AssemblyName) Then
+            Application.Exit()
+            Return
+        End If
 
         Try
             AddHandler ErrorHandler.FatalError, AddressOf ExitDueToError
@@ -93,7 +96,8 @@ Module Main
     End Sub
 
     Private Sub ExitDueToError()
-        End
+        Application.Exit()
+        Environment.Exit(1)
     End Sub
 
 
