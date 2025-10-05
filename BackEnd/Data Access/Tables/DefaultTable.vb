@@ -349,8 +349,12 @@ Public Class DefaultTable
             If canAddRow Then
                 Try
                     row.Table.Rows.Add(dupeRow)
+                Catch ex As ConstraintException
+                    ' Row already exists with this primary key, skip silently
+                    ErrorHandler.LogError("Failed to add duplicate row", ex)
                 Catch ex As Exception
-
+                    ErrorHandler.LogError("Unexpected error adding duplicate row", ex)
+                    Throw
                 End Try
             End If
 
