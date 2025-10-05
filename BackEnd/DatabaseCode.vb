@@ -2,7 +2,6 @@ Option Strict On
 Option Explicit On
 
 Imports System.Data
-Imports System.Security.Cryptography.Pkcs
 
 Public Module DatabaseCode
     'JMich
