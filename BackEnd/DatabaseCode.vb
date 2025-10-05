@@ -933,8 +933,8 @@ Public Module DatabaseCode
         t.ExtendedProperties.Add(TableProperty.DataSetName, t.TableName & "LIST")
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\Launchables.xml")
 
-        t.Columns.Add(MakeColumn("launchableIndex", "Launchable", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = 256 or usItemClass = 512", , , "szLongItemName"))
-        t.Columns.Add(MakeColumn("itemIndex", "Launcher", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = 16", , , "szLongItemName"))
+        t.Columns.Add(MakeColumn("launchableIndex", "Launchable", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = " & ItemClass.Grenade & " or usItemClass = " & ItemClass.Bomb, , , "szLongItemName"))
+        t.Columns.Add(MakeColumn("itemIndex", "Launcher", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = " & ItemClass.Launcher, , , "szLongItemName"))
 
         AddConstraint(t, New String() {"launchableIndex", "itemIndex"}, True)
 
@@ -1014,8 +1014,8 @@ Public Module DatabaseCode
         t.ExtendedProperties.Add(TableProperty.FileName, "Items\CompatibleFaceItems.xml")
         t.ExtendedProperties.Add(TableProperty.TableHandlerName, "DuplicateEntryTable")
 
-        t.Columns.Add(MakeColumn("compatiblefaceitemIndex", "Face Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = 32768", , , "szLongItemName"))
-        t.Columns.Add(MakeColumn("itemIndex", "Face Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = 32768", , , "szLongItemName"))
+        t.Columns.Add(MakeColumn("compatiblefaceitemIndex", "Face Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = " & ItemClass.Face, , , "szLongItemName"))
+        t.Columns.Add(MakeColumn("itemIndex", "Face Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = " & ItemClass.Face, , , "szLongItemName"))
 
         AddConstraint(t, New String() {"compatiblefaceitemIndex", "itemIndex"}, True)
 
@@ -1323,7 +1323,7 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("overheatDamageThresholdModificator", "Overheating Damage Threshold Modifier", GetType(Decimal), 0, , , , , , True))
         t.Columns.Add(MakeColumn("DirtIncreaseFactor", "Dirt Increase Factor", GetType(Decimal), , , , , , , True))
         t.Columns.Add(MakeColumn("RobotDamageReduction", "RobotDamageReduction", GetType(Decimal), , , , , , , True))
-        t.Columns.Add(MakeColumn("DiscardedLauncherItem", "Discarded Launcher Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "uiIndex=0 OR usItemClass=268435456", True, , "szLongItemName"))
+        t.Columns.Add(MakeColumn("DiscardedLauncherItem", "Discarded Launcher Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "uiIndex=0 OR usItemClass=" & ItemClass.Misc, True, , "szLongItemName"))
         t.Columns.Add(MakeColumn("randomitem", "Random Item", GetType(Integer), , "RANDOMITEM", "uiIndex", "szName", , , True, , "szName"))
         t.Columns.Add(MakeColumn("buddyitem", "Buddy Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "uiIndex=0", True, , "szLongItemName"))
         t.Columns.Add(MakeColumn("usRiotShieldStrength", "Riot Shield Strength", GetType(Integer), 0, , , , , , True))
@@ -1338,7 +1338,7 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("MinRangeForAimBonus", "Min. Range For Aim Bonus", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("PercentAPReduction", "% AP Reduction", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("PercentStatusDrainReduction", "% Status Drain Reduction", GetType(Integer), , , , , , , True))
-        t.Columns.Add(MakeColumn("BloodiedItem", "Bloodied Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = 8 OR uiIndex=0", True, , "szLongItemName"))
+        t.Columns.Add(MakeColumn("BloodiedItem", "Bloodied Item", GetType(Integer), , "ITEM", "uiIndex", "szLongItemName", , "usItemClass = " & ItemClass.ThrowingKnife & " OR uiIndex=0", True, , "szLongItemName"))
         t.Columns.Add(MakeColumn("HearingRangeBonus", "Hearing Range Bonus", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("VisionRangeBonus", "Vision Range Bonus", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("NightVisionRangeBonus", "Night Vision Range Bonus", GetType(Integer), , , , , , , True))
