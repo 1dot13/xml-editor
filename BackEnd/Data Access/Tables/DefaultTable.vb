@@ -10,6 +10,24 @@ Public Class DefaultTable
     Protected _table As DataTable
     Protected WithEvents _dm As DataManager
 
+    ' Dictionary mapping file names to table names for special cases
+    Private Shared ReadOnly FileNameToTableNameMap As New Dictionary(Of String, String) From {
+        {"Inventory\EnemyGunChoices.xml", "ENEMYGUNCHOICESDEFAULT"},
+        {"Inventory\GunChoices_Enemy_Admin.xml", "ENEMYGUNCHOICESADMIN"},
+        {"Inventory\GunChoices_Enemy_Regular.xml", "ENEMYGUNCHOICESREGULAR"},
+        {"Inventory\GunChoices_Enemy_Elite.xml", "ENEMYGUNCHOICESELITE"},
+        {"Inventory\GunChoices_Militia_Green.xml", "MILITIAGUNCHOICESGREEN"},
+        {"Inventory\GunChoices_Militia_Regular.xml", "MILITIAGUNCHOICESREGULAR"},
+        {"Inventory\GunChoices_Militia_Elite.xml", "MILITIAGUNCHOICESELITE"},
+        {"Inventory\EnemyItemChoices.xml", "ENEMYITEMCHOICESDEFAULT"},
+        {"Inventory\ItemChoices_Enemy_Admin.xml", "ENEMYITEMCHOICESADMIN"},
+        {"Inventory\ItemChoices_Enemy_Regular.xml", "ENEMYITEMCHOICESREGULAR"},
+        {"Inventory\ItemChoices_Enemy_Elite.xml", "ENEMYITEMCHOICESELITE"},
+        {"Inventory\ItemChoices_Militia_Green.xml", "MILITIAITEMCHOICESGREEN"},
+        {"Inventory\ItemChoices_Militia_Regular.xml", "MILITIAITEMCHOICESREGULAR"},
+        {"Inventory\ItemChoices_Militia_Elite.xml", "MILITIAITEMCHOICESELITE"}
+    }
+
     Public Sub New(ByVal table As DataTable, ByVal manager As DataManager)
         _table = table
         _dm = manager
@@ -30,6 +48,15 @@ Public Class DefaultTable
         Return filePath
     End Function
 
+    ''' <summary>
+    ''' Applies table name mapping based on file name if it exists in the dictionary
+    ''' </summary>
+    Private Sub ApplyTableNameMapping(fileName As String)
+        If FileNameToTableNameMap.ContainsKey(fileName) Then
+            _table.TableName = FileNameToTableNameMap(fileName)
+        End If
+    End Sub
+
     Public Overridable Sub LoadData()
         Const Temp As String = "temp"
 
@@ -48,35 +75,7 @@ Public Class DefaultTable
                 _table.TableName() = "ENEMYITEMCHOICES"
             End If
             _table.ReadXml(filePath)
-            If fileName = "Inventory\EnemyGunChoices.xml" Then
-                _table.TableName = "ENEMYGUNCHOICESDEFAULT"
-            ElseIf fileName = "Inventory\GunChoices_Enemy_Admin.xml" Then
-                _table.TableName = "ENEMYGUNCHOICESADMIN"
-            ElseIf fileName = "Inventory\GunChoices_Enemy_Regular.xml" Then
-                _table.TableName = "ENEMYGUNCHOICESREGULAR"
-            ElseIf fileName = "Inventory\GunChoices_Enemy_Elite.xml" Then
-                _table.TableName = "ENEMYGUNCHOICESELITE"
-            ElseIf fileName = "Inventory\GunChoices_Militia_Green.xml" Then
-                _table.TableName = "MILITIAGUNCHOICESGREEN"
-            ElseIf fileName = "Inventory\GunChoices_Militia_Regular.xml" Then
-                _table.TableName = "MILITIAGUNCHOICESREGULAR"
-            ElseIf fileName = "Inventory\GunChoices_Militia_Elite.xml" Then
-                _table.TableName = "MILITIAGUNCHOICESELITE"
-            ElseIf fileName = "Inventory\EnemyItemChoices.xml" Then
-                _table.TableName = "ENEMYITEMCHOICESDEFAULT"
-            ElseIf fileName = "Inventory\ItemChoices_Enemy_Admin.xml" Then
-                _table.TableName = "ENEMYITEMCHOICESADMIN"
-            ElseIf fileName = "Inventory\ItemChoices_Enemy_Regular.xml" Then
-                _table.TableName = "ENEMYITEMCHOICESREGULAR"
-            ElseIf fileName = "Inventory\ItemChoices_Enemy_Elite.xml" Then
-                _table.TableName = "ENEMYITEMCHOICESELITE"
-            ElseIf fileName = "Inventory\ItemChoices_Militia_Green.xml" Then
-                _table.TableName = "MILITIAITEMCHOICESGREEN"
-            ElseIf fileName = "Inventory\ItemChoices_Militia_Regular.xml" Then
-                _table.TableName = "MILITIAITEMCHOICESREGULAR"
-            ElseIf fileName = "Inventory\ItemChoices_Militia_Elite.xml" Then
-                _table.TableName = "MILITIAITEMCHOICESELITE"
-            End If
+            ApplyTableNameMapping(fileName)
         Else
             Dim tableName As String = _table.TableName
             For Each t In _table.DataSet.Tables
@@ -107,35 +106,7 @@ Public Class DefaultTable
             _table.TableName() = "ENEMYITEMCHOICES"
         End If
         SaveData(_table)
-        If fileName = "Inventory\EnemyGunChoices.xml" Then
-            _table.TableName = "ENEMYGUNCHOICESDEFAULT"
-        ElseIf fileName = "Inventory\GunChoices_Enemy_Admin.xml" Then
-            _table.TableName = "ENEMYGUNCHOICESADMIN"
-        ElseIf fileName = "Inventory\GunChoices_Enemy_Regular.xml" Then
-            _table.TableName = "ENEMYGUNCHOICESREGULAR"
-        ElseIf fileName = "Inventory\GunChoices_Enemy_Elite.xml" Then
-            _table.TableName = "ENEMYGUNCHOICESELITE"
-        ElseIf fileName = "Inventory\GunChoices_Militia_Green.xml" Then
-            _table.TableName = "MILITIAGUNCHOICESGREEN"
-        ElseIf fileName = "Inventory\GunChoices_Militia_Regular.xml" Then
-            _table.TableName = "MILITIAGUNCHOICESREGULAR"
-        ElseIf fileName = "Inventory\GunChoices_Militia_Elite.xml" Then
-            _table.TableName = "MILITIAGUNCHOICESELITE"
-        ElseIf fileName = "Inventory\EnemyItemChoices.xml" Then
-            _table.TableName = "ENEMYITEMCHOICESDEFAULT"
-        ElseIf fileName = "Inventory\ItemChoices_Enemy_Admin.xml" Then
-            _table.TableName = "ENEMYITEMCHOICESADMIN"
-        ElseIf fileName = "Inventory\ItemChoices_Enemy_Regular.xml" Then
-            _table.TableName = "ENEMYITEMCHOICESREGULAR"
-        ElseIf fileName = "Inventory\ItemChoices_Enemy_Elite.xml" Then
-            _table.TableName = "ENEMYITEMCHOICESELITE"
-        ElseIf fileName = "Inventory\ItemChoices_Militia_Green.xml" Then
-            _table.TableName = "MILITIAITEMCHOICESGREEN"
-        ElseIf fileName = "Inventory\ItemChoices_Militia_Regular.xml" Then
-            _table.TableName = "MILITIAITEMCHOICESREGULAR"
-        ElseIf fileName = "Inventory\ItemChoices_Militia_Elite.xml" Then
-            _table.TableName = "MILITIAITEMCHOICESELITE"
-        End If
+        ApplyTableNameMapping(fileName)
     End Sub
 
     Protected Overridable Sub SaveData(ByVal table As DataTable)
