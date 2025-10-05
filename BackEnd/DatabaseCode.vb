@@ -75,7 +75,6 @@ Public Module DatabaseCode
         Dim itemsToExplosives As DataTable = MakeITETable()
         Dim transform As DataTable = MakeTransformTable()
         Dim disease As DataTable = MakeDiseaseTable()
-        'Dim drugs As DataTable = MakeDrugsTable()
         Dim food As DataTable = MakeFoodTable()
         Dim clothes As DataTable = MakeClothesTable()
         Dim randomitems As DataTable = MakeRandomTable()
@@ -220,7 +219,6 @@ Public Module DatabaseCode
         ds.Tables.Add(transform)
         ds.Tables.Add(attachmentPoints)
         ds.Tables.Add(disease)
-        'ds.Tables.Add(drugs)
         ds.Tables.Add(food)
         ds.Tables.Add(clothes)
         ds.Tables.Add(randomitems)
@@ -575,7 +573,6 @@ Public Module DatabaseCode
             AddLookupData(itemClasses, 2048, "Armour")
             AddLookupData(itemClasses, 4096, "Medkit")
             AddLookupData(itemClasses, 8192, "Kit")
-            'AddLookupData(itemClasses, 16384, "(Unused)")
             AddLookupData(itemClasses, 32768, "Face Item")
             AddLookupData(itemClasses, 65536, "Key")
             AddLookupData(itemClasses, 131072, "Load Bearing Equipment")
@@ -929,8 +926,6 @@ Public Module DatabaseCode
         pk(0) = t.Columns("uiIndex")
         t.PrimaryKey = pk
 
-        'AddConstraint(t, New String() {"ubCalibre", "ubMagSize", "ubAmmoType"}, False)
-
         Return t
     End Function
 
@@ -1258,7 +1253,6 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("fBurstOnlyByFanTheHammer", "fBurstOnlyByFanTheHammer", GetType(Boolean)))
         ' NOTE BarrelConfiguration tags are defined in LoadData() in Weapontable.vb
         ' Datasets do not like multiple xml nodes with the same name inside one parent node
-        't.Columns.Add(MakeColumn("BarrelConfiguration", "BarrelConfiguration", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("ubNWSSCase", "ubNWSSCase", GetType(Byte), , , , , , , True))
         t.Columns.Add(MakeColumn("ubNWSSLast", "ubNWSSLast", GetType(Byte), , , , , , , True))
         t.Columns.Add(MakeColumn("szNWSSSound", "szNWSSSound", GetType(String), , , , , , , True))
@@ -1292,7 +1286,6 @@ Public Module DatabaseCode
         For i As Integer = 0 To 9
             t.Columns.Add(MakeColumn("AvailableAttachmentPoint" & i, "Avail. Att. Point " & i + 1, GetType(ULong), , "AttachmentPoint", "id", "name", , , True, , "name", , , , "AvailableAttachmentPoint"))
         Next
-        't.Columns.Add(MakeColumn("AvailableAttachmentPoint", "Avail. Att. Point", GetType(ULong), , "AttachmentPoint", "id", "name", , , True, , "name"))
         t.Columns.Add(MakeColumn("AttachmentPoint", "Att. Point", GetType(ULong), , "AttachmentPoint", "id", "name", , , True, , "name"))
         t.Columns.Add(MakeColumn("AttachToPointAPCost", "Att. AP Cost", GetType(Integer), , , , , , , True))
         t.Columns.Add(MakeColumn("ubClassIndex", "Foreign Key", GetType(Integer), , , , , , , True))
@@ -1463,8 +1456,6 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("GrenadeLauncher", "Grenade Launcher", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("Mortar", "Mortar", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("Duckbill", "Duckbill", GetType(Boolean), , , , , , , True))
-        't.Columns.Add(MakeColumn("Detonator", "Detonator", GetType(Boolean), , , , , , , True))
-        't.Columns.Add(MakeColumn("RemoteDetonator", "RemoteDetonator", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("HideMuzzleFlash", "Hide Muzzle Flash", GetType(Boolean), , , , , , , True))
         t.Columns.Add(MakeColumn("RocketLauncher", "Rocket Launcher", GetType(Boolean), , , , , , , True))
         'ItemFlag2
@@ -2435,12 +2426,6 @@ Public Module DatabaseCode
         t.Columns.Add(MakeColumn("uiIndex", "ID", GetType(Integer)))
         t.Columns.Add(MakeColumn("szName", "Name", GetType(String)))
         t.Columns.Add(MakeColumn("opinionevent", "Opinion Event", GetType(Boolean)))
-
-        't.Columns.Add(MakeColumn("ubDrugTravelRate", "Travel Rate", GetType(Integer)))
-        't.Columns.Add(MakeColumn("ubDrugWearoffRate", "Wear Off Rate", GetType(Integer)))
-        't.Columns.Add(MakeColumn("ubDrugEffect", "Effect", GetType(Integer)))
-        't.Columns.Add(MakeColumn("ubDrugSideEffect", "Side Effect", GetType(Integer)))
-        't.Columns.Add(MakeColumn("ubDrugSideEffectRate", "Side Effect Rate", GetType(Integer)))
 
         Dim pk(0) As DataColumn
         pk(0) = t.Columns("uiIndex")

@@ -294,23 +294,7 @@ Public Class ItemTable
     End Sub
 
     Public Overrides Sub DeleteRow(ByVal key As Decimal)
-        'Dim row As DataRow = _table.Rows.Find(key)
         MyBase.DeleteRow(key)
-        ''MM: no longer needed due to nothing items being added automatically on save
-        'Dim nothingRow As DataRow = tbl.Rows.Find(0)
-        'If row IsNot Nothing Then
-        '    Dim maxID = tbl.Compute("MAX(" & tbl.PrimaryKey(0).ColumnName & ")", Nothing)
-        '    If row(Tables.Items.Fields.ID) = maxID Then 'if this is the last record, then we can delete it
-        'row.Delete()
-        '    Else 'otherwise, we need to turn this into a nothing item, 
-        ''because JA2 will stop looking for items once it hits this one's zero value itemclass
-        'For Each c As DataColumn In tbl.Columns
-        '    If Not c.ReadOnly AndAlso c IsNot tbl.PrimaryKey(0) Then row(c) = nothingRow(c)
-        'Next
-        'row(Tables.Items.Fields.ItemClass) = ItemClass.None
-        'row(Tables.Items.Fields.Description) = "Index " & row(Tables.Items.Fields.ID)
-        '    End If
-        'End If
     End Sub
 
     Public Overrides Sub LoadData()
@@ -619,8 +603,6 @@ Public Class ItemTable
                 CopyExtraRow(Tables.Sounds, newRow, sourceRow, Tables.Weapons.Name & Tables.Weapons.Fields.LockNLoadSound, sourceDB)
                 CopyExtraRow(Tables.Sounds, newRow, sourceRow, Tables.Weapons.Name & Tables.Weapons.Fields.ReloadSound, sourceDB)
             Case ItemClass.LBE
-                'lbes
-                'CopyExtraRow(Tables.Silhouettes, newRow, sourceRow, Tables.LoadBearingEquipment.Name & Tables.LoadBearingEquipment.Fields.Silhouette, sourceDB)
                 CopyExtraRow(Tables.LbeClasses, newRow, sourceRow, Tables.LoadBearingEquipment.Name & Tables.LoadBearingEquipment.Fields.LbeClass, sourceDB)
         End Select
 
@@ -632,7 +614,6 @@ Public Class ItemTable
 
         If row IsNot Nothing Then
             Dim extraRow As DataRow = _dm.Database.CopyRows(tableName, New DataRow() {row}, sourceDB, False)
-            'newRow(fieldName) = extraRow(_dm.Database.Table(tableName).PrimaryKey(0))
         End If
     End Sub
 

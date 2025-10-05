@@ -258,8 +258,6 @@ Public Class DefaultTable
         xw.WriteWhitespace(vbLf)
         xw.Close()
         view.Dispose()
-
-        'table.AcceptChanges()
     End Sub
 
     'this just works on single pk tables for now

@@ -66,12 +66,6 @@ Public Class EnemyItemTable
                     Exit For
                 End If
             Next
-            'row.ItemArray = ammoTable.Rows.Contains(rowindex)
-
-            'row.ItemArray = ammoTable.Rows(rowindex).ItemArray
-            'row("uiIndex") = 19
-            '_table.Rows.Add(row)
-            'ammoTable.Rows.RemoveAt(0)
         End If
     End Sub
 End Class

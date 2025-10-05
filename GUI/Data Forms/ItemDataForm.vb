@@ -260,8 +260,6 @@ Public Class ItemDataForm
         TempChecklistBox.SetItemChecked(ItemFlags.GrenadeLauncher, _view(0)("GrenadeLauncher"))
         TempChecklistBox.SetItemChecked(ItemFlags.Mortar, _view(0)("Mortar"))
         TempChecklistBox.SetItemChecked(ItemFlags.Duckbill, _view(0)("Duckbill"))
-        'TempChecklistBox.SetItemChecked(ItemFlags.Detonator_UNUSED, _view(0)("Detonator"))
-        'TempChecklistBox.SetItemChecked(ItemFlags.RemoteDetonator_UNUSED, _view(0)("RemoteDetonator"))
         TempChecklistBox.SetItemChecked(ItemFlags.HideMuzzleFlash, _view(0)("HideMuzzleFlash"))
         TempChecklistBox.SetItemChecked(ItemFlags.RocketLauncher, _view(0)("RocketLauncher"))
 
@@ -310,20 +308,6 @@ Public Class ItemDataForm
         TempChecklistBox.SetItemChecked(ItemFlags2.ProvidesRobotCamo, _view(0)("ProvidesRobotCamo"))
         TempChecklistBox.SetItemChecked(ItemFlags2.ProvidesRobotNightVision, _view(0)("ProvidesRobotNightVision"))
         TempChecklistBox.SetItemChecked(ItemFlags2.ProvidesRobotLaserBonus, _view(0)("ProvidesRobotLaserBonus"))
-
-
-
-        ''Setting Drugs
-        'Dim TempDrugFlags As UInt32 = _view(0)("DrugType")
-        'Dim BitDrugFlags As String = ToBinary(TempDrugFlags).PadRight(32, "0")
-
-        ''TODO: Dynamically create the checkboxes from the entries in table "DRUG"
-
-        'Dim TempDrugChecklistBox As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox65").Controls.Item("DrugsCheckedList")
-        'For i As Integer = 0 To 31
-        '    TempDrugChecklistBox.SetItemChecked(i, (BitDrugFlags(i).ToString.Equals("1")))
-        'Next
-
 
         SetupGrid(AttachmentGrid, Tables.Attachments.Name, Tables.Attachments.Fields.ItemID)
         SetupGrid(AttachmentInfoGrid, Tables.AttachmentInfo.Name, Tables.AttachmentInfo.Fields.ItemID)
@@ -922,8 +906,6 @@ Public Class ItemDataForm
             Dim multiplicator As Integer = Math.Round(maxAPs / 25, 0)
             Dim val As Integer = Math.Round((2 * multiplicator * 80 * 100) / ((100 + 80) * ubShotsPer4TurnsUpDown.Value), 0)
 
-            ' RoWa21: This is the simplified old formular for the 25 AP system
-            'Dim val As Integer = Math.Round(89 / ubShotsPer4TurnsUpDown.Value, 0)
             Me.APsShots4TurnsLabel.Text = "= " & val & " APs"
         Else
             Me.APsShots4TurnsLabel.Text = ""
@@ -1097,15 +1079,6 @@ Public Class ItemDataForm
 
 
             ''Saving Drugs
-            'Dim TempDrugFlags As UInt32 = 0
-            'Dim TempDrugChecklistBox As CheckedListBox = ItemTab.TabPages("FlagsTab").Controls.Item("GroupBox65").Controls.Item("DrugsCheckedList")
-            'For i As Integer = 0 To 31
-            '    If TempDrugChecklistBox.GetItemChecked(i) Then
-            '        TempDrugFlags += 2 ^ i
-            '    End If
-            'Next
-
-            '_view(0)("DrugType") = TempDrugFlags
 
             _view(0).Row.AcceptChanges()
             AcceptGridChanges(AttachmentGrid)

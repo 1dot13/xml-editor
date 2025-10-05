@@ -91,7 +91,6 @@ Public Class MercStartingGearTable
     Protected Overrides Sub WriteXml(ByVal table As DataTable, ByVal fileName As String)
         'the stupid table.WriteXml method doesn't let you sort the data first
         Dim view As New DataView(table, "", table.Columns(0).ColumnName, DataViewRowState.CurrentRows)
-        'Dim trim As Boolean = table.GetBooleanProperty(TableProperty.Trim)
         Dim trim As Boolean = False
         Dim sourceDSName = table.GetStringProperty(TableProperty.DataSetName)
         If sourceDSName Is Nothing Then
@@ -114,7 +113,6 @@ Public Class MercStartingGearTable
                 xw.WriteStartElement(table.TableName)
                 xw.WriteString(vbLf)
 
-                'Dim dcIndex As Integer = -1
                 Dim isGearKit As Boolean = False
                 Dim gkIndex As String = ""
                 trim = False

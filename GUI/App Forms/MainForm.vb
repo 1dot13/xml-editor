@@ -728,10 +728,6 @@ Public Class MainForm
         ShowDataGridForm(_activeDataSet, DisplayText.DrugTypes, Tables.DrugTypes)
     End Sub
 
-    'Private Sub DrugsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles DrugsToolStripMenuItem.Click
-    '    ShowDataGridForm(_activeDataSet, DisplayText.Drugs, Tables.Drugs)
-    'End Sub
-
     Private Sub DrugsItemFilterToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles DrugsItemFilterToolStripMenuItem.Click
         ShowItemGridForm(_activeDataSet, FormatItemClassText(DisplayText.Drugs), Tables.Items.Fields.Medical & "= 1", Nothing)
     End Sub
