@@ -22,7 +22,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>J:\JA2 1.13 SVN\xml-editor-vb\Backup\BackEnd\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

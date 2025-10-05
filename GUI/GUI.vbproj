@@ -26,11 +26,9 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>J:\JA2 1.13 SVN\xml-editor-vb\Backup\GUI\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\..\..\Game\JA2 1.13 EN %28Actual%29\</OutputPath>
     <DocumentationFile>XML Editor.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42353,42354,42355</NoWarn>
     <WarningsAsErrors>
