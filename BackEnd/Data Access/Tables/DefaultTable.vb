@@ -36,6 +36,11 @@ Public Class DefaultTable
         Dim fileName As String = _table.GetStringProperty(TableProperty.FileName)
         Dim filePath As String = GetFilePath(fileName)
 
+        ' Validate that the XML file exists before attempting to load
+        If Not System.IO.File.Exists(filePath) Then
+            Throw New System.IO.FileNotFoundException($"XML file not found: {filePath}", fileName)
+        End If
+
         Dim sourceName As String = _table.GetStringProperty(TableProperty.SourceTableName)
         If sourceName Is Nothing Then
             'JMich Adding support for different rank levels of equipment

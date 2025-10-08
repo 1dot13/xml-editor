@@ -154,25 +154,61 @@ Public Class XmlDB
 
     Protected Sub EndInit()
         ds.AcceptChanges()
+
+        ' Proactive validation before enforcing constraints
+        Dim validator As New XmlValidator(ds)
+        If Not validator.ValidateAll() Then
+            ' Show detailed validation errors
+            Dim errorMessage As String = validator.GetFormattedErrors()
+            ErrorHandler.ShowError(errorMessage, "XML Validation Failed", MessageBoxIcon.Error)
+            ErrorHandler.TriggerFatalError()
+            Return
+        End If
+
         Try
             ds.EnforceConstraints = True
         Catch ex As ConstraintException
-            ErrorHandler.ShowError("One or more of your files contain invalid data.  Please fix the data and restart the editor.", "Error Loading Files", ex)
+            ' This is now a fallback - should rarely be hit due to proactive validation
+            Dim errMsg As New Text.StringBuilder()
+            errMsg.AppendLine("Constraint validation failed after proactive checks.")
+            errMsg.AppendLine("This may indicate a data race condition or complex constraint issue.")
+            errMsg.AppendLine()
+            errMsg.AppendLine("Error Details:")
+            errMsg.AppendLine(ex.Message)
+            errMsg.AppendLine()
+
             For Each t As DataTable In ds.Tables
                 If t.HasErrors Then
-                    Dim errStr As New Text.StringBuilder("Details:" & vbCrLf & vbCrLf)
                     Dim fileName As String = t.GetStringProperty(TableProperty.FileName)
                     If Not String.IsNullOrEmpty(fileName) Then
-                        errStr.Append("File: " & fileName & vbCrLf)
+                        errMsg.AppendLine("File: " & fileName)
                     Else
-                        errStr.Append("Table: " & t.TableName & vbCrLf)
+                        errMsg.AppendLine("Table: " & t.TableName)
                     End If
-                    For i As Integer = 0 To t.GetErrors.GetUpperBound(0)
-                        errStr.Append(vbCrLf & t.GetErrors(i).RowError)
+
+                    ' Enhanced error reporting with row numbers and column info
+                    Dim errorRows As DataRow() = t.GetErrors()
+                    For i As Integer = 0 To Math.Min(errorRows.GetUpperBound(0), 9) ' Limit to 10 errors
+                        Dim row As DataRow = errorRows(i)
+                        Dim rowIndex As Integer = t.Rows.IndexOf(row)
+                        errMsg.AppendLine($"  Row {rowIndex + 1}: {row.RowError}")
+
+                        ' Show which columns have errors
+                        For Each col As DataColumn In t.Columns
+                            If Not String.IsNullOrEmpty(row.GetColumnError(col)) Then
+                                errMsg.AppendLine($"    Column '{col.ColumnName}': {row.GetColumnError(col)}")
+                            End If
+                        Next
                     Next
-                    ErrorHandler.ShowError(errStr.ToString, "Error Loading Files", MessageBoxIcon.Exclamation)
+
+                    If errorRows.Length > 10 Then
+                        errMsg.AppendLine($"  ... and {errorRows.Length - 10} more error(s)")
+                    End If
+                    errMsg.AppendLine()
                 End If
             Next
+
+            ErrorHandler.ShowError(errMsg.ToString(), "Error Loading Files", MessageBoxIcon.Error, ex)
             ErrorHandler.TriggerFatalError()
         End Try
         ds.EndInit()
@@ -211,8 +247,19 @@ Public Class XmlDB
             End If
 
             If loadData Then
-                RaiseEvent LoadingTable(Me, fileName)
-                table.GetTableHandler.LoadData()
+                Try
+                    RaiseEvent LoadingTable(Me, fileName)
+                    table.GetTableHandler.LoadData()
+                Catch ex As System.IO.FileNotFoundException
+                    ErrorHandler.ShowError($"Failed to load '{fileName}': File not found.{vbCrLf}{vbCrLf}Path: {ex.FileName}", "File Not Found", MessageBoxIcon.Error, ex)
+                    Throw
+                Catch ex As Xml.XmlException
+                    ErrorHandler.ShowError($"Failed to load '{fileName}': Invalid XML format.{vbCrLf}{vbCrLf}Line {ex.LineNumber}, Position {ex.LinePosition}: {ex.Message}", "XML Format Error", MessageBoxIcon.Error, ex)
+                    Throw
+                Catch ex As Exception
+                    ErrorHandler.ShowError($"Failed to load '{fileName}': {ex.Message}{vbCrLf}{vbCrLf}Table: {table.TableName}", "Error Loading Table", MessageBoxIcon.Error, ex)
+                    Throw
+                End Try
             End If
 
         End If
