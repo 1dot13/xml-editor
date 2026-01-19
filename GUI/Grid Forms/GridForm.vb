@@ -115,8 +115,11 @@ Public Class GridForm
         If _mouseDown AndAlso test.RowIndex >= 0 AndAlso Grid.SelectedRows.Count > 0 Then
             Dim c As New GridCopyContainer With {.Database = _dm.Database}
             ReDim c.Rows(Grid.SelectedRows.Count - 1)
+
             For i As Integer = 0 To Grid.SelectedRows.Count - 1
-                c.Rows(i) = DirectCast(Grid.SelectedRows(i).DataBoundItem, DataRowView).Row
+                If Grid.SelectedRows(i).DataBoundItem IsNot Nothing Then
+                    c.Rows(i) = DirectCast(Grid.SelectedRows(i).DataBoundItem, DataRowView).Row
+                End If
             Next
 
             Grid.DoDragDrop(c, DragDropEffects.Copy)
