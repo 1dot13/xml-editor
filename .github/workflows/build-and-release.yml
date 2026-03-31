@@ -1,0 +1,41 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers on version tags like v1.0.0
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore XMLEditor_VS2010.sln
+
+      - name: Build solution
+        run: dotnet build XMLEditor_VS2010.sln --configuration Release --no-restore
+
+      - name: Publish GUI project
+        run: dotnet publish GUI/GUI.vbproj --configuration Release --no-build --output ./publish
+
+      - name: Create release archive
+        run: Compress-Archive -Path ./publish/* -DestinationPath XMLEditor-Release.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: XMLEditor-Release.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
